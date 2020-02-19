@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.controller;
 
 public class Controller {
 
