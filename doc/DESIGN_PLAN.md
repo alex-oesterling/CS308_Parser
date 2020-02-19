@@ -41,6 +41,7 @@ Alex Oesterling (axo), Hannah Taubenfeld (hbt3), Tyler Meier (tkm22), and Dana M
     * Purpose: Sending UI information back to the model (buttons, menus, etc) to update it.
     * Two implementations:
         * Using a controller to send information to the model, this would separate the graphical interface from the interpreter and let them communicate when necessary. This is. how the information from the UI will also get to the model if needed
+        * Also use binding in order to reduce complications in the controller
         * Sends information directly to the model just using getter and setter methods
     * Interaction with other APIs: Interacting with the external model to let it know what to do based off of a click or command in the UI. Also allows the internal view API to know what to do/ draw after recieving information from the external model API
 
@@ -127,7 +128,7 @@ Alex Oesterling (axo), Hannah Taubenfeld (hbt3), Tyler Meier (tkm22), and Dana M
      * possible controller super classes
      * Getters (public)
      * Setters (public)
-     * Return a node with all of the UI elemets
+     * Return a node with all of the UI elements
  * Visualizer Class
      * SetUp scene (public)
      * Do stuff with colors  (private)
