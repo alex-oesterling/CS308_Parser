@@ -109,6 +109,14 @@ public class Turtle {
   }
 
   /**
+   * getter for String of the pen color name
+   * @return
+   */
+  public String getPenColor(){
+    return penColorName;
+  }
+
+  /**
    * put the turtle back where it started
    */
   public void goHome(){
