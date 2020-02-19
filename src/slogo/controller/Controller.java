@@ -1,8 +1,12 @@
 package slogo.controller;
 
-import java.util.List;
+import slogo.model.Turtle;
+import slogo.model.command.Command;
 
 public class Controller {
+    Turtle turtle = new Turtle();
+    Errors error = new Errors();
+    Command command;
 
     public Controller() {
     }
@@ -12,18 +16,36 @@ public class Controller {
         //this.command = command;
     }
 
-    //get parsed command from the model and give to view to be displayed
-    public void returnCommand(){
-        //takes in parsed command and returns it, is a getter
+    /**
+     * Gets parsed command from model
+     * @return command
+     */
+    public double returnCommand(){
+        return command.getResult();
     }
 
-    //get x position from model and give to view
+    /**
+     * Gets x position from Turtle class
+     * @return double
+     */
+    public double getXPosition(){
+        return turtle.getX();
+    }
 
-    //get y position from model and give to view
+    /**
+     * Gets y position from Turtle class
+     * @return double
+     */
+    public double getYPosition(){
+        return turtle.getY();
+    }
 
-    //get error message from model and give to view, need an error class that uses switch cases
-    public void setError(Error e){
-        //this.error = error;
+    /**
+     * Takes an error from the model
+     * @param e
+     */
+    public void setError(Errors e){
+        this.error = e;
     }
 
     //do actions that buttons execute
