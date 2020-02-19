@@ -38,11 +38,16 @@ Alex Oesterling (axo), Hannah Taubenfeld (hbt3), Tyler Meier (tkm22), and Dana M
         * Having multiple windows for commands and turtle stuff compared to only having one window that contains everything for the scene and such
     * Interaction with other APIs: Receives commands from external view to be drawn and added to the scene and the history of commands. Does not interact with the model. 
 * View  (External)
-    * Purpose: Sending UI information back to the model (buttons, menus, etc) to update it.
+    * Purpose: Allowing the model to update the turtle
     * Two implementations:
+<<<<<<< Updated upstream:doc/DESIGN_PLAN.md
         * Using a controller to send information to the model, this would separate the graphical interface from the interpreter and let them communicate when necessary. This is. how the information from the UI will also get to the model if needed
         * Also use binding in order to reduce complications in the controller
         * Sends information directly to the model just using getter and setter methods
+=======
+        * Having a intermediate controller which takes information from the model and calls methods inside the visualizer
+        * Model sends information directly to the model just using getter and setter methods
+>>>>>>> Stashed changes:doc/DESIGN.md
     * Interaction with other APIs: Interacting with the external model to let it know what to do based off of a click or command in the UI. Also allows the internal view API to know what to do/ draw after recieving information from the external model API
 
 ![Overview](Overview.png)
