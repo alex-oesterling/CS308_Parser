@@ -1,6 +1,8 @@
-package slogo.model.command;
+package slogo.model.command.displaycommand;
 
-public class DisplayCommand extends Command {
+import slogo.model.command.Command;
+
+abstract public class DisplayCommand extends Command {
 
   public DisplayCommand(){
     super();
