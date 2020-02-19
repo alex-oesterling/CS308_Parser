@@ -7,4 +7,7 @@ public class Errors {
         this.error = new Errors();
     }
 
+    private void assignErrorType(Error error){
+    }
+
 }
