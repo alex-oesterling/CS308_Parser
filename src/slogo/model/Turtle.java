@@ -4,22 +4,31 @@ public class Turtle {
 
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
+  private static final int DEFAULT_HEADING = 90;
   private static final String DEFAULT_PEN_COLOR = "BLACK";
 
   private double xPosition;
   private double yPosition;
+  private double homeX;
+  private double homeY;
+  //define heading as the degrees clockwise from East
+  private int heading;
   private String penColorName;
 
   /**
    * Turtle constructor to create turtle at a specific point
    * @param startingXPosition value to set xPosition to
    * @param startingYPosition value to set yPosition to
+   * @param startingHeading value to set heading to; degrees clockwise from east
    * @param penColor string to set penColorName to
    */
-  public Turtle(double startingXPosition, double startingYPosition, String penColor){
+  public Turtle(double startingXPosition, double startingYPosition, int startingHeading, String penColor){
     //TODO check that parameters are valid
     xPosition = startingXPosition;
+    homeX = xPosition;
     yPosition = startingYPosition;
+    homeY = yPosition;
+    heading = startingHeading;
     penColorName = penColor;
   }
 
@@ -27,9 +36,10 @@ public class Turtle {
    * Turtle constructor to create turtle at a specific point
    * @param startingXPosition value to set xPosition to
    * @param startingYPosition value to set yPosition to
+   * @param startingHeading value to set heading to; degrees clockwise from east
    */
-  public Turtle(double startingXPosition, double startingYPosition){
-    this(startingXPosition,startingYPosition, DEFAULT_PEN_COLOR); //values will be checked for validness in this() constructor
+  public Turtle(double startingXPosition, double startingYPosition, int startingHeading){
+    this(startingXPosition,startingYPosition, startingHeading, DEFAULT_PEN_COLOR); //values will be checked for validness in this() constructor
   }
 
   /**
@@ -38,14 +48,14 @@ public class Turtle {
    * @param penColor string to set penColorName to
    */
   public Turtle(String penColor){
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, penColor); //penColor will be checked for validness in this() constructor
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, penColor); //penColor will be checked for validness in this() constructor
   }
 
   /**
    * default Turtle constructor
    */
   public Turtle(){
-    this(DEFAULT_STARTING_X,DEFAULT_STARTING_Y, DEFAULT_PEN_COLOR);
+    this(DEFAULT_STARTING_X,DEFAULT_STARTING_Y, DEFAULT_HEADING, DEFAULT_PEN_COLOR);
   }
 
   /**
@@ -79,5 +89,38 @@ public class Turtle {
    */
   public double getY(){
     return yPosition;
+  }
+
+  /**
+   * return the unique id of the turtle
+   * @return the object's hashcode
+   */
+  public int getId(){
+    return this.hashCode();
+  }
+
+  /**
+   * set a new Pen color
+   * @param newColor
+   */
+  public void setPenColor(String newColor){
+    //TODO check that newColor is valid
+    penColorName = newColor.toUpperCase();
+  }
+
+  /**
+   * getter for String of the pen color name
+   * @return
+   */
+  public String getPenColor(){
+    return penColorName;
+  }
+
+  /**
+   * put the turtle back where it started
+   */
+  public void goHome(){
+    xPosition = homeX;
+    yPosition = homeY;
   }
 }

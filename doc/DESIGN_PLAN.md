@@ -38,11 +38,11 @@ Alex Oesterling (axo), Hannah Taubenfeld (hbt3), Tyler Meier (tkm22), and Dana M
         * Having multiple windows for commands and turtle stuff compared to only having one window that contains everything for the scene and such
     * Interaction with other APIs: Receives commands from external view to be drawn and added to the scene and the history of commands. Does not interact with the model. 
 * View  (External)
-    * Purpose: Sending UI information back to the model (buttons, menus, etc) to update it.
+    * Purpose: Allowing the model to update the turtle
     * Two implementations:
-        * Using a controller to send information to the model, this would separate the graphical interface from the interpreter and let them communicate when necessary. This is. how the information from the UI will also get to the model if needed
-        * Also use binding in order to reduce complications in the controller
-        * Sends information directly to the model just using getter and setter methods
+        * Having a intermediate controller which takes information from the model and calls methods inside the visualizer
+            * Also implementing binding to help reduce controller complexity
+        * Model sends information directly to the model just using getter and setter methods
     * Interaction with other APIs: Interacting with the external model to let it know what to do based off of a click or command in the UI. Also allows the internal view API to know what to do/ draw after recieving information from the external model API
 
 ![Overview](Overview.png)
@@ -82,15 +82,15 @@ Alex Oesterling (axo), Hannah Taubenfeld (hbt3), Tyler Meier (tkm22), and Dana M
         * Add new child command classes as Command is going to be its own package, and Command Class will be superclass. 
     * All private and protected methods
 * View Internal 
-    * Features supported and how: Creates stages and sets scene through the Visualizer Class, Application Class.
-        * Visualizer Class - creates lines, visually updates turtle position
+    * Features supported and how: Sets scene through the Application Class.
         * Application Class - includes the setting of the stage and Main class 
     * Extendable: There is room for extension but as of now this seems unnecessary
     * Closed to modification (especially Application)
     * Resources: Any images needed to create the scene or stage. The current and future position of the turtle. Also, any styling files we might create.  
 * View External 
-    * Features supported and how: Takes commands and gives them to the Model through the Controller Class
-        * Controller Class - deals with all of the actions that would interact the view external and the model external
+    * Features supported and how: Updates turtle's rendering using Visualizer class
+        * Controller Class - deals with all of the actual rendering of the turtle, has public methods allowing for the manipulation
+        of portions of the scene (turtle orientation/location, pen color, lines, etc)
     * Resources: none
     * Extendable: Different types of controllers could take different types of syntax. A controller that allows for program writing in the command line versus reading of programs (such as a txt file of commands) could both be extended. 
     * All public methods
@@ -124,7 +124,7 @@ Alex Oesterling (axo), Hannah Taubenfeld (hbt3), Tyler Meier (tkm22), and Dana M
          * stores the turtles pen color
      * Turtle pen up or pen down (public)
          * boolean deciding if turtle draws
- * Controller Class
+ * Controller Class (not part of view or model API, just here as part of plan)
      * possible controller super classes
      * Getters (public)
      * Setters (public)
