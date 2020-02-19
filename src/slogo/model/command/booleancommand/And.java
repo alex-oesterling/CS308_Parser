@@ -8,16 +8,8 @@ public class And extends BooleanCommand {
    * @param bool2 condition 2
    */
   public And(boolean bool1, boolean bool2){
-   super(bool1, bool2);
-  }
-
-  /**
-   * return true is both a and b are true, otherwise return false
-   * @return a&&b
-   */
-  @Override
-  public boolean getResult() {
-    return getFirstCondition()&&getSecondCondition();
+   super();
+   super.changeBooleanResultToDouble(bool1&&bool2);
   }
 
   public static void main(String[] args) {

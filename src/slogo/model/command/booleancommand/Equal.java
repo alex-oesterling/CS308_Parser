@@ -2,13 +2,24 @@ package slogo.model.command.booleancommand;
 
 public class Equal extends BooleanCommand{
 
-  public Equal(Object object1, Object object2){
-    super(object1, object2);
+  /**
+   * Equal constructor comparing booleans
+   * @param bool1 first object
+   * @param bool2 second object
+   */
+  public Equal(boolean bool1, boolean bool2){
+    super();
+    super.changeBooleanResultToDouble(bool1==bool2);
   }
 
-  @Override
-  public boolean getResult() {
-    return getFirstObject().equals(getSecondObject());
+  /**
+   * Equal constructor comparing doubles
+   * @param double1 first object
+   * @param double2 second object
+   */
+  public Equal(double double1, double double2){
+    super();
+    super.changeBooleanResultToDouble(double1==double2);
   }
 
   public static void main(String[] args) {
@@ -32,38 +43,13 @@ public class Equal extends BooleanCommand{
     c = new Equal(a,b);
     System.out.println(a+"==" + b + ": "+c.getResult());
 
-    String d = "1";
-    String e = "1";
-    c = new Equal(d,e);
-    System.out.println(d+"==" + e + ": "+c.getResult());
-
-    d = "2";
-    e = "1";
-    c = new Equal(d,e);
-    System.out.println(d+"==" + e + ": "+c.getResult());
-
-    d = "cat";
-    e = "cat";
-    c = new Equal(d,e);
-    System.out.println(d+"==" + e + ": "+c.getResult());
-
-    d = "CAT";
-    e = "cat";
-    c = new Equal(d,e);
-    System.out.println(d+"==" + e + ": "+c.getResult());
-
-    int f = 1;
-    String test = "1";
-    c = new Equal(f,test);
-    System.out.println(f+"==" + test + ": "+c.getResult());
-
-    char g = 'a';
-    e = "a";
-    c = new Equal(g,e);
-    System.out.println(g+"==" + e + ": "+c.getResult());
-
     Boolean h = true;
     c = new Equal(b,h);
     System.out.println(b+"==" + h + ": "+c.getResult());
+
+    int i = 1;
+    int j = 0;
+    c = new Equal(i,j);
+    System.out.println(i+"=="+j+": " +c.getResult());
   }
 }
