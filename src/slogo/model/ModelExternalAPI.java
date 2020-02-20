@@ -7,5 +7,5 @@ package slogo.model;
  * effort between all team members)
  */
 public interface ModelExternalAPI {
-  void readCommandFromString();
+  void readCommandFromString(String command);
 }

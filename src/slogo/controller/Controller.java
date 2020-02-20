@@ -12,14 +12,15 @@ public class Controller {
     Parser myParser;
     Visualizer myView;
 
-    public Controller(Parser parser) {
+    public Controller(Parser parser, Visualizer visualizer) {
         myParser = parser;
-        myView = new Visualizer(myParser, this);
+        myView = visualizer;
     }
 
     //get command from the view and give to model, need a reference to the command class
     public void setCommand(String command){
         //this.command = command;
+        myParser.readCommandFromString(command);
     }
 
     /**
@@ -50,6 +51,7 @@ public class Controller {
      * Takes an error from the model
      * @param e
      */
+    //FIXME commented out by Alex. when creating the error class its constructor creates a new error and there is a stack overflow
     public void setError(Errors e){
         this.error = e;
     }
