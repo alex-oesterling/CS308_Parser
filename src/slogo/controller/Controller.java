@@ -1,14 +1,20 @@
 package slogo.controller;
 
+import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.Command;
+import slogo.view.Visualizer;
 
 public class Controller {
     Turtle turtle = new Turtle();
     Errors error = new Errors();
     Command command;
+    Parser myParser;
+    Visualizer myView;
 
-    public Controller() {
+    public Controller(Parser parser) {
+        myParser = parser;
+        myView = new Visualizer(myParser, this);
     }
 
     //get command from the view and give to model, need a reference to the command class

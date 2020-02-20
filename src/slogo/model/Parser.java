@@ -1,5 +1,9 @@
 package slogo.model;
 
-public class Parser {
+public class Parser implements ModelExternalAPI{
 
+  @Override
+  public void readCommandFromString() {
+
+  }
 }
