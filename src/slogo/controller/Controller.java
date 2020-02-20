@@ -5,15 +5,15 @@ import slogo.model.command.Command;
 
 public class Controller {
     Turtle turtle = new Turtle();
-    Errors error = new Errors();
+    ErrorHandler error = new ErrorHandler();
     Command command;
 
     public Controller() {
     }
 
     //get command from the view and give to model, need a reference to the command class
-    public void setCommand(String command){
-        //this.command = command;
+    public void setCommand(String viewCommand){
+        //this.command = viewCommand;
     }
 
     /**
@@ -44,7 +44,7 @@ public class Controller {
      * Takes an error from the model
      * @param e
      */
-    public void setError(Errors e){
+    public void setError(ErrorHandler e){
         this.error = e;
     }
 
