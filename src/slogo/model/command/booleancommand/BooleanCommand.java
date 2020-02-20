@@ -2,23 +2,30 @@ package slogo.model.command.booleancommand;
 
 import slogo.model.command.Command;
 
-abstract public class BooleanCommand extends Command{// implements Cloneable{
+public class BooleanCommand extends Command{// implements Cloneable{
 
   private static final double TRUE = 1;
-  private static final double FALSE = 0;
+  private static final double FALSE_AND_DEFAULT = 0;
+  private double result;
 
   /**
    * Boolean constructor, call super Command constructor
    */
   public BooleanCommand(){
     super();
+    result = FALSE_AND_DEFAULT;
+  }
+
+  @Override
+  public double getResult() {
+    return result;
   }
 
   protected void changeBooleanResultToDouble(boolean condition) {
     if (condition) {
-      super.setResult(TRUE);
+      result = TRUE;
     } else {
-      super.setResult(FALSE);
+      result = FALSE_AND_DEFAULT;
     }
   }
 }
