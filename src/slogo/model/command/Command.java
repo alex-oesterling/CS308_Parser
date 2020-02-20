@@ -1,7 +1,10 @@
 package slogo.model.command;
 
 abstract public class Command {
-
+  /*
+  FIXME Alex Oesterling: I was doing some of the readings and this feels like it wants to be an interface instead of an abstract class.
+  At this point because we havent written much should we try to organize this into an interface before we create unnecessary dependencies?
+   */
   private static final int DEFAULT_RESULT_VALUE = 0;
   private double result;
 
