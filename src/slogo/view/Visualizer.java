@@ -3,6 +3,7 @@ package slogo.view;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -20,6 +21,7 @@ import slogo.model.Parser;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.beans.EventHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -60,7 +62,7 @@ public class Visualizer implements ViewExternalAPI{
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
     root = new Group();
     turtleFile = getTurtleImage(new Stage());
-    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle());
+    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor());
     createBox();
     myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     return myScene;
@@ -86,29 +88,38 @@ public class Visualizer implements ViewExternalAPI{
     return commandLine;
   }
 
-    private Rectangle createBox() {
-      r = new Rectangle(XPOS_OFFSET, YPOS_OFFSET, TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
-      r.setFill(Color.TRANSPARENT);
-      r.setStroke(Color.BLACK);
-      r.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-      return r;
-    }
+  private Rectangle createBox() {
+    r = new Rectangle(XPOS_OFFSET, YPOS_OFFSET, TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
+    r.setFill(Color.WHITE);
+    r.setStroke(Color.BLACK);
+    r.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
+    return r;
+  }
 
-    private ImageView chooseTurtle() {
-      turtleImage = new ImageView();
-      try {
-          BufferedImage bufferedImage = ImageIO.read(turtleFile);
-          Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-          turtleImage.setImage(image);
-          turtleImage.setFitWidth(TURTLE_WIDTH);
-          turtleImage.setFitHeight(TURTLE_HEIGHT);
-          turtleImage.setX((XPOS_OFFSET + TURTLE_SCREEN_WIDTH) / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
-          turtleImage.setY((YPOS_OFFSET + TURTLE_SCREEN_HEIGHT) / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
-      } catch (IOException e) {
-          //add errors here
-      }
-      return turtleImage;
+  private ColorPicker backgroundColor(){
+    ColorPicker colorPicker = new ColorPicker();
+    colorPicker.setOnAction(e -> {
+      Color c = colorPicker.getValue();
+      r.setFill(c);
+    });
+    return colorPicker;
+  }
+
+  private ImageView chooseTurtle() {
+    turtleImage = new ImageView();
+    try {
+      BufferedImage bufferedImage = ImageIO.read(turtleFile);
+      Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+      turtleImage.setImage(image);
+      turtleImage.setFitWidth(TURTLE_WIDTH);
+      turtleImage.setFitHeight(TURTLE_HEIGHT);
+      turtleImage.setX((XPOS_OFFSET + TURTLE_SCREEN_WIDTH) / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
+      turtleImage.setY((YPOS_OFFSET + TURTLE_SCREEN_HEIGHT) / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
+    } catch (IOException e) {
+        //add errors here
     }
+    return turtleImage;
+  }
 
   private void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
@@ -117,11 +128,11 @@ public class Visualizer implements ViewExternalAPI{
   }
 
   private File getTurtleImage(Stage stage) {
-      FileChooser fileChooser = new FileChooser();
-      fileChooser.setTitle("Choose Turtle Image");
-      fileChooser.getExtensionFilters().addAll(
-              new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
-      return fileChooser.showOpenDialog(stage);
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Choose Turtle Image");
+    fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+    return fileChooser.showOpenDialog(stage);
     }
 
   @Override
