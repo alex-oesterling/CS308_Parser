@@ -5,6 +5,10 @@ public class Turtle {
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 90;
+  private static final int QUAD1_BEGINS = 360;
+  private static final int QUAD2_BEGINS = 90;
+  private static final int QUAD3_BEGINS = 180;
+  private static final int QUAD4_BEGINS = 270;
   private static final String DEFAULT_PEN_COLOR = "BLACK";
 
   private double xPosition;
@@ -114,6 +118,25 @@ public class Turtle {
    */
   public String getPenColor(){
     return penColorName;
+  }
+
+  /**
+   * Mover method that updates the position of the turtle
+   * based on the current heading (which quadrant the turtle points to)
+   * and the incoming distance d
+   * @param distance incoming distance
+   */
+  public void move(double distance){
+    double theta = heading;
+    if(heading>QUAD2_BEGINS && heading<QUAD3_BEGINS){
+      theta = QUAD3_BEGINS - heading;
+    } else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){
+      theta = heading - QUAD3_BEGINS;
+    } else if(heading>QUAD4_BEGINS){
+      theta = QUAD1_BEGINS - heading;
+    }
+    xPosition += distance * Math.sin(theta);
+    yPosition += distance * Math.cos(theta);
   }
 
   /**
