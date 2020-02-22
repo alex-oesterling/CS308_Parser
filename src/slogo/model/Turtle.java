@@ -1,6 +1,6 @@
 package slogo.model;
 
-public class Turtle {
+public class Turtle{
 
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
@@ -18,7 +18,9 @@ public class Turtle {
   private double homeY;
   //define heading as the degrees clockwise from North
   private double heading;
+  private boolean turtleIsDrawing;
   private String penColorName;
+  private boolean turtleIsVisible;
 
   /**
    * Turtle constructor to create turtle at a specific point
@@ -35,6 +37,7 @@ public class Turtle {
     homeY = yPosition;
     heading = startingHeading;
     penColorName = penColor;
+    turtleIsDrawing = true;
   }
 
   /**
@@ -193,5 +196,37 @@ public class Turtle {
     moveTo(newXPos, newYPos);
 
     return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+  }
+
+  /**
+   * Set the pen as up or down
+   * @param penStatus true if penDown (drawing), false if penUp (not drawing)
+   */
+  public void setDrawing(boolean penStatus){
+    turtleIsDrawing = penStatus;
+  }
+
+  /**
+   * Return the drawing capabilities of the turtle
+   * @return pen status
+   */
+  public boolean getDrawingStatus(){
+    return turtleIsDrawing;
+  }
+
+  /**
+   * Set the visibility of the turtle
+   * @param visibility true if the turtle can be seen, false otherwise
+   */
+  public void setVisibility(boolean visibility){
+    turtleIsVisible = visibility;
+  }
+
+  /**
+   * Tell the view if the turtle should be shown or not
+   * @return turtleIsVisible
+   */
+  public boolean isTurtleVisible(){
+    return turtleIsVisible;
   }
 }
