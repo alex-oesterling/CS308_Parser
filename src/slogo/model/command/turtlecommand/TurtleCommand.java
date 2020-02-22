@@ -5,11 +5,13 @@ import slogo.model.command.Command;
 
 abstract public class TurtleCommand extends Command {
 
+  private static final double NOTHING = 0;
   private Turtle myTurtle;
   private double result;
 
   /**
-   * TurtleCommand constructor with an incoming Turtle
+   * TurtleCommand constructor with an incoming Turtle,
+   * and a value to set result to
    * @param body turtle the changes apply to
    * @param value result to be returned
    */
@@ -18,6 +20,15 @@ abstract public class TurtleCommand extends Command {
     //TODO check that body != null
     myTurtle = body;
     result = value;
+  }
+
+  /**
+   * TurtleCommand constructor with an incoming Turtle
+   * with no value to set result to
+   * @param body turtle the changes apply to
+   */
+  public TurtleCommand(Turtle body){
+    this(body, NOTHING);
   }
 
   /**
