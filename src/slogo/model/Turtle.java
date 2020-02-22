@@ -1,6 +1,6 @@
 package slogo.model;
 
-public class Turtle {
+public class Turtle{
 
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
@@ -18,7 +18,9 @@ public class Turtle {
   private double homeY;
   //define heading as the degrees clockwise from North
   private double heading;
+  private boolean turtleIsDrawing;
   private String penColorName;
+  private boolean turtleIsVisible;
 
   /**
    * Turtle constructor to create turtle at a specific point
@@ -35,6 +37,7 @@ public class Turtle {
     homeY = yPosition;
     heading = startingHeading;
     penColorName = penColor;
+    turtleIsDrawing = true;
   }
 
   /**
@@ -171,7 +174,59 @@ public class Turtle {
    * put the turtle back where it started
    */
   public void goHome(){
-    xPosition = homeX;
-    yPosition = homeY;
+    moveTo(homeX, homeY);
+  }
+
+  private void moveTo(double newXPos, double newYPos){
+    xPosition = newXPos;
+    yPosition = newYPos;
+  }
+
+  /**
+   * Set the turtle's position to a specified location,
+   * and return the distance it travelled
+   * @param newXPos new X position
+   * @param newYPos new Y position
+   * @return distance travelled by turtle
+   */
+  public double setPosition(double newXPos, double newYPos){
+    double deltaX = xPosition - newXPos;
+    double deltaY = yPosition = newYPos;
+
+    moveTo(newXPos, newYPos);
+
+    return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+  }
+
+  /**
+   * Set the pen as up or down
+   * @param penStatus true if penDown (drawing), false if penUp (not drawing)
+   */
+  public void setDrawing(boolean penStatus){
+    turtleIsDrawing = penStatus;
+  }
+
+  /**
+   * Return the drawing capabilities of the turtle
+   * @return pen status
+   */
+  public boolean getDrawingStatus(){
+    return turtleIsDrawing;
+  }
+
+  /**
+   * Set the visibility of the turtle
+   * @param visibility true if the turtle can be seen, false otherwise
+   */
+  public void setVisibility(boolean visibility){
+    turtleIsVisible = visibility;
+  }
+
+  /**
+   * Tell the view if the turtle should be shown or not
+   * @return turtleIsVisible
+   */
+  public boolean isTurtleVisible(){
+    return turtleIsVisible;
   }
 }
