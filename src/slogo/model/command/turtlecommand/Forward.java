@@ -2,13 +2,12 @@ package slogo.model.command.turtlecommand;
 
 import slogo.model.Turtle;
 
-public class Forward {//extends TurtleCommand {
+public class Forward extends TurtleCommand {
 
   private double increment;
 
-  public Forward(double pos) {
-    //super(new Turtle());
+  public Forward(Turtle body, double pos) {
+    super(body, pos);
     increment = pos;
   }
-
 }
