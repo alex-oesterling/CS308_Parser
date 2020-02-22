@@ -98,9 +98,12 @@ public class Visualizer implements ViewExternalAPI{
 
   private ColorPicker backgroundColor(){
     ColorPicker colorPicker = new ColorPicker();
+    colorPicker.setLayoutX( XPOS_OFFSET);
+    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
     colorPicker.setOnAction(e -> {
-      Color c = colorPicker.getValue();
-      r.setFill(c);
+      root.getChildren().remove(r);
+      r.setFill(colorPicker.getValue());
+      root.getChildren().add(r);
     });
     return colorPicker;
   }
