@@ -171,7 +171,27 @@ public class Turtle {
    * put the turtle back where it started
    */
   public void goHome(){
-    xPosition = homeX;
-    yPosition = homeY;
+    moveTo(homeX, homeY);
+  }
+
+  private void moveTo(double newXPos, double newYPos){
+    xPosition = newXPos;
+    yPosition = newYPos;
+  }
+
+  /**
+   * Set the turtle's position to a specified location,
+   * and return the distance it travelled
+   * @param newXPos new X position
+   * @param newYPos new Y position
+   * @return distance travelled by turtle
+   */
+  public double setPosition(double newXPos, double newYPos){
+    double deltaX = xPosition - newXPos;
+    double deltaY = yPosition = newYPos;
+
+    moveTo(newXPos, newYPos);
+
+    return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
   }
 }
