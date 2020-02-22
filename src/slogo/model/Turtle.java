@@ -5,17 +5,18 @@ public class Turtle {
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 90;
-  private static final int QUAD1_BEGINS = 360;
+  private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
+  private static final int QUAD4_ENDS = 360;
   private static final String DEFAULT_PEN_COLOR = "BLACK";
 
   private double xPosition;
   private double yPosition;
   private double homeX;
   private double homeY;
-  //define heading as the degrees clockwise from East
+  //define heading as the degrees clockwise from North
   private int heading;
   private String penColorName;
 
@@ -133,10 +134,23 @@ public class Turtle {
     } else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){
       theta = heading - QUAD3_BEGINS;
     } else if(heading>QUAD4_BEGINS){
-      theta = QUAD1_BEGINS - heading;
+      theta = QUAD4_ENDS - heading;
     }
     xPosition += distance * Math.sin(theta);
     yPosition += distance * Math.cos(theta);
+  }
+
+  /**
+   * Change the heading of the turtle, and make sure
+   * that it's within 0 and 360 degrees
+   * @param deltaTheta value to change by
+   */
+  public void turn(double deltaTheta){
+    heading+=deltaTheta;
+    heading %= QUAD4_ENDS; //make it a value between -360 and 360
+    if(heading < QUAD1_BEGINS){
+      heading += QUAD4_ENDS; //make it a value between 0 and 360
+    }
   }
 
   /**
