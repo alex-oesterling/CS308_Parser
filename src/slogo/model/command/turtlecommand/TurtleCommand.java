@@ -5,27 +5,19 @@ import slogo.model.command.Command;
 
 abstract public class TurtleCommand extends Command {
 
-  Turtle myTurtle;
-
-  /*
-  public TurtleCommand(){
-    super();
-  }
-
-  public TurtleCommand(double xPos, double yPos, int heading){
-    this();
-    //TODO check that xPos and yPos are valid, if not, don't execute following line
-    myTurtle = new Turtle(xPos, yPos, heading);
-  }*/
+  private Turtle myTurtle;
+  private double result;
 
   /**
    * TurtleCommand constructor with an incoming Turtle
-   * @param body
+   * @param body turtle the changes apply to
+   * @param value result to be returned
    */
-  public TurtleCommand(Turtle body){
+  public TurtleCommand(Turtle body, double value){
     super();
     //TODO check that body != null
     myTurtle = body;
+    result = value;
   }
 
   /**
@@ -51,14 +43,8 @@ abstract public class TurtleCommand extends Command {
     myTurtle.goHome();
   }
 
-  /*
-  /**
-   * getter for the turtle effected by these commands
-   * @return myTurtle
-
-  public Turtle getTurtle(){
-    return myTurtle;
+  @Override
+  public double getResult(){
+    return result;
   }
-   */
-
 }
