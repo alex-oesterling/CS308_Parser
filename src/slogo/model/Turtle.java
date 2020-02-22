@@ -17,7 +17,7 @@ public class Turtle {
   private double homeX;
   private double homeY;
   //define heading as the degrees clockwise from North
-  private int heading;
+  private double heading;
   private String penColorName;
 
   /**
@@ -147,6 +147,20 @@ public class Turtle {
    */
   public void turn(double deltaTheta){
     heading+=deltaTheta;
+    makeHeadingValid();
+  }
+
+  /**
+   * Set heading to a given value, and make it valid
+   * (between 0 and 360)
+   * @param theta new heading
+   */
+  public void setHeading(double theta){
+    heading = theta;
+    makeHeadingValid();
+  }
+
+  private void makeHeadingValid() {
     heading %= QUAD4_ENDS; //make it a value between -360 and 360
     if(heading < QUAD1_BEGINS){
       heading += QUAD4_ENDS; //make it a value between 0 and 360
