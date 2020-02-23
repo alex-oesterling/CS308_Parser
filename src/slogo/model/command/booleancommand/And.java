@@ -4,33 +4,25 @@ public class And extends BooleanCommand {
 
   /**
    * constructor of and logic
-   * @param bool1 condition 1
-   * @param bool2 condition 2
+   * @param value1 condition 1
+   * @param value2 condition 2
    */
-  public And(boolean bool1, boolean bool2){
-   super();
-   super.changeBooleanResultToDouble(bool1&&bool2);
+  public And(double value1, double value2){
+   super(value1!=0.0&&value2!=0.0); //'convert' to booleans
   }
 
   public static void main(String[] args) {
-    boolean a = false;
-    boolean b = true;
-    And c = new And(a,b);
-    System.out.println(a+" && " + b + " = "+c.getResult());
-
-    a = true;
-    b = false;
-    c = new And(a,b);
-    System.out.println(a+" && " + b + " = "+c.getResult());
-
-    a = false;
-    b = false;
-    c = new And(a,b);
-    System.out.println(a+" && " + b + " = "+c.getResult());
-
-    a = true;
-    b = true;
-    c = new And(a,b);
-    System.out.println(a+" && " + b + " = "+c.getResult());
+    double a = 1.0;
+    double b = 0.0;
+    double c = 1.0;
+    double d = -1.0;
+    And e = new And(a,b);
+    System.out.println(a+"&&"+b+": "+e.getResult());
+    e = new And(a,c);
+    System.out.println(a+"&&"+c+": "+e.getResult());
+    e = new And(a,d);
+    System.out.println(a+"&&"+d+": "+e.getResult());
+    e = new And(d,b);
+    System.out.println(d+"&&"+b+": "+e.getResult());
   }
 }

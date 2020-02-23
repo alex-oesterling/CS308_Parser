@@ -8,43 +8,21 @@ public class NotEqual extends BooleanCommand{
    * @param double2 second double
    */
   public NotEqual(double double1, double double2){
-    super();
-    super.changeBooleanResultToDouble(double1!=double2);
-  }
-  
-  /**
-   * NotEqual constructor using booleans
-   * @param bool1 first boolean
-   * @param bool2 second boolean
-   */
-  public NotEqual(boolean bool1, boolean bool2){
-    super();
-    super.changeBooleanResultToDouble(bool1!=bool2);
+    super(double1!=double2);
   }
 
   public static void main(String[] args) {
-    boolean a = false;
-    boolean b = true;
-    NotEqual c = new NotEqual(a,b);
-    System.out.println(a+"!=" + b + ": "+c.getResult());
-
-    a = true;
-    b = false;
-    c = new NotEqual(a,b);
-    System.out.println(a+"!=" + b + ": "+c.getResult());
-
-    a = false;
-    b = false;
-    c = new NotEqual(a,b);
-    System.out.println(a+"!=" + b + ": "+c.getResult());
-
-    a = true;
-    b = true;
-    c = new NotEqual(a,b);
-    System.out.println(a+"!=" + b + ": "+c.getResult());
-
-    Boolean h = true;
-    c = new NotEqual(b,h);
-    System.out.println(b+"!=" + h + ": "+c.getResult());
+    double a = 1.0;
+    double b = 0.0;
+    double c = 1.0;
+    double d = -1.0;
+    NotEqual e = new NotEqual(a,b);
+    System.out.println(a+"!="+b+": "+e.getResult());
+    e = new NotEqual(a,c);
+    System.out.println(a+"!="+c+": "+e.getResult());
+    e = new NotEqual(a,d);
+    System.out.println(a+"!="+d+": "+e.getResult());
+    e = new NotEqual(d,b);
+    System.out.println(d+"!="+b+": "+e.getResult());
   }
 }
