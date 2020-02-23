@@ -9,7 +9,6 @@ public class Cosine extends MathCommand {
    * @param a
    */
   public Cosine(double a){
-    super();
-    super.sendMathResultUp(Math.cos(a));
+    super(Math.cos(a));
   }
 }

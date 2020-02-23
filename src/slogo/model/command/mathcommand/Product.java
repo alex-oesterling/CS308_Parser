@@ -10,8 +10,7 @@ public class Product extends MathCommand {
    * @param value2 b
    */
   public Product(double value1, double value2){
-    super();
-    super.sendMathResultUp(value1*value2);
+    super(value1*value2);
   }
 
 }

@@ -7,11 +7,10 @@ public class Difference extends MathCommand {
    * and sets the value to return as the difference between the two
    * provided values;
    * performs a-b
-   * @param valueToSubtractFrom a
-   * @param valueToSubtract b
+   * @param minuend a
+   * @param subtrahend b
    */
-  public Difference(double valueToSubtractFrom, double valueToSubtract){
-    super();
-    super.sendMathResultUp(Math.abs(valueToSubtractFrom-valueToSubtract));
+  public Difference(double minuend, double subtrahend){
+    super(minuend-subtrahend);
   }
 }

@@ -5,19 +5,13 @@ import slogo.model.command.Command;
 public class MathCommand extends Command {
 
   private static final double MATH_DEFAULT_VALUE = 1;
-  private double result;
 
-  public MathCommand(){
-    super();
-    result = MATH_DEFAULT_VALUE;
+  public MathCommand(double returnValue) {
+    super(returnValue);
   }
 
-  @Override
-  public double getResult() {
-    return result;
+  public MathCommand() {
+    super(MATH_DEFAULT_VALUE);
   }
 
-  protected void sendMathResultUp(double value){
-    result = value;
-  }
 }

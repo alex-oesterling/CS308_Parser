@@ -10,7 +10,6 @@ public class Quotient extends MathCommand {
    * @param divisor number to divide by; b
    */
   public Quotient(double dividend, double divisor){
-    super();
-    super.sendMathResultUp(dividend/divisor);
+    super(dividend/divisor);
   }
 }
