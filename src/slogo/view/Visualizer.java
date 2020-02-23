@@ -6,8 +6,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -21,9 +19,7 @@ import slogo.controller.Controller;
 import slogo.model.Parser;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.beans.EventHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -58,6 +54,7 @@ public class Visualizer implements ViewExternalAPI{
   File turtleFile;
   ImageView turtleImage;
   ResourceBundle myResources;
+  String language;
 
   public Visualizer (Parser parser){
     myParser = parser;
@@ -65,7 +62,7 @@ public class Visualizer implements ViewExternalAPI{
   }
 
   public Scene setupScene(){
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     root = new Group();
     turtleFile = getTurtleImage(new Stage());
     root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
@@ -143,7 +140,7 @@ public class Visualizer implements ViewExternalAPI{
     help.setLayoutX(XPOS_OFFSET);
     help.setLayoutY( 5 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT + MENUBUTTON_HEIGHT);
     help.setOnAction(e-> {
-      helpWindow = new HelpWindow();
+      helpWindow = new HelpWindow(language);
     });
     return help;
   }
@@ -160,11 +157,13 @@ public class Visualizer implements ViewExternalAPI{
             myResources.getString("Urdu")
     };
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
+    comboBox.setValue(myResources.getString("English"));
+    language = comboBox.getValue().toString();
     comboBox.setLayoutX(XPOS_OFFSET);
     comboBox.setLayoutY(4 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT);
     comboBox.setOnAction(event -> {
       //TODO: pass in value of combobox to some method to change the language
-      comboBox.getValue();
+      language = comboBox.getValue().toString();
     });
     return comboBox;
   }
