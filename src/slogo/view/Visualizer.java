@@ -3,8 +3,11 @@ package slogo.view;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -37,7 +40,8 @@ public class Visualizer implements ViewExternalAPI{
   Parser myParser;
   Controller myController;
   Group root;
-  TextField textBox;
+  CommandLine commandLine;
+
   Rectangle r;
   File turtleFile;
   ImageView turtleImage;
@@ -50,27 +54,23 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene(){
     root = new Group();
+    commandLine = new CommandLine(myController);
     turtleFile = getTurtleImage(new Stage());
-    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle());
+    root.getChildren().addAll(bundledUI());
     createBox();
     myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     return myScene;
   }
 
-  private Node setupCommandLine(){
-    HBox commandLine = new HBox();
-
-    textBox = new TextField();
-    textBox.setPromptText("Enter command:");
-    commandLine.getChildren().add(textBox);
-
-    //FIXME language labels/properties
-    Button run = new Button("Run");
-    run.setOnAction(e->submitCommand());
-    commandLine.getChildren().add(run);
-
-    return commandLine;
+  private Node bundledUI(){
+    VBox pane = new VBox();
+    pane.getChildren().add(createBox());
+    pane.getChildren().add(chooseTurtle());
+    pane.getChildren().add(commandLine.setupCommandLine());
+    return pane;
   }
+
+
 
     private Rectangle createBox() {
         r = new Rectangle(TURTLE_SCREEN_XPOS, TURTLE_SCREEN_YPOS, TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
@@ -92,11 +92,7 @@ public class Visualizer implements ViewExternalAPI{
       return turtleImage;
     }
 
-  private void submitCommand() {
-    if((textBox.getText() != null) && !textBox.getText().isEmpty()){
-      myController.setCommand(textBox.getText());
-    }
-  }
+
 
   private File getTurtleImage(Stage stage) {
       FileChooser fileChooser = new FileChooser();
