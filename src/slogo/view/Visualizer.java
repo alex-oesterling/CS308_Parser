@@ -49,6 +49,8 @@ public class Visualizer implements ViewExternalAPI{
   public Visualizer (Parser parser){
     myParser = parser;
     myController = new Controller(parser, this);
+    myController.addLanguage("English"); //FIXME set in view
+    myController.addLanguage("Syntax");
   }
 
 

@@ -38,7 +38,7 @@ public class CommandLine {
 
   private void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
-      myController.setCommand(textBox.getText());
+      myController.runCommand(textBox.getText());
       textBox.clear();
     }
   }
