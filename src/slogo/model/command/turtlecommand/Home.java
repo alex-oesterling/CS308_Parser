@@ -5,12 +5,10 @@ import slogo.model.Turtle;
 public class Home extends TurtleCommand {
 
   /**
-   * TurtleCommand constructor with an incoming Turtle
-   *
-   * @param body
+   * Sends the turtle back to the home positions
    */
   public Home(Turtle body) {
-    super(body);
-    super.sendHome();
+    super();
+    body.goHome();
   }
 }

@@ -9,8 +9,7 @@ public class GreaterThan extends BooleanCommand {
    * @param value2 b
    */
   public GreaterThan(double value1, double value2){
-    super();
-    super.changeBooleanResultToDouble(value1>value2);
+    super(value1>value2);
   }
 
   public static void main(String[] args) {

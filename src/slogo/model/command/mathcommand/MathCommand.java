@@ -2,9 +2,16 @@ package slogo.model.command.mathcommand;
 
 import slogo.model.command.Command;
 
-abstract public class MathCommand extends Command {
+public class MathCommand extends Command {
 
-  public MathCommand(){
+  private static final double MATH_DEFAULT_VALUE = 1;
 
+  public MathCommand(double returnValue) {
+    super(returnValue);
   }
+
+  public MathCommand() {
+    super(MATH_DEFAULT_VALUE);
+  }
+
 }
