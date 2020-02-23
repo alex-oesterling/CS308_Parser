@@ -9,7 +9,6 @@ public class Remainder extends MathCommand{
    * @param divisor
    */
   public Remainder(double dividend, double divisor){
-    super();
-    super.sendMathResultUp(dividend%divisor);
+    super(dividend%divisor);
   }
 }

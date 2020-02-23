@@ -10,7 +10,6 @@ public class Sum extends MathCommand {
    * @param addend2 b
    */
   public Sum(double addend1, double addend2){
-    super();
-    super.sendMathResultUp(addend1+addend2);
+    super(addend1+addend2);
   }
 }

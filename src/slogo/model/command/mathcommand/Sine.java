@@ -9,7 +9,6 @@ public class Sine extends MathCommand{
    * @param a value to take the sine of
    */
   public Sine(double a){
-    super();
-    super.sendMathResultUp(Math.sin(a));
+    super(Math.sin(a));
   }
 }
