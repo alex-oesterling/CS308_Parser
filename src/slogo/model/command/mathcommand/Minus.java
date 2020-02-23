@@ -4,12 +4,10 @@ public class Minus extends MathCommand {
 
   /**
    * Default Minus constructor, calls super constructor
-   * sets the value to return as a-b
-   * @param minuend a
-   * @param subtrahend b
+   * sets the value to return as -a
+   * @param value a
    */
-  public Minus(double minuend, double subtrahend){
-    super();
-    super.sendMathResultUp(minuend-subtrahend);
+  public Minus(double value){
+    super(-1*value);
   }
 }

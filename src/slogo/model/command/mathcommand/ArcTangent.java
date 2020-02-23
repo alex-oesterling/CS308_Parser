@@ -8,7 +8,6 @@ public class ArcTangent extends MathCommand {
    * @param a
    */
   public ArcTangent(double a){
-    super();
-    super.sendMathResultUp(Math.atan(a));
+    super(Math.atan(a));
   }
 }

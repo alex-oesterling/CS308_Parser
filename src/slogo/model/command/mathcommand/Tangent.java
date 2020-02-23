@@ -9,7 +9,6 @@ public class Tangent extends MathCommand {
    * @param a value to take the tangent of
    */
   public Tangent(double a){
-    super();
-    super.sendMathResultUp(Math.tan(a));
+    super(Math.tan(a));
   }
 }

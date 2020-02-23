@@ -7,7 +7,6 @@ public class Pi extends MathCommand{
    * and sets the result to be returned as pi
    */
   public Pi(){
-    super();
-    super.sendMathResultUp(Math.PI);
+    super(Math.PI);
   }
 }
