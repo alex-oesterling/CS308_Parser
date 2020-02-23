@@ -1,9 +1,13 @@
 package slogo.view;
 
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -11,8 +15,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
@@ -40,12 +42,16 @@ public class Visualizer implements ViewExternalAPI{
   public static final int TURTLE_HEIGHT = 40;
   public static final int TEXTBOX_WIDTH = 500;
   public static final int TEXTBOX_HEIGHT = 100;
+  public static final int COLORPICKER_HEIGHT = 30;
+  public static final int MENUBUTTON_HEIGHT = 30;
+  public static final int RECTANGLE_INDEX = 2;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
   Scene myScene;
   Parser myParser;
   Controller myController;
+  HelpWindow helpWindow;
   Group root;
   javafx.scene.control.TextArea textBox;
   Rectangle r;
@@ -62,7 +68,7 @@ public class Visualizer implements ViewExternalAPI{
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "English");
     root = new Group();
     turtleFile = getTurtleImage(new Stage());
-    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor());
+    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
     createBox();
     myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     return myScene;
@@ -100,10 +106,12 @@ public class Visualizer implements ViewExternalAPI{
     ColorPicker colorPicker = new ColorPicker();
     colorPicker.setLayoutX( XPOS_OFFSET);
     colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
+    colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> {
       root.getChildren().remove(r);
+      Color c = colorPicker.getValue();
       r.setFill(colorPicker.getValue());
-      root.getChildren().add(r);
+      root.getChildren().add(RECTANGLE_INDEX,r);
     });
     return colorPicker;
   }
@@ -128,6 +136,37 @@ public class Visualizer implements ViewExternalAPI{
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
       myController.setCommand(textBox.getText());
     }
+  }
+
+  private Button help(){
+    Button help = new Button(myResources.getString("HelpCommand"));
+    help.setLayoutX(XPOS_OFFSET);
+    help.setLayoutY( 5 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT + MENUBUTTON_HEIGHT);
+    help.setOnAction(e-> {
+      helpWindow = new HelpWindow();
+    });
+    return help;
+  }
+
+  private ComboBox languageSelect(){
+    String languages[] = { myResources.getString("English"),
+            myResources.getString("Chinese"),
+            myResources.getString("French"),
+            myResources.getString("German"),
+            myResources.getString("Italian"),
+            myResources.getString("Portuguese"),
+            myResources.getString("Spanish"),
+            myResources.getString("Russian"),
+            myResources.getString("Urdu")
+    };
+    ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
+    comboBox.setLayoutX(XPOS_OFFSET);
+    comboBox.setLayoutY(4 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT);
+    comboBox.setOnAction(event -> {
+      //TODO: pass in value of combobox to some method to change the language
+      comboBox.getValue();
+    });
+    return comboBox;
   }
 
   private File getTurtleImage(Stage stage) {
