@@ -8,6 +8,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -49,7 +51,9 @@ public class Visualizer implements ViewExternalAPI{
   Controller myController;
   HelpWindow helpWindow;
   Group root;
+
   javafx.scene.control.TextArea textBox;
+
   Rectangle r;
   File turtleFile;
   ImageView turtleImage;
@@ -59,12 +63,15 @@ public class Visualizer implements ViewExternalAPI{
   public Visualizer (Parser parser){
     myParser = parser;
     myController = new Controller(parser, this);
+    myController.addLanguage("English"); //FIXME set in view
+    myController.addLanguage("Syntax");
   }
 
   public Scene setupScene(){
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     root = new Group();
     turtleFile = getTurtleImage(new Stage());
+
     root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
     createBox();
     myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
@@ -86,9 +93,22 @@ public class Visualizer implements ViewExternalAPI{
     run.setOnAction(e->submitCommand());
     commandLine.getChildren().add(run);
 
+    Button clear = new Button(myResources.getString("ClearCommand"));
+    clear.setOnAction(e->{
+      textBox.clear();
+    });
+    commandLine.getChildren().add(clear);
+
     commandLine.setLayoutX(XPOS_OFFSET);
     commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
     return commandLine;
+  }
+
+  private void submitCommand() {
+    if((textBox.getText() != null) && !textBox.getText().isEmpty()){
+      myController.runCommand(textBox.getText());
+      textBox.clear();
+    }
   }
 
   private Rectangle createBox() {
@@ -129,11 +149,7 @@ public class Visualizer implements ViewExternalAPI{
     return turtleImage;
   }
 
-  private void submitCommand() {
-    if((textBox.getText() != null) && !textBox.getText().isEmpty()){
-      myController.setCommand(textBox.getText());
-    }
-  }
+
 
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));
