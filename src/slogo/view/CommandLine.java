@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.util.ResourceBundle;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -8,10 +9,18 @@ import slogo.controller.Controller;
 import slogo.model.Parser;
 
 public class CommandLine {
+  public static final int TEXTBOX_WIDTH = 500;
+  public static final int TEXTBOX_HEIGHT = 100;
+
+  public static final String RESOURCE = "resources.languages";
+  public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
+
   private Controller myController;
-  TextArea textBox;
+  private ResourceBundle myResources;
+  private TextArea textBox;
 
   public CommandLine(Controller controller){
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     myController = controller;
   }
 
@@ -19,6 +28,11 @@ public class CommandLine {
     HBox commandLine = new HBox();
 
     textBox = new TextArea();
+    textBox.setEditable(true);
+    textBox.wrapTextProperty();
+    textBox.setMaxWidth(TEXTBOX_WIDTH);
+    textBox.setMaxHeight(TEXTBOX_HEIGHT);
+    textBox.setPromptText(myResources.getString("TextBoxFiller"));
     textBox.setPromptText("Enter command:");
     commandLine.getChildren().add(textBox);
 
@@ -32,6 +46,9 @@ public class CommandLine {
       textBox.clear();
     });
     commandLine.getChildren().add(clear);
+
+//    commandLine.setLayoutX(XPOS_OFFSET);
+//    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
 
     return commandLine;
   }

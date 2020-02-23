@@ -17,7 +17,7 @@ import slogo.model.command.Command;
 import slogo.view.Visualizer;
 
 public class Controller {
-    private static final String RESOURCES_PACKAGE = ".resources.languages.";
+    private static final String RESOURCES_PACKAGE = "resources.languages.";
     private static final String COMMAND_PACKAGE = "slogo.model.command";
     public static final String WHITESPACE = "\\s+";
 

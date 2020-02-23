@@ -4,12 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-<<<<<<< HEAD
-import javafx.scene.control.TextArea;
-=======
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
->>>>>>> master
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -57,7 +53,6 @@ public class Visualizer implements ViewExternalAPI{
   Group root;
 
   javafx.scene.control.TextArea textBox;
-  CommandLine commandLine;
 
   Rectangle r;
   File turtleFile;
@@ -75,34 +70,46 @@ public class Visualizer implements ViewExternalAPI{
   public Scene setupScene(){
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     root = new Group();
-    commandLine = new CommandLine(myController);
     turtleFile = getTurtleImage(new Stage());
 
-    root.getChildren().addAll(commandLine.setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
+    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
     createBox();
     myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     return myScene;
   }
 
-//  private Node setupCommandLine(){
-//    HBox commandLine = new HBox();
-//
-//    textBox = new javafx.scene.control.TextArea();
-//    textBox.setEditable(true);
-//    textBox.wrapTextProperty();
-//    textBox.setMaxWidth(TEXTBOX_WIDTH);
-//    textBox.setMaxHeight(TEXTBOX_HEIGHT);
-//    textBox.setPromptText(myResources.getString("TextBoxFiller"));
-//    commandLine.getChildren().add(textBox);
-//
-//    Button run = new Button(myResources.getString("RunCommand"));
-//    run.setOnAction(e->submitCommand());
-//    commandLine.getChildren().add(run);
-//
-//    commandLine.setLayoutX(XPOS_OFFSET);
-//    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
-//    return commandLine;
-//  }
+  private Node setupCommandLine(){
+    HBox commandLine = new HBox();
+
+    textBox = new javafx.scene.control.TextArea();
+    textBox.setEditable(true);
+    textBox.wrapTextProperty();
+    textBox.setMaxWidth(TEXTBOX_WIDTH);
+    textBox.setMaxHeight(TEXTBOX_HEIGHT);
+    textBox.setPromptText(myResources.getString("TextBoxFiller"));
+    commandLine.getChildren().add(textBox);
+
+    Button run = new Button(myResources.getString("RunCommand"));
+    run.setOnAction(e->submitCommand());
+    commandLine.getChildren().add(run);
+
+    Button clear = new Button(myResources.getString("ClearCommand"));
+    clear.setOnAction(e->{
+      textBox.clear();
+    });
+    commandLine.getChildren().add(clear);
+
+    commandLine.setLayoutX(XPOS_OFFSET);
+    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
+    return commandLine;
+  }
+
+  private void submitCommand() {
+    if((textBox.getText() != null) && !textBox.getText().isEmpty()){
+      myController.runCommand(textBox.getText());
+      textBox.clear();
+    }
+  }
 
   private Rectangle createBox() {
     r = new Rectangle(XPOS_OFFSET, YPOS_OFFSET, TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
