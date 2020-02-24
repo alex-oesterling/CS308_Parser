@@ -3,7 +3,7 @@ package slogo.model.command.turtlecommand.querycommand;
 import slogo.model.Turtle;
 import slogo.model.command.Command;
 
-public class YCoordinate extends QueryCommand {
+public class YCoordinate extends Command {
 
     /**
      * Takes in a turtle, and returns the y coordinate of that turtle
