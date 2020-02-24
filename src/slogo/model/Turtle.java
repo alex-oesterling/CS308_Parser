@@ -20,9 +20,9 @@ public class Turtle{
   private double homeY;
   //define heading as the degrees clockwise from North
   private double heading;
-  private boolean turtleIsDrawing;
+  private double turtleIsDrawing;
   private String penColorName;
-  private boolean turtleIsVisible;
+  private double turtleIsVisible;
 
   /**
    * Turtle constructor to create turtle at a specific point
@@ -39,7 +39,8 @@ public class Turtle{
     homeY = yPosition;
     heading = startingHeading;
     penColorName = penColor;
-    turtleIsDrawing = true;
+    turtleIsDrawing = 1;
+    turtleIsVisible = 1;
   }
 
   /**
@@ -205,15 +206,16 @@ public class Turtle{
    * Set the pen as up or down
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
-  public void setDrawing(boolean penStatus){
+  public double setDrawing(double penStatus){
     turtleIsDrawing = penStatus;
+    return penStatus;
   }
 
   /**
    * Return the drawing capabilities of the turtle
    * @return pen status
    */
-  public boolean getDrawingStatus(){
+  public double getDrawingStatus(){
     return turtleIsDrawing;
   }
 
@@ -221,15 +223,16 @@ public class Turtle{
    * Set the visibility of the turtle
    * @param visibility true if the turtle can be seen, false otherwise
    */
-  public void setVisibility(boolean visibility){
+  public double setVisibility(double visibility){
     turtleIsVisible = visibility;
+    return visibility;
   }
 
   /**
    * Tell the view if the turtle should be shown or not
    * @return turtleIsVisible
    */
-  public boolean isTurtleVisible(){
+  public double isTurtleVisible(){
     return turtleIsVisible;
   }
 }
