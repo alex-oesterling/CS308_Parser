@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -43,7 +44,7 @@ public class Visualizer implements ViewExternalAPI{
   public static final int TEXTBOX_HEIGHT = 100;
   public static final int COLORPICKER_HEIGHT = 30;
   public static final int MENUBUTTON_HEIGHT = 30;
-  public static final int RECTANGLE_INDEX = 2;
+  public static final int RECTANGLE_INDEX = 1;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
@@ -52,9 +53,6 @@ public class Visualizer implements ViewExternalAPI{
   Controller myController;
   HelpWindow helpWindow;
   Group root;
-
-  javafx.scene.control.TextArea textBox;
-
   Rectangle r;
   File turtleFile;
   ImageView turtleImage;
@@ -69,50 +67,13 @@ public class Visualizer implements ViewExternalAPI{
   }
 
   public Scene setupScene(){
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
+    turtleFile = getTurtleImage(new Stage());
     CommandLine commandLine = new CommandLine(myController);
     root = new Group();
-    turtleFile = getTurtleImage(new Stage());
-
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     root.getChildren().addAll(commandLine.setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
-    createBox();
     myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     return myScene;
-  }
-
-  private Node setupCommandLine(){
-    ScrollPane terminal = new ScrollPane();
-//    terminal.setPrefSize(216, 400);
-    HBox commandLine = new HBox();
-
-    textBox = new javafx.scene.control.TextArea();
-    textBox.setEditable(true);
-    textBox.wrapTextProperty();
-    textBox.setMaxWidth(TEXTBOX_WIDTH);
-    textBox.setMaxHeight(TEXTBOX_HEIGHT);
-    textBox.setPromptText(myResources.getString("TextBoxFiller"));
-    commandLine.getChildren().add(textBox);
-
-    Button run = new Button(myResources.getString("RunCommand"));
-    run.setOnAction(e->submitCommand());
-    commandLine.getChildren().add(run);
-
-    Button clear = new Button(myResources.getString("ClearCommand"));
-    clear.setOnAction(e->{
-      textBox.clear();
-    });
-    commandLine.getChildren().add(clear);
-
-    commandLine.setLayoutX(2* XPOS_OFFSET + TURTLE_SCREEN_WIDTH);
-    commandLine.setLayoutY(YPOS_OFFSET);
-    return commandLine;
-  }
-
-  private void submitCommand() {
-    if((textBox.getText() != null) && !textBox.getText().isEmpty()){
-      myController.runCommand(textBox.getText());
-      textBox.clear();
-    }
   }
 
   private Rectangle createBox() {
@@ -130,7 +91,6 @@ public class Visualizer implements ViewExternalAPI{
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> {
       root.getChildren().remove(r);
-      Color c = colorPicker.getValue();
       r.setFill(colorPicker.getValue());
       root.getChildren().add(RECTANGLE_INDEX,r);
     });
@@ -152,8 +112,6 @@ public class Visualizer implements ViewExternalAPI{
     }
     return turtleImage;
   }
-
-
 
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));

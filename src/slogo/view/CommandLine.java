@@ -24,9 +24,6 @@ public class CommandLine {
   public static final int YPOS_OFFSET = 10;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final String INVALID_COMMAND = "Invalid command: ";
-
-
-
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
