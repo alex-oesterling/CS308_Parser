@@ -1,8 +1,9 @@
 package slogo.model.command.turtlecommand;
 
 import slogo.model.Turtle;
+import slogo.model.command.Command;
 
-public class Left extends TurtleCommand {
+public class Left extends Command {
 
     private double left;
 
