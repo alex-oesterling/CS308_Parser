@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Cosine extends MathCommand {
+import slogo.model.command.Command;
+
+public class Cosine extends Command {
 
   /**
    * Default Cosine constructor, calls super constructor

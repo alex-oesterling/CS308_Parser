@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Minus extends MathCommand {
+import slogo.model.command.Command;
+
+public class Minus extends Command {
 
   /**
    * Default Minus constructor, calls super constructor

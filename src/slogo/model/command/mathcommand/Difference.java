@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Difference extends MathCommand {
+import slogo.model.command.Command;
+
+public class Difference extends Command {
 
   /**
    * Default constructor that calls the super constructor
