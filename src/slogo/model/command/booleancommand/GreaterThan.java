@@ -1,6 +1,8 @@
 package slogo.model.command.booleancommand;
 
-public class GreaterThan extends BooleanCommand {
+import slogo.model.command.Command;
+
+public class GreaterThan extends Command {
 
   /**
    * GreaterThan constructor for checking a>b
