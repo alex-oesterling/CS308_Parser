@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Sine extends MathCommand{
+import slogo.model.command.Command;
+
+public class Sine extends Command {
 
   /**
    * Default Sine constructor, calls super constuctor

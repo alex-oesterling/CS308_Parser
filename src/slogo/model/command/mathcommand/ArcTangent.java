@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class ArcTangent extends MathCommand {
+import slogo.model.command.Command;
+
+public class ArcTangent extends Command {
 
   /**
    * Default constructor for ArcTangent

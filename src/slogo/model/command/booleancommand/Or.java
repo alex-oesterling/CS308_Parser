@@ -1,6 +1,8 @@
 package slogo.model.command.booleancommand;
 
-public class Or extends BooleanCommand {
+import slogo.model.command.Command;
+
+public class Or extends Command {
 
   /**
    * Or constructors, checks for value of a||b,

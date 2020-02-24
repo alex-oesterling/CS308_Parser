@@ -1,6 +1,8 @@
 package slogo.model.command.booleancommand;
 
-public class NotEqual extends BooleanCommand{
+import slogo.model.command.Command;
+
+public class NotEqual extends Command {
 
   /**
    * NotEqual constructor using doubles, call super constructor and update result

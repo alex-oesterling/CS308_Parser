@@ -5,12 +5,16 @@ public class Turtle{
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 90;
+  private static final double VISIBLE = 1;
+  private static final double INVISIBLE = 0;
   private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
   private static final int QUAD4_ENDS = 360;
   private static final String DEFAULT_PEN_COLOR = "BLACK";
+  private static final double DRAWING = 1.0;
+  private static final double NOT_DRAWING = 0.0;
 
   private double xPosition;
   private double yPosition;
@@ -18,9 +22,9 @@ public class Turtle{
   private double homeY;
   //define heading as the degrees clockwise from North
   private double heading;
-  private boolean turtleIsDrawing;
+  private double turtleIsDrawing;
   private String penColorName;
-  private boolean turtleIsVisible;
+  private double turtleIsVisible;
 
   /**
    * Turtle constructor to create turtle at a specific point
@@ -37,7 +41,8 @@ public class Turtle{
     homeY = yPosition;
     heading = startingHeading;
     penColorName = penColor;
-    turtleIsDrawing = true;
+    turtleIsDrawing = 1;
+    turtleIsVisible = 1;
   }
 
   /**
@@ -147,20 +152,25 @@ public class Turtle{
    * Change the heading of the turtle, and make sure
    * that it's within 0 and 360 degrees
    * @param deltaTheta value to change by
+   * @return deltaTheta change in heading
    */
-  public void turn(double deltaTheta){
+  public double turn(double deltaTheta){
     heading+=deltaTheta;
     makeHeadingValid();
+    return deltaTheta;
   }
 
   /**
    * Set heading to a given value, and make it valid
    * (between 0 and 360)
    * @param theta new heading
+   * @return difference between the two headings
    */
-  public void setHeading(double theta){
+  public double setHeadingAndGetDeltaTheta(double theta){
+    double oldHeading = heading;
     heading = theta;
     makeHeadingValid();
+    return Math.min(Math.abs(oldHeading-heading), QUAD4_ENDS-oldHeading+heading);
   }
 
   private void makeHeadingValid() {
@@ -173,13 +183,8 @@ public class Turtle{
   /**
    * put the turtle back where it started
    */
-  public void goHome(){
-    moveTo(homeX, homeY);
-  }
-
-  private void moveTo(double newXPos, double newYPos){
-    xPosition = newXPos;
-    yPosition = newYPos;
+  public double goHome(){
+    return moveToPosition(homeX, homeY);
   }
 
   /**
@@ -189,11 +194,12 @@ public class Turtle{
    * @param newYPos new Y position
    * @return distance travelled by turtle
    */
-  public double setPosition(double newXPos, double newYPos){
+  public double moveToPosition(double newXPos, double newYPos){
     double deltaX = xPosition - newXPos;
-    double deltaY = yPosition = newYPos;
+    double deltaY = yPosition - newYPos;
 
-    moveTo(newXPos, newYPos);
+    xPosition = newXPos;
+    yPosition = newYPos;
 
     return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
   }
@@ -202,15 +208,19 @@ public class Turtle{
    * Set the pen as up or down
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
-  public void setDrawing(boolean penStatus){
-    turtleIsDrawing = penStatus;
+  public void setDrawing(double penStatus){
+    if(penStatus!=0.0){
+      turtleIsDrawing = DRAWING;
+    } else {
+      turtleIsDrawing = NOT_DRAWING;
+    }
   }
 
   /**
    * Return the drawing capabilities of the turtle
    * @return pen status
    */
-  public boolean getDrawingStatus(){
+  public double getDrawingStatus(){
     return turtleIsDrawing;
   }
 
@@ -218,15 +228,56 @@ public class Turtle{
    * Set the visibility of the turtle
    * @param visibility true if the turtle can be seen, false otherwise
    */
-  public void setVisibility(boolean visibility){
-    turtleIsVisible = visibility;
+  public void setVisibility(double visibility){
+    if(visibility!=0.0){
+      turtleIsVisible = VISIBLE;
+    } else {
+      turtleIsVisible = INVISIBLE;
+    }
   }
 
   /**
    * Tell the view if the turtle should be shown or not
    * @return turtleIsVisible
    */
-  public boolean isTurtleVisible(){
+  public double isTurtleVisible(){
     return turtleIsVisible;
   }
+
+  /**
+   * Return the heading of the current turtle in degrees (as a double)
+   * @return  heading, in degrees
+   */
+  public double getHeading(){ return heading; }
+
+  /**
+   * Turns the turtle to face the point (x,y)
+   * @param xPos the x position to set the turtle to
+   * @param yPos the y position to set the turtle to
+   * @return the degrees turned
+   */
+  public double pointTowards(double xPos, double yPos){
+    double theta = Math.atan(xPos/yPos); //value within quadrant; good for quadrants I and III
+
+    if((xPos < 0) != (yPos < 0)){
+      theta = Math.atan(yPos/xPos); //value within quadrants II and IV
+    }
+
+    //in quadrant ii
+    if(xPos > 0 && yPos < 0){
+      theta += QUAD2_BEGINS;
+    }
+    //in quadrant iii
+    else if (xPos < 0 && yPos < 0){
+      theta += QUAD3_BEGINS;
+    }
+    //in quadrant iv
+    else if(xPos < 0 && yPos > 0){
+      theta += QUAD4_BEGINS;
+    }
+
+    return setHeadingAndGetDeltaTheta(theta);
+  }
 }
+
+

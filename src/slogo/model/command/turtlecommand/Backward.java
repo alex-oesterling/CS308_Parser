@@ -1,8 +1,9 @@
 package slogo.model.command.turtlecommand;
 
 import slogo.model.Turtle;
+import slogo.model.command.Command;
 
-public class Backward extends TurtleCommand {
+public class Backward extends Command {
 
     private double back;
 
