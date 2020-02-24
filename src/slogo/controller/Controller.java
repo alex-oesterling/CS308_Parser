@@ -122,7 +122,7 @@ public class Controller {
         sLogoCommands.putIfAbsent("Backward", resourceBundle.getString("Backward"));
         numberOfArgsNeeded.putIfAbsent("Backward", TURTLE_AND_ONE_DOUBLE);*/
 
-        sLogoCommands = new Map<String, String>;
+        sLogoCommands = new HashMap<String, String>();
         Set<String> keys = resourceBundle.keySet();
         for(String key : keys){
             sLogoCommands.putIfAbsent(key, resourceBundle.getString(key));
