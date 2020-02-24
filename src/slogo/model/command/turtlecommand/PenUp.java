@@ -12,6 +12,7 @@ public class PenUp extends Command {
      * @param body the current turtle that will have its pen set up and not drawing
      */
     public PenUp(Turtle body){
-        super(body.setDrawing(NOT_DRAWING));
+        super(NOT_DRAWING);
+        body.setDrawing(NOT_DRAWING);
     }
 }

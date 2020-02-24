@@ -1,6 +1,8 @@
 package slogo.model.command.booleancommand;
 
-public class And extends BooleanCommand {
+import slogo.model.command.Command;
+
+public class And extends Command {
 
   /**
    * constructor of and logic
