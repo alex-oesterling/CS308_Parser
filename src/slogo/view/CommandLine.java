@@ -30,13 +30,8 @@ public class CommandLine {
   public static final int TEXTBOX_WIDTH = 200;
   public static final int TEXTBOX_HEIGHT = 100;
   public static final int BUTTON_WIDTH = 50;
-  public static final int XPOS_OFFSET = 10;
-  public static final int YPOS_OFFSET = 10;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final String INVALID_COMMAND = "Invalid command: ";
-
-
-
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
@@ -56,10 +51,8 @@ public class CommandLine {
   public Node setupCommandLine(){
     VBox commandLine = new VBox();
     ScrollPane terminal = new ScrollPane();
-    VBox historyBox = new VBox();
     terminal.setContent(historyBox);
     terminal.setPrefSize(TEXTBOX_WIDTH,TURTLE_SCREEN_HEIGHT-TEXTBOX_HEIGHT);
-//    terminal.setMaxWidth(TEXTBOX_WIDTH*2);
 
     historyBox.heightProperty().addListener((obs, old, newValue) -> terminal.setVvalue((Double)newValue));
     HBox userControls = new HBox();
@@ -68,32 +61,30 @@ public class CommandLine {
     textBox.setEditable(true);
     textBox.wrapTextProperty();
 
-    textBox.setMaxWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
+    textBox.setPrefWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
     textBox.setMaxHeight(TEXTBOX_HEIGHT);
     textBox.setPromptText(myResources.getString("TextBoxFiller"));
+    userControls.setHgrow(textBox, Priority.ALWAYS);
     userControls.getChildren().add(textBox);
 
     VBox buttonBox = new VBox();
     Button run = new Button(myResources.getString("RunCommand"));
     run.setMinWidth(BUTTON_WIDTH);
     run.setOnAction(e->submitCommand());
+    run.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(run);
 
     Button clear = new Button(myResources.getString("ClearCommand"));
     clear.setOnAction(e->{
       textBox.clear();
     });
+    clear.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(clear);
-
-//    commandLine.setLayoutX(XPOS_OFFSET);
-//    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
 
     userControls.getChildren().add(buttonBox);
     commandLine.setVgrow(terminal, Priority.ALWAYS);
     commandLine.getChildren().add(terminal);
     commandLine.getChildren().add(userControls);
-//    commandLine.setLayoutX(2* XPOS_OFFSET+TURTLE_SCREEN_HEIGHT);
-//    commandLine.setLayoutY(YPOS_OFFSET);
 
     return commandLine;
   }
