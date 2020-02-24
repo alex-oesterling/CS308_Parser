@@ -1,12 +1,10 @@
 package slogo.controller;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.Command;
 import slogo.view.Visualizer;
@@ -15,11 +13,14 @@ public class Controller {
     private static final String RESOURCES_PACKAGE = "resources.languages.";
     private static final String COMMAND_PACKAGE = "slogo.model.command";
     public static final String WHITESPACE = "\\s+";
+    private static final Integer TURTLE_AND_ONE_DOUBLE = -1;
 
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<Command> commandStack;
+    private ResourceBundle resourceBundle;
     private Map<String, String> userCreatedCommands;
-    private Map<Command, Integer> numberOfArgsNeeded;
+    private Map<String, Integer> numberOfArgsNeeded;
+    private Map<String, String> sLogoCommands;
     Turtle turtle = new Turtle();
     Errors error = new Errors();
     Command myCommand;
@@ -30,7 +31,8 @@ public class Controller {
         mySymbols = new ArrayList<>();
         myCommand = command;
         commandStack = new Stack<>();
-
+        resourceBundle = ResourceBundle.getBundle(RESOURCES_PACKAGE);
+        makeCommandMap();
     }
 
     /**
@@ -107,20 +109,24 @@ public class Controller {
         return myCommand.getResult();
     }
 
-    /**
-     * Gets x position from Turtle class
-     * @return double
-     */
-    public double getXPosition(){
-        return turtle.getX();
-    }
+    private void makeCommandMap(){
+        /*sLogoCommands.putIfAbsent("Forward", resourceBundle.getString("Forward"));
+        numberOfArgsNeeded.putIfAbsent("Forward", TURTLE_AND_ONE_DOUBLE);
 
-    /**
-     * Gets y position from Turtle class
-     * @return double
-     */
-    public double getYPosition(){
-        return turtle.getY();
+        sLogoCommands.putIfAbsent("Backward", resourceBundle.getString("Backward"));
+        numberOfArgsNeeded.putIfAbsent("Backward", TURTLE_AND_ONE_DOUBLE);
+
+        sLogoCommands.putIfAbsent("Forward", resourceBundle.getString("Forward"));
+        numberOfArgsNeeded.putIfAbsent("Forward", TURTLE_AND_ONE_DOUBLE);
+
+        sLogoCommands.putIfAbsent("Backward", resourceBundle.getString("Backward"));
+        numberOfArgsNeeded.putIfAbsent("Backward", TURTLE_AND_ONE_DOUBLE);*/
+
+        sLogoCommands = new Map<String, String>;
+        Set<String> keys = resourceBundle.keySet();
+        for(String key : keys){
+            sLogoCommands.putIfAbsent(key, resourceBundle.getString(key));
+        }
     }
 
     /**
