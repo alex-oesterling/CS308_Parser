@@ -15,7 +15,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,7 +22,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Node;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
 import slogo.model.Parser;
@@ -38,20 +36,12 @@ public class Visualizer implements ViewExternalAPI{
 
   public static final String XML_FILEPATH = "user.dir";
   public static final Paint BACKGROUND = Color.AZURE;
-  public static final int SIZE_WIDTH = 1000;
-  public static final int SIZE_HEIGHT = 800;
-  public static final int XPOS_OFFSET = 10;
-  public static final int YPOS_OFFSET = 10;
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
   public static final int TURTLE_WIDTH = 50;
   public static final int TURTLE_HEIGHT = 40;
-  public static final int TEXTBOX_WIDTH = 500;
-  public static final int TEXTBOX_HEIGHT = 100;
   public static final int COLORPICKER_HEIGHT = 30;
-  public static final int MENUBUTTON_HEIGHT = 30;
-  public static final int RECTANGLE_INDEX = 2;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
@@ -62,10 +52,7 @@ public class Visualizer implements ViewExternalAPI{
   BorderPane root;
   Group view;
 
-  javafx.scene.control.TextArea textBox;
-
   Rectangle turtleArea;
-  File turtleFile;
   List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
   ResourceBundle myResources;
   String language;
@@ -80,7 +67,7 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-    turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
+//    turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
     root = createView();
     myScene = new Scene(root);
     return myScene;
@@ -142,7 +129,7 @@ public class Visualizer implements ViewExternalAPI{
   private ImageView chooseTurtle() {
     ImageView turtleImage = new ImageView();
     try {
-      BufferedImage bufferedImage = ImageIO.read(turtleFile);
+      BufferedImage bufferedImage = ImageIO.read(getTurtleImage(new Stage()));
       Image image = SwingFXUtils.toFXImage(bufferedImage, null);
       turtleImage.setImage(image);
       turtleImage.setFitWidth(TURTLE_WIDTH);
