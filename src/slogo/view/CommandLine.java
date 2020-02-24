@@ -3,6 +3,8 @@ package slogo.view;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -45,7 +47,6 @@ public class CommandLine {
     ScrollPane terminal = new ScrollPane();
     terminal.setContent(historyBox);
     terminal.setPrefSize(TEXTBOX_WIDTH,TURTLE_SCREEN_HEIGHT);
-    historyBox.heightProperty().addListener((obs, old, newValue) -> terminal.setVvalue((Double)newValue));
     HBox userControls = new HBox();
 
     textBox = new javafx.scene.control.TextArea();
@@ -59,20 +60,21 @@ public class CommandLine {
     VBox buttonBox = new VBox();
     Button run = new Button(myResources.getString("RunCommand"));
     run.setMinWidth(BUTTON_WIDTH);
-    run.setOnAction(e->submitCommand());
+    run.setOnAction(e-> {
+      submitCommand();
+      textBox.clear();
+    });
     buttonBox.getChildren().add(run);
 
     Button clear = new Button(myResources.getString("ClearCommand"));
-    clear.setOnAction(e->{
-      textBox.clear();
-    });
+    clear.setOnAction(e->textBox.clear());
     clear.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(clear);
 
     userControls.getChildren().add(buttonBox);
     commandLine.setTop(terminal);
     commandLine.setBottom(userControls);
-    commandLine.setLayoutX(2* XPOS_OFFSET+TURTLE_SCREEN_HEIGHT);
+    commandLine.setLayoutX(2 * XPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
     commandLine.setLayoutY(YPOS_OFFSET);
     return commandLine;
   }
