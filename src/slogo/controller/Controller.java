@@ -82,7 +82,7 @@ public class Controller {
                     System.out.println(getSymbol(command));
                     Class commandClass = null;
                     try {
-                        commandClass = Class.forName(COMMAND_PACKAGE + command);
+                        commandClass = Class.forName(COMMAND_PACKAGE + ".turtlecommand."+ command);
                         commandStack.push((Command) (commandClass.getConstructor().newInstance()));
                     } catch (ClassNotFoundException | //FIXME generic error handling by alex. could make better possible but low priority
                         InstantiationException |

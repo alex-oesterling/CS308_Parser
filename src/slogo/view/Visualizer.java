@@ -1,13 +1,24 @@
 package slogo.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -48,70 +59,105 @@ public class Visualizer implements ViewExternalAPI{
   Controller myController;
   HelpWindow helpWindow;
   Group root;
-  Rectangle r;
+  Group view;
+
+  javafx.scene.control.TextArea textBox;
+
+  Rectangle turtleArea;
   File turtleFile;
-  ImageView turtleImage;
+  List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
   ResourceBundle myResources;
   String language;
 
   public Visualizer (Parser parser){
+    turtleImages = new ArrayList<ImageView>();
     myParser = parser;
     myController = new Controller(parser, this);
     myController.addLanguage("English"); //FIXME set in view
     myController.addLanguage("Syntax");
   }
 
-  public Scene setupScene(){
-    turtleFile = getTurtleImage(new Stage());
+  public Scene setupScene() {
+    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     CommandLine commandLine = new CommandLine(myController);
     root = new Group();
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-    root.getChildren().addAll(commandLine.setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
-    myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+    turtleFile = getTurtleImage(new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
+    myScene = new Scene(createView());
     return myScene;
   }
 
-  private Rectangle createBox() {
-    r = new Rectangle(XPOS_OFFSET, YPOS_OFFSET, TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
-    r.setFill(Color.WHITE);
-    r.setStroke(Color.BLACK);
-    r.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    return r;
+  private Pane createView(){
+    BorderPane viewPane = new BorderPane();
+    viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
+    viewPane.setPadding(new Insets(10, 10, 10, 10));
+    Node turtleView = createBox();
+    Node commandLine = new CommandLine(myController).setupCommandLine();
+    Node userInterface = createUI();
+
+    viewPane.setMargin(commandLine, new Insets(0, 10, 0, 10));
+
+    viewPane.setLeft(turtleView);
+    viewPane.setCenter(commandLine);
+    viewPane.setRight(userInterface);
+    return viewPane;
+  }
+
+
+  private Group createBox() {
+    view = new Group();
+    GridPane turtlePane = new GridPane();
+    turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
+    turtleArea.setFill(Color.WHITE);
+    turtleArea.setStroke(Color.BLACK);
+    turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
+    turtlePane.add(turtleArea, 0, 0);
+    turtlePane.setHgrow(turtleArea, Priority.ALWAYS);
+    turtlePane.setVgrow(turtleArea, Priority.ALWAYS);
+    view.getChildren().add(turtlePane);
+    view.getChildren().add(chooseTurtle());
+    return view;
+  }
+
+  private Node createUI() {
+    VBox ui = new VBox();
+    ui.setSpacing(10);
+    ui.getChildren().add(backgroundColor());
+    ui.getChildren().add(help());
+    ui.getChildren().add(languageSelect());
+    return ui;
   }
 
   private ColorPicker backgroundColor(){
     ColorPicker colorPicker = new ColorPicker();
-    colorPicker.setLayoutX(XPOS_OFFSET);
-    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> {
-      root.getChildren().remove(r);
-      r.setFill(colorPicker.getValue());
-      root.getChildren().add(RECTANGLE_INDEX,r);
+      root.getChildren().remove(turtleArea);
+      Color c = colorPicker.getValue();
+      turtleArea.setFill(colorPicker.getValue());
+      root.getChildren().add(RECTANGLE_INDEX,turtleArea);
     });
     return colorPicker;
   }
 
   private ImageView chooseTurtle() {
-    turtleImage = new ImageView();
+    ImageView turtleImage = new ImageView();
     try {
       BufferedImage bufferedImage = ImageIO.read(turtleFile);
       Image image = SwingFXUtils.toFXImage(bufferedImage, null);
       turtleImage.setImage(image);
       turtleImage.setFitWidth(TURTLE_WIDTH);
       turtleImage.setFitHeight(TURTLE_HEIGHT);
-      turtleImage.setX((XPOS_OFFSET + TURTLE_SCREEN_WIDTH) / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
-      turtleImage.setY((YPOS_OFFSET + TURTLE_SCREEN_HEIGHT) / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
+      turtleImage.setX(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
+      turtleImage.setY(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
     } catch (IOException e) {
-        //add errors here
+        //FIXME add errors here
     }
+    turtleImages.add(turtleImage);
     return turtleImage;
   }
 
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));
-    help.setLayoutX(XPOS_OFFSET);
-    help.setLayoutY( 5 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT + MENUBUTTON_HEIGHT);
     help.setOnAction(e-> {
       helpWindow = new HelpWindow(language);
     });
@@ -132,8 +178,6 @@ public class Visualizer implements ViewExternalAPI{
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
-    comboBox.setLayoutX(XPOS_OFFSET);
-    comboBox.setLayoutY(4 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT);
     comboBox.setOnAction(event -> {
       //TODO: pass in value of combobox to some method to change the language
       language = comboBox.getValue().toString();
