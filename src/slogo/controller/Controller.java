@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import slogo.exceptions.InvalidCommandException;
 import slogo.model.Turtle;
 import slogo.model.command.Command;
 import slogo.view.Visualizer;
@@ -81,20 +82,15 @@ public class Controller {
                     System.out.println(getSymbol(command));
                     Class commandClass = null;
                     try {
-                        commandClass = Class.forName(COMMAND_PACKAGE + command);
+                        commandClass = Class.forName(COMMAND_PACKAGE + ".turtlecommand."+ command);
                         commandStack.push((Command) (commandClass.getConstructor().newInstance()));
-                    } catch (ClassNotFoundException e) {
-                        System.out.println("Error: Invalid Command");
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                    } catch (ClassNotFoundException | //FIXME generic error handling by alex. could make better possible but low priority
+                        InstantiationException |
+                        InvocationTargetException |
+                        NoSuchMethodException |
+                        IllegalAccessException e) {
+                        throw new InvalidCommandException(e);
                     }
-                    //FIXME FAILURE CASE
                 }
             }
         }
@@ -110,18 +106,6 @@ public class Controller {
     }
 
     private void makeCommandMap(){
-        /*sLogoCommands.putIfAbsent("Forward", resourceBundle.getString("Forward"));
-        numberOfArgsNeeded.putIfAbsent("Forward", TURTLE_AND_ONE_DOUBLE);
-
-        sLogoCommands.putIfAbsent("Backward", resourceBundle.getString("Backward"));
-        numberOfArgsNeeded.putIfAbsent("Backward", TURTLE_AND_ONE_DOUBLE);
-
-        sLogoCommands.putIfAbsent("Forward", resourceBundle.getString("Forward"));
-        numberOfArgsNeeded.putIfAbsent("Forward", TURTLE_AND_ONE_DOUBLE);
-
-        sLogoCommands.putIfAbsent("Backward", resourceBundle.getString("Backward"));
-        numberOfArgsNeeded.putIfAbsent("Backward", TURTLE_AND_ONE_DOUBLE);*/
-
         sLogoCommands = new HashMap<String, String>();
         Set<String> keys = resourceBundle.keySet();
         for(String key : keys){
