@@ -37,20 +37,14 @@ public class Visualizer implements ViewExternalAPI{
 
   public static final String XML_FILEPATH = "user.dir";
   public static final Paint BACKGROUND = Color.AZURE;
-  public static final int SIZE_WIDTH = 1000;
-  public static final int SIZE_HEIGHT = 800;
-  public static final int XPOS_OFFSET = 10;
-  public static final int YPOS_OFFSET = 10;
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
   public static final int TURTLE_WIDTH = 50;
   public static final int TURTLE_HEIGHT = 40;
-  public static final int TEXTBOX_WIDTH = 500;
-  public static final int TEXTBOX_HEIGHT = 100;
   public static final int COLORPICKER_HEIGHT = 30;
-  public static final int MENUBUTTON_HEIGHT = 30;
-  public static final int RECTANGLE_INDEX = 1;
+  public static final int VIEWPANE_PADDING = 10;
+  public static final int VIEWPANE_MARGIN = 0;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
@@ -60,9 +54,7 @@ public class Visualizer implements ViewExternalAPI{
   HelpWindow helpWindow;
   Group root;
   Group view;
-
-  javafx.scene.control.TextArea textBox;
-
+  BorderPane viewPane;
   Rectangle turtleArea;
   File turtleFile;
   List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
@@ -70,7 +62,7 @@ public class Visualizer implements ViewExternalAPI{
   String language;
 
   public Visualizer (Parser parser){
-    turtleImages = new ArrayList<ImageView>();
+    turtleImages = new ArrayList<>();
     myParser = parser;
     myController = new Controller(parser, this);
     myController.addLanguage("English"); //FIXME set in view
@@ -79,7 +71,6 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-    CommandLine commandLine = new CommandLine(myController);
     root = new Group();
     turtleFile = getTurtleImage(new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
     myScene = new Scene(createView());
@@ -87,21 +78,18 @@ public class Visualizer implements ViewExternalAPI{
   }
 
   private Pane createView(){
-    BorderPane viewPane = new BorderPane();
+    viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
-    viewPane.setPadding(new Insets(10, 10, 10, 10));
+    viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
     Node turtleView = createBox();
     Node commandLine = new CommandLine(myController).setupCommandLine();
     Node userInterface = createUI();
-
-    viewPane.setMargin(commandLine, new Insets(0, 10, 0, 10));
-
+    viewPane.setMargin(commandLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setLeft(turtleView);
     viewPane.setCenter(commandLine);
     viewPane.setRight(userInterface);
     return viewPane;
   }
-
 
   private Group createBox() {
     view = new Group();
@@ -131,10 +119,7 @@ public class Visualizer implements ViewExternalAPI{
     ColorPicker colorPicker = new ColorPicker();
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> {
-      root.getChildren().remove(turtleArea);
-      Color c = colorPicker.getValue();
       turtleArea.setFill(colorPicker.getValue());
-      root.getChildren().add(RECTANGLE_INDEX,turtleArea);
     });
     return colorPicker;
   }
@@ -158,9 +143,7 @@ public class Visualizer implements ViewExternalAPI{
 
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));
-    help.setOnAction(e-> {
-      helpWindow = new HelpWindow(language);
-    });
+    help.setOnAction(e-> helpWindow = new HelpWindow(language));
     return help;
   }
 

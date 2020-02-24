@@ -20,8 +20,6 @@ public class CommandLine {
   public static final int TEXTBOX_WIDTH = 200;
   public static final int TEXTBOX_HEIGHT = 100;
   public static final int BUTTON_WIDTH = 50;
-  public static final int XPOS_OFFSET = 10;
-  public static final int YPOS_OFFSET = 10;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final String INVALID_COMMAND = "Invalid command: ";
   public static final String RESOURCE = "resources.languages";
