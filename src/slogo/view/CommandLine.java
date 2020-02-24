@@ -5,8 +5,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
 import slogo.controller.Controller;
-import slogo.model.Parser;
+
 
 public class CommandLine {
   public static final int TEXTBOX_WIDTH = 500;
@@ -25,16 +29,30 @@ public class CommandLine {
   }
 
   public Node setupCommandLine(){
-    HBox commandLine = new HBox();
+    VBox commandLine = new VBox();
+    ScrollPane terminal = new ScrollPane();
+    terminal.setContent(historyBox);
+    terminal.setPrefSize(TEXTBOX_WIDTH,TURTLE_SCREEN_HEIGHT-TEXTBOX_HEIGHT);
+//    terminal.setMaxWidth(TEXTBOX_WIDTH*2);
+    historyBox.heightProperty().addListener((obs, old, newValue) -> terminal.setVvalue((Double)newValue));
+    HBox userControls = new HBox();
 
     textBox = new TextArea();
     textBox.setEditable(true);
     textBox.wrapTextProperty();
+<<<<<<< Updated upstream
     textBox.setMaxWidth(TEXTBOX_WIDTH);
     textBox.setMaxHeight(TEXTBOX_HEIGHT);
     textBox.setPromptText(myResources.getString("TextBoxFiller"));
     textBox.setPromptText("Enter command:");
     commandLine.getChildren().add(textBox);
+=======
+    textBox.setPrefWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
+    textBox.setMaxHeight(TEXTBOX_HEIGHT);
+    textBox.setPromptText(myResources.getString("TextBoxFiller"));
+    userControls.setHgrow(textBox, Priority.ALWAYS);
+    userControls.getChildren().add(textBox);
+>>>>>>> Stashed changes
 
     //FIXME language labels/properties
     Button run = new Button("Run");
@@ -50,6 +68,15 @@ public class CommandLine {
 //    commandLine.setLayoutX(XPOS_OFFSET);
 //    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
 
+<<<<<<< Updated upstream
+=======
+    userControls.getChildren().add(buttonBox);
+    commandLine.setVgrow(terminal, Priority.ALWAYS);
+    commandLine.getChildren().add(terminal);
+    commandLine.getChildren().add(userControls);
+//    commandLine.setLayoutX(2* XPOS_OFFSET+TURTLE_SCREEN_HEIGHT);
+//    commandLine.setLayoutY(YPOS_OFFSET);
+>>>>>>> Stashed changes
     return commandLine;
   }
 

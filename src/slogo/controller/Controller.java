@@ -81,7 +81,7 @@ public class Controller {
                     System.out.println(getSymbol(command));
                     Class commandClass = null;
                     try {
-                        commandClass = Class.forName(COMMAND_PACKAGE + command);
+                        commandClass = Class.forName(COMMAND_PACKAGE + ".turtlecommand."+ command);
                         commandStack.push((Command) (commandClass.getConstructor().newInstance()));
                     } catch (ClassNotFoundException e) {
                         System.out.println("Error: Invalid Command");
