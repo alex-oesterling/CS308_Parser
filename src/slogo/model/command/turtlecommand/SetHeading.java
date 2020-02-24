@@ -12,6 +12,6 @@ public class SetHeading extends Command {
      * @param value the value/angle that the value will turn to
      */
     public SetHeading(Turtle body, double value){
-        super(body.setHeading(value));
+        super(body.setHeadingAndGetDeltaTheta(value));
     }
 }

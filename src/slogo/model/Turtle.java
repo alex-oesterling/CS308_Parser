@@ -5,12 +5,16 @@ public class Turtle{
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 90;
+  private static final double VISIBLE = 1;
+  private static final double INVISIBLE = 0;
   private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
   private static final int QUAD4_ENDS = 360;
   private static final String DEFAULT_PEN_COLOR = "BLACK";
+  private static final double DRAWING = 1.0;
+  private static final double NOT_DRAWING = 0.0;
 
   private double xPosition;
   private double yPosition;
@@ -162,7 +166,7 @@ public class Turtle{
    * @param theta new heading
    * @return difference between the two headings
    */
-  public double setHeading(double theta){
+  public double setHeadingAndGetDeltaTheta(double theta){
     double oldHeading = heading;
     heading = theta;
     makeHeadingValid();
@@ -204,9 +208,12 @@ public class Turtle{
    * Set the pen as up or down
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
-  public double setDrawing(double penStatus){
-    turtleIsDrawing = penStatus;
-    return penStatus;
+  public void setDrawing(double penStatus){
+    if(penStatus!=0.0){
+      turtleIsDrawing = DRAWING;
+    } else {
+      turtleIsDrawing = NOT_DRAWING;
+    }
   }
 
   /**
@@ -221,9 +228,12 @@ public class Turtle{
    * Set the visibility of the turtle
    * @param visibility true if the turtle can be seen, false otherwise
    */
-  public double setVisibility(double visibility){
-    turtleIsVisible = visibility;
-    return visibility;
+  public void setVisibility(double visibility){
+    if(visibility!=0.0){
+      turtleIsVisible = VISIBLE;
+    } else {
+      turtleIsVisible = INVISIBLE;
+    }
   }
 
   /**
@@ -266,7 +276,7 @@ public class Turtle{
       theta += QUAD4_BEGINS;
     }
 
-    return setHeading(theta);
+    return setHeadingAndGetDeltaTheta(theta);
   }
 }
 
