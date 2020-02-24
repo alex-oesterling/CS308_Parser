@@ -1,7 +1,5 @@
 package slogo.model;
 
-import slogo.model.command.turtlecommand.querycommand.QueryCommand;
-
 public class Turtle{
 
   private static final int DEFAULT_STARTING_X = 0;
