@@ -1,8 +1,9 @@
 package slogo.model.command.turtlecommand.querycommand;
 
 import slogo.model.Turtle;
+import slogo.model.command.Command;
 
-public class IsShowing extends QueryCommand {
+public class IsShowing extends Command {
 
     /**
      * Return 1 if the turtle is showing, 0 otherwise

@@ -1,8 +1,9 @@
 package slogo.model.command.turtlecommand;
 
 import slogo.model.Turtle;
+import slogo.model.command.Command;
 
-public class Forward extends TurtleCommand {
+public class Forward extends Command {
 
   /**
    * Forward constructor, to get the value for going forward

@@ -1,5 +1,7 @@
 package slogo.model;
 
+import slogo.model.command.turtlecommand.querycommand.QueryCommand;
+
 public class Turtle{
 
   private static final int DEFAULT_STARTING_X = 0;
@@ -18,9 +20,9 @@ public class Turtle{
   private double homeY;
   //define heading as the degrees clockwise from North
   private double heading;
-  private boolean turtleIsDrawing;
+  private double turtleIsDrawing;
   private String penColorName;
-  private boolean turtleIsVisible;
+  private double turtleIsVisible;
 
   /**
    * Turtle constructor to create turtle at a specific point
@@ -37,7 +39,8 @@ public class Turtle{
     homeY = yPosition;
     heading = startingHeading;
     penColorName = penColor;
-    turtleIsDrawing = true;
+    turtleIsDrawing = 1;
+    turtleIsVisible = 1;
   }
 
   /**
@@ -147,20 +150,25 @@ public class Turtle{
    * Change the heading of the turtle, and make sure
    * that it's within 0 and 360 degrees
    * @param deltaTheta value to change by
+   * @return deltaTheta change in heading
    */
-  public void turn(double deltaTheta){
+  public double turn(double deltaTheta){
     heading+=deltaTheta;
     makeHeadingValid();
+    return deltaTheta;
   }
 
   /**
    * Set heading to a given value, and make it valid
    * (between 0 and 360)
    * @param theta new heading
+   * @return difference between the two headings
    */
-  public void setHeading(double theta){
+  public double setHeading(double theta){
+    double oldHeading = heading;
     heading = theta;
     makeHeadingValid();
+    return Math.min(Math.abs(oldHeading-heading), QUAD4_ENDS-oldHeading+heading);
   }
 
   private void makeHeadingValid() {
@@ -173,13 +181,8 @@ public class Turtle{
   /**
    * put the turtle back where it started
    */
-  public void goHome(){
-    moveTo(homeX, homeY);
-  }
-
-  private void moveTo(double newXPos, double newYPos){
-    xPosition = newXPos;
-    yPosition = newYPos;
+  public double goHome(){
+    return moveToPosition(homeX, homeY);
   }
 
   /**
@@ -189,11 +192,12 @@ public class Turtle{
    * @param newYPos new Y position
    * @return distance travelled by turtle
    */
-  public double setPosition(double newXPos, double newYPos){
+  public double moveToPosition(double newXPos, double newYPos){
     double deltaX = xPosition - newXPos;
-    double deltaY = yPosition = newYPos;
+    double deltaY = yPosition - newYPos;
 
-    moveTo(newXPos, newYPos);
+    xPosition = newXPos;
+    yPosition = newYPos;
 
     return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
   }
@@ -202,15 +206,16 @@ public class Turtle{
    * Set the pen as up or down
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
-  public void setDrawing(boolean penStatus){
+  public double setDrawing(double penStatus){
     turtleIsDrawing = penStatus;
+    return penStatus;
   }
 
   /**
    * Return the drawing capabilities of the turtle
    * @return pen status
    */
-  public boolean getDrawingStatus(){
+  public double getDrawingStatus(){
     return turtleIsDrawing;
   }
 
@@ -218,15 +223,16 @@ public class Turtle{
    * Set the visibility of the turtle
    * @param visibility true if the turtle can be seen, false otherwise
    */
-  public void setVisibility(boolean visibility){
+  public double setVisibility(double visibility){
     turtleIsVisible = visibility;
+    return visibility;
   }
 
   /**
    * Tell the view if the turtle should be shown or not
    * @return turtleIsVisible
    */
-  public boolean isTurtleVisible(){
+  public double isTurtleVisible(){
     return turtleIsVisible;
   }
 

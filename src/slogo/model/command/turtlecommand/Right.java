@@ -1,8 +1,9 @@
 package slogo.model.command.turtlecommand;
 
 import slogo.model.Turtle;
+import slogo.model.command.Command;
 
-public class Right extends TurtleCommand {
+public class Right extends Command {
 
     /**
      * Right constructor, to get the value of going right
