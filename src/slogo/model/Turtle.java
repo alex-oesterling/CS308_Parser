@@ -235,4 +235,22 @@ public class Turtle{
   public double isTurtleVisible(){
     return turtleIsVisible;
   }
+
+  /**
+   * Return the heading of the current turtle in degrees (as a double)
+   * @return  heading, in degrees
+   */
+  public double getHeading(){ return heading; }
+
+  /**
+   * Turns the turtle to face the point (x,y)
+   * @param xPos the x position to set the turtle to
+   * @param yPos the y position to set the turtle to
+   * @return the degrees turned
+   */
+  public double pointTowards(double xPos, double yPos){
+    return setHeading();
+  }
 }
+
+
