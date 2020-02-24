@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Remainder extends MathCommand{
+import slogo.model.command.Command;
+
+public class Remainder extends Command {
 
   /**
    * Default constructor for finding the remainder of a division

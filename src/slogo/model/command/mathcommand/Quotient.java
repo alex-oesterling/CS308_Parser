@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Quotient extends MathCommand {
+import slogo.model.command.Command;
+
+public class Quotient extends Command {
 
   /**
    * Calls the super constructor, and sets the result to be returned
