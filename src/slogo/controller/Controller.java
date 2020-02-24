@@ -2,14 +2,9 @@ package slogo.controller;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.ResourceBundle;
-import java.util.Stack;
 import java.util.regex.Pattern;
 import slogo.model.Parser;
 import slogo.model.Turtle;
@@ -23,16 +18,19 @@ public class Controller {
 
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<Command> commandStack;
+    private Map<String, String> userCreatedCommands;
+    private Map<Command, Integer> numberOfArgsNeeded;
     Turtle turtle = new Turtle();
     Errors error = new Errors();
-    Command command;
-    Parser myParser;
+    Command myCommand;
     Visualizer myView;
 
-    public Controller(Parser parser, Visualizer visualizer) {
-        myParser = parser;
+    public Controller(Command command, Visualizer visualizer) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
+        myCommand = command;
+        commandStack = new Stack<>();
+
     }
 
     /**
@@ -106,7 +104,7 @@ public class Controller {
      * @return command
      */
     public double returnCommand(){
-        return command.getResult();
+        return myCommand.getResult();
     }
 
     /**
