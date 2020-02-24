@@ -77,43 +77,43 @@ public class Visualizer implements ViewExternalAPI{
     myController.addLanguage("Syntax");
   }
 
-  public Scene setupScene(){
+  public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     root = new Group();
-    turtleFile = getTurtleImage(new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
-
-<<<<<<< Updated upstream
-    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
-    createBox();
-    myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
-    return myScene;
-  }
-
-  private Node setupCommandLine(){
-    HBox commandLine = new HBox();
-
-    textBox = new javafx.scene.control.TextArea();
-    textBox.setEditable(true);
-    textBox.wrapTextProperty();
-    textBox.setMaxWidth(TEXTBOX_WIDTH);
-    textBox.setMaxHeight(TEXTBOX_HEIGHT);
-    textBox.setPromptText(myResources.getString("TextBoxFiller"));
-    commandLine.getChildren().add(textBox);
-
-    Button run = new Button(myResources.getString("RunCommand"));
-    run.setOnAction(e->submitCommand());
-    commandLine.getChildren().add(run);
-
-    Button clear = new Button(myResources.getString("ClearCommand"));
-    clear.setOnAction(e->{
-      textBox.clear();
-    });
-    commandLine.getChildren().add(clear);
-
-    commandLine.setLayoutX(XPOS_OFFSET);
-    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
-    return commandLine;
-=======
+    turtleFile = getTurtleImage(
+        new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
+//<<<<<<< Updated upstream
+//    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
+//    createBox();
+//    myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+//    return myScene;
+//  }
+//
+//  private Node setupCommandLine(){
+//    HBox commandLine = new HBox();
+//
+//    textBox = new javafx.scene.control.TextArea();
+//    textBox.setEditable(true);
+//    textBox.wrapTextProperty();
+//    textBox.setMaxWidth(TEXTBOX_WIDTH);
+//    textBox.setMaxHeight(TEXTBOX_HEIGHT);
+//    textBox.setPromptText(myResources.getString("TextBoxFiller"));
+//    commandLine.getChildren().add(textBox);
+//
+//    Button run = new Button(myResources.getString("RunCommand"));
+//    run.setOnAction(e->submitCommand());
+//    commandLine.getChildren().add(run);
+//
+//    Button clear = new Button(myResources.getString("ClearCommand"));
+//    clear.setOnAction(e->{
+//      textBox.clear();
+//    });
+//    commandLine.getChildren().add(clear);
+//
+//    commandLine.setLayoutX(XPOS_OFFSET);
+//    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
+//    return commandLine;
+//=======
 //    root.getChildren().add(createView());
 //    createBox();
     myScene = new Scene(createView());
@@ -134,7 +134,6 @@ public class Visualizer implements ViewExternalAPI{
     viewPane.setCenter(commandLine);
     viewPane.setRight(userInterface);
     return viewPane;
->>>>>>> Stashed changes
   }
 
 
@@ -201,13 +200,12 @@ public class Visualizer implements ViewExternalAPI{
 
   private ColorPicker backgroundColor(){
     ColorPicker colorPicker = new ColorPicker();
-<<<<<<< Updated upstream
-    colorPicker.setLayoutX( XPOS_OFFSET);
-    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
-=======
+//<<<<<<< Updated upstream
+//    colorPicker.setLayoutX( XPOS_OFFSET);
+//    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
+//=======
 //    colorPicker.setLayoutX(XPOS_OFFSET);
 //    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
->>>>>>> Stashed changes
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> {
       root.getChildren().remove(turtleArea);

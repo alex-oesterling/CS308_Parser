@@ -1,8 +1,11 @@
 package slogo.view;
 
+import static slogo.view.Visualizer.TURTLE_SCREEN_HEIGHT;
+
 import java.util.ResourceBundle;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 
@@ -18,6 +21,7 @@ public class CommandLine {
 
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
+  private static final int BUTTON_WIDTH = 50;
 
   private Controller myController;
   private ResourceBundle myResources;
@@ -31,6 +35,7 @@ public class CommandLine {
   public Node setupCommandLine(){
     VBox commandLine = new VBox();
     ScrollPane terminal = new ScrollPane();
+    VBox historyBox = new VBox();
     terminal.setContent(historyBox);
     terminal.setPrefSize(TEXTBOX_WIDTH,TURTLE_SCREEN_HEIGHT-TEXTBOX_HEIGHT);
 //    terminal.setMaxWidth(TEXTBOX_WIDTH*2);
@@ -40,43 +45,40 @@ public class CommandLine {
     textBox = new TextArea();
     textBox.setEditable(true);
     textBox.wrapTextProperty();
-<<<<<<< Updated upstream
-    textBox.setMaxWidth(TEXTBOX_WIDTH);
-    textBox.setMaxHeight(TEXTBOX_HEIGHT);
-    textBox.setPromptText(myResources.getString("TextBoxFiller"));
-    textBox.setPromptText("Enter command:");
-    commandLine.getChildren().add(textBox);
-=======
+//<<<<<<< Updated upstream
+//    textBox.setMaxWidth(TEXTBOX_WIDTH);
+//    textBox.setMaxHeight(TEXTBOX_HEIGHT);
+//    textBox.setPromptText(myResources.getString("TextBoxFiller"));
+//    textBox.setPromptText("Enter command:");
+//    commandLine.getChildren().add(textBox);
+//=======
     textBox.setPrefWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
     textBox.setMaxHeight(TEXTBOX_HEIGHT);
     textBox.setPromptText(myResources.getString("TextBoxFiller"));
     userControls.setHgrow(textBox, Priority.ALWAYS);
     userControls.getChildren().add(textBox);
->>>>>>> Stashed changes
 
+    VBox buttonBox = new VBox();
     //FIXME language labels/properties
     Button run = new Button("Run");
     run.setOnAction(e->submitCommand());
-    commandLine.getChildren().add(run);
+    buttonBox.getChildren().add(run);
 
     Button clear = new Button("Clear");
     clear.setOnAction(e->{
       textBox.clear();
     });
-    commandLine.getChildren().add(clear);
+    buttonBox.getChildren().add(clear);
 
 //    commandLine.setLayoutX(XPOS_OFFSET);
 //    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
 
-<<<<<<< Updated upstream
-=======
     userControls.getChildren().add(buttonBox);
     commandLine.setVgrow(terminal, Priority.ALWAYS);
     commandLine.getChildren().add(terminal);
     commandLine.getChildren().add(userControls);
 //    commandLine.setLayoutX(2* XPOS_OFFSET+TURTLE_SCREEN_HEIGHT);
 //    commandLine.setLayoutY(YPOS_OFFSET);
->>>>>>> Stashed changes
     return commandLine;
   }
 
