@@ -247,7 +247,26 @@ public class Turtle{
    * @return the degrees turned
    */
   public double pointTowards(double xPos, double yPos){
-    return setHeading();
+    double theta = Math.atan(xPos/yPos); //value within quadrant; good for quadrants I and III
+
+    if((xPos < 0) != (yPos < 0)){
+      theta = Math.atan(yPos/xPos); //value within quadrants II and IV
+    }
+
+    //in quadrant ii
+    if(xPos > 0 && yPos < 0){
+      theta += QUAD2_BEGINS;
+    }
+    //in quadrant iii
+    else if (xPos < 0 && yPos < 0){
+      theta += QUAD3_BEGINS;
+    }
+    //in quadrant iv
+    else if(xPos < 0 && yPos > 0){
+      theta += QUAD4_BEGINS;
+    }
+
+    return setHeading(theta);
   }
 }
 
