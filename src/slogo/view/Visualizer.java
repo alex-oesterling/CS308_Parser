@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -19,11 +20,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
 import slogo.model.Parser;
@@ -38,20 +38,14 @@ public class Visualizer implements ViewExternalAPI{
 
   public static final String XML_FILEPATH = "user.dir";
   public static final Paint BACKGROUND = Color.AZURE;
-  public static final int SIZE_WIDTH = 1000;
-  public static final int SIZE_HEIGHT = 800;
-  public static final int XPOS_OFFSET = 10;
-  public static final int YPOS_OFFSET = 10;
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
   public static final int TURTLE_WIDTH = 50;
   public static final int TURTLE_HEIGHT = 40;
-  public static final int TEXTBOX_WIDTH = 500;
-  public static final int TEXTBOX_HEIGHT = 100;
   public static final int COLORPICKER_HEIGHT = 30;
-  public static final int MENUBUTTON_HEIGHT = 30;
-  public static final int RECTANGLE_INDEX = 2;
+  public static final int VIEWPANE_PADDING = 10;
+  public static final int VIEWPANE_MARGIN = 0;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
@@ -61,9 +55,8 @@ public class Visualizer implements ViewExternalAPI{
   HelpWindow helpWindow;
   Group root;
   Group view;
-
-  javafx.scene.control.TextArea textBox;
-
+  Line pen;
+  BorderPane viewPane;
   Rectangle turtleArea;
   File turtleFile;
   List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
@@ -71,7 +64,7 @@ public class Visualizer implements ViewExternalAPI{
   String language;
 
   public Visualizer (Parser parser){
-    turtleImages = new ArrayList<ImageView>();
+    turtleImages = new ArrayList<>();
     myParser = parser;
     myController = new Controller(parser, this);
     myController.addLanguage("English"); //FIXME set in view
@@ -80,101 +73,28 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-    CommandLine commandLine = new CommandLine(myController);
     root = new Group();
     turtleFile = getTurtleImage(new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
-//<<<<<<< Updated upstream
-//    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
-//    createBox();
-//    myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
-//    return myScene;
-//  }
-//
-//  private Node setupCommandLine(){
-//    HBox commandLine = new HBox();
-//
-//    textBox = new javafx.scene.control.TextArea();
-//    textBox.setEditable(true);
-//    textBox.wrapTextProperty();
-//    textBox.setMaxWidth(TEXTBOX_WIDTH);
-//    textBox.setMaxHeight(TEXTBOX_HEIGHT);
-//    textBox.setPromptText(myResources.getString("TextBoxFiller"));
-//    commandLine.getChildren().add(textBox);
-//
-//    Button run = new Button(myResources.getString("RunCommand"));
-//    run.setOnAction(e->submitCommand());
-//    commandLine.getChildren().add(run);
-//
-//    Button clear = new Button(myResources.getString("ClearCommand"));
-//    clear.setOnAction(e->{
-//      textBox.clear();
-//    });
-//    commandLine.getChildren().add(clear);
-//
-//    commandLine.setLayoutX(XPOS_OFFSET);
-//    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
-//    return commandLine;
-//=======
-//    root.getChildren().add(createView());
-//    createBox();
     myScene = new Scene(createView());
     return myScene;
   }
 
   private Pane createView(){
-    BorderPane viewPane = new BorderPane();
+    viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
-    viewPane.setPadding(new Insets(10, 10, 10, 10));
+    viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
     Node turtleView = createBox();
     Node commandLine = new CommandLine(myController).setupCommandLine();
     Node userInterface = createUI();
-
-    viewPane.setMargin(commandLine, new Insets(0, 10, 0, 10));
-
+    viewPane.setMargin(commandLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setLeft(turtleView);
     viewPane.setCenter(commandLine);
     viewPane.setRight(userInterface);
     return viewPane;
   }
 
-//  private Node setupCommandLine(){
-//    ScrollPane terminal = new ScrollPane();
-//    terminal.setPrefSize(216, 400);
-//    HBox commandLine = new HBox();
-//
-//    textBox = new javafx.scene.control.TextArea();
-//    textBox.setEditable(true);
-//    textBox.wrapTextProperty();
-//    textBox.setMaxWidth(TEXTBOX_WIDTH);
-//    textBox.setMaxHeight(TEXTBOX_HEIGHT);
-//    textBox.setPromptText(myResources.getString("TextBoxFiller"));
-//    commandLine.getChildren().add(textBox);
-//
-//    Button run = new Button(myResources.getString("RunCommand"));
-//    run.setOnAction(e->submitCommand());
-//    commandLine.getChildren().add(run);
-//
-//    Button clear = new Button(myResources.getString("ClearCommand"));
-//    clear.setOnAction(e->{
-//      textBox.clear();
-//    });
-//    commandLine.getChildren().add(clear);
-//
-//    commandLine.setLayoutX(2* XPOS_OFFSET + TURTLE_SCREEN_WIDTH);
-//    commandLine.setLayoutY(YPOS_OFFSET);
-//    return commandLine;
-//  }
-//
-//  private void submitCommand() {
-//    if((textBox.getText() != null) && !textBox.getText().isEmpty()){
-//      myController.runCommand(textBox.getText());
-//      textBox.clear();
-//    }
-//  }
-
   private Group createBox() {
     view = new Group();
-//    turtleArea = new Rectangle(XPOS_OFFSET, YPOS_OFFSET, TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     GridPane turtlePane = new GridPane();
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     turtleArea.setFill(Color.WHITE);
@@ -190,29 +110,25 @@ public class Visualizer implements ViewExternalAPI{
 
   private Node createUI() {
     VBox ui = new VBox();
+    Label background = new Label(myResources.getString("BackgroundColor"));
+    Label pen = new Label(myResources.getString("PenColor"));
+    Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
     ui.setSpacing(10);
-    ui.getChildren().add(backgroundColor());
-    ui.getChildren().add(help());
-    ui.getChildren().add(languageSelect());
+    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help());
     return ui;
   }
 
   private ColorPicker backgroundColor(){
     ColorPicker colorPicker = new ColorPicker();
-//<<<<<<< Updated upstream
-//    colorPicker.setLayoutX( XPOS_OFFSET);
-//    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
-//=======
-//    colorPicker.setLayoutX(XPOS_OFFSET);
-//    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
-
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> {
-      root.getChildren().remove(turtleArea);
-      Color c = colorPicker.getValue();
-      turtleArea.setFill(colorPicker.getValue());
-      root.getChildren().add(RECTANGLE_INDEX,turtleArea);
-    });
+    colorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
+    return colorPicker;
+  }
+
+  private ColorPicker penColor(){
+    ColorPicker colorPicker = new ColorPicker();
+    colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
+    colorPicker.setOnAction(e -> pen.setFill(colorPicker.getValue()));
     return colorPicker;
   }
 
@@ -226,8 +142,6 @@ public class Visualizer implements ViewExternalAPI{
       turtleImage.setFitHeight(TURTLE_HEIGHT);
       turtleImage.setX(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
       turtleImage.setY(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
-//      turtleImage.setX((XPOS_OFFSET + TURTLE_SCREEN_WIDTH) / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
-//      turtleImage.setY((YPOS_OFFSET + TURTLE_SCREEN_HEIGHT) / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
     } catch (IOException e) {
         //FIXME add errors here
     }
@@ -235,15 +149,9 @@ public class Visualizer implements ViewExternalAPI{
     return turtleImage;
   }
 
-
-
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));
-//    help.setLayoutX(XPOS_OFFSET);
-//    help.setLayoutY( 5 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT + MENUBUTTON_HEIGHT);
-    help.setOnAction(e-> {
-      helpWindow = new HelpWindow(language);
-    });
+    help.setOnAction(e-> helpWindow = new HelpWindow(language));
     return help;
   }
 
@@ -261,8 +169,6 @@ public class Visualizer implements ViewExternalAPI{
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
-//    comboBox.setLayoutX(XPOS_OFFSET);
-//    comboBox.setLayoutY(4 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT + COLORPICKER_HEIGHT);
     comboBox.setOnAction(event -> {
       //TODO: pass in value of combobox to some method to change the language
       language = comboBox.getValue().toString();
