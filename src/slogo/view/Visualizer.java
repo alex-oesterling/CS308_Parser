@@ -36,6 +36,7 @@ import java.util.ResourceBundle;
 
 public class Visualizer implements ViewExternalAPI{
 
+  public static final String XML_FILEPATH = "user.dir";
   public static final Paint BACKGROUND = Color.AZURE;
   public static final int SIZE_WIDTH = 1000;
   public static final int SIZE_HEIGHT = 800;
@@ -79,9 +80,9 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
+    CommandLine commandLine = new CommandLine(myController);
     root = new Group();
-    turtleFile = getTurtleImage(
-        new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
+    turtleFile = getTurtleImage(new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
 //<<<<<<< Updated upstream
 //    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
 //    createBox();
@@ -135,8 +136,6 @@ public class Visualizer implements ViewExternalAPI{
     viewPane.setRight(userInterface);
     return viewPane;
   }
-
-
 
 //  private Node setupCommandLine(){
 //    ScrollPane terminal = new ScrollPane();
@@ -206,6 +205,7 @@ public class Visualizer implements ViewExternalAPI{
 //=======
 //    colorPicker.setLayoutX(XPOS_OFFSET);
 //    colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
+
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> {
       root.getChildren().remove(turtleArea);
@@ -275,6 +275,7 @@ public class Visualizer implements ViewExternalAPI{
     fileChooser.setTitle("Choose Turtle Image");
     fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+    fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
     return fileChooser.showOpenDialog(stage);
     }
 
