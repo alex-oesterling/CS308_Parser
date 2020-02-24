@@ -20,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -54,6 +55,7 @@ public class Visualizer implements ViewExternalAPI{
   HelpWindow helpWindow;
   Group root;
   Group view;
+  Line pen;
   BorderPane viewPane;
   Rectangle turtleArea;
   File turtleFile;
@@ -108,19 +110,25 @@ public class Visualizer implements ViewExternalAPI{
 
   private Node createUI() {
     VBox ui = new VBox();
+    Label background = new Label(myResources.getString("BackgroundColor"));
+    Label pen = new Label(myResources.getString("PenColor"));
+    Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
     ui.setSpacing(10);
-    ui.getChildren().add(backgroundColor());
-    ui.getChildren().add(help());
-    ui.getChildren().add(languageSelect());
+    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help());
     return ui;
   }
 
   private ColorPicker backgroundColor(){
     ColorPicker colorPicker = new ColorPicker();
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> {
-      turtleArea.setFill(colorPicker.getValue());
-    });
+    colorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
+    return colorPicker;
+  }
+
+  private ColorPicker penColor(){
+    ColorPicker colorPicker = new ColorPicker();
+    colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
+    colorPicker.setOnAction(e -> pen.setFill(colorPicker.getValue()));
     return colorPicker;
   }
 
