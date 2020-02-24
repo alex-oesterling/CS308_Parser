@@ -1,16 +1,31 @@
 package slogo.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import slogo.controller.Controller;
-import slogo.model.Parser;
+import slogo.exceptions.InvalidCommandException;
 
 public class CommandLine {
-  public static final int TEXTBOX_WIDTH = 500;
+  public static final int TEXTBOX_WIDTH = 200;
   public static final int TEXTBOX_HEIGHT = 100;
+  public static final int BUTTON_WIDTH = 50;
+  public static final int XPOS_OFFSET = 10;
+  public static final int YPOS_OFFSET = 10;
+  public static final int TURTLE_SCREEN_HEIGHT = 500;
+  public static final String INVALID_COMMAND = "Invalid command: ";
+
+
 
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
@@ -18,44 +33,67 @@ public class CommandLine {
   private Controller myController;
   private ResourceBundle myResources;
   private TextArea textBox;
+  private List<Label> history;
+  private VBox historyBox;
 
   public CommandLine(Controller controller){
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     myController = controller;
+    history = new ArrayList<>();
+    historyBox = new VBox();
   }
 
   public Node setupCommandLine(){
-    HBox commandLine = new HBox();
+    BorderPane commandLine = new BorderPane();
+    ScrollPane terminal = new ScrollPane();
+    terminal.setContent(historyBox);
+    terminal.setPrefSize(TEXTBOX_WIDTH,TURTLE_SCREEN_HEIGHT);
+    historyBox.heightProperty().addListener((obs, old, newValue) -> terminal.setVvalue((Double)newValue));
+    HBox userControls = new HBox();
 
-    textBox = new TextArea();
+    textBox = new javafx.scene.control.TextArea();
     textBox.setEditable(true);
     textBox.wrapTextProperty();
-    textBox.setMaxWidth(TEXTBOX_WIDTH);
+    textBox.setMaxWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
     textBox.setMaxHeight(TEXTBOX_HEIGHT);
     textBox.setPromptText(myResources.getString("TextBoxFiller"));
-    textBox.setPromptText("Enter command:");
-    commandLine.getChildren().add(textBox);
+    userControls.getChildren().add(textBox);
 
-    //FIXME language labels/properties
-    Button run = new Button("Run");
+    VBox buttonBox = new VBox();
+    Button run = new Button(myResources.getString("RunCommand"));
+    run.setMinWidth(BUTTON_WIDTH);
     run.setOnAction(e->submitCommand());
-    commandLine.getChildren().add(run);
+    buttonBox.getChildren().add(run);
 
-    Button clear = new Button("Clear");
+    Button clear = new Button(myResources.getString("ClearCommand"));
     clear.setOnAction(e->{
       textBox.clear();
     });
-    commandLine.getChildren().add(clear);
+    clear.setMinWidth(BUTTON_WIDTH);
+    buttonBox.getChildren().add(clear);
 
-//    commandLine.setLayoutX(XPOS_OFFSET);
-//    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
-
+    userControls.getChildren().add(buttonBox);
+    commandLine.setTop(terminal);
+    commandLine.setBottom(userControls);
+    commandLine.setLayoutX(2* XPOS_OFFSET+TURTLE_SCREEN_HEIGHT);
+    commandLine.setLayoutY(YPOS_OFFSET);
     return commandLine;
   }
 
   private void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
-      myController.runCommand(textBox.getText());
+      try {
+        myController.runCommand(textBox.getText());
+      } catch (InvalidCommandException e){
+        Label recentCommand = new Label(INVALID_COMMAND + textBox.getText());
+        recentCommand.setTextFill(Color.RED);
+        history.add(recentCommand);
+        historyBox.getChildren().add(recentCommand);
+        return;
+      }
+      Label recentCommand = new Label(textBox.getText());
+      history.add(recentCommand);
+      historyBox.getChildren().add(recentCommand);
       textBox.clear();
     }
   }

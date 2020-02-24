@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.regex.Pattern;
+import slogo.exceptions.InvalidCommandException;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.Command;
@@ -83,18 +84,13 @@ public class Controller {
                     try {
                         commandClass = Class.forName(COMMAND_PACKAGE + command);
                         commandStack.push((Command) (commandClass.getConstructor().newInstance()));
-                    } catch (ClassNotFoundException e) {
-                        System.out.println("Error: Invalid Command");
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                    } catch (ClassNotFoundException | //FIXME generic error handling by alex. could make better possible but low priority
+                        InstantiationException |
+                        InvocationTargetException |
+                        NoSuchMethodException |
+                        IllegalAccessException e) {
+                        throw new InvalidCommandException(e);
                     }
-                    //FIXME FAILURE CASE
                 }
             }
         }

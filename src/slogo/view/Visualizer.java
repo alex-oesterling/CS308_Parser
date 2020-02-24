@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 public class Visualizer implements ViewExternalAPI{
 
+  public static final String XML_FILEPATH = "user.dir";
   public static final Paint BACKGROUND = Color.AZURE;
   public static final int SIZE_WIDTH = 1000;
   public static final int SIZE_HEIGHT = 800;
@@ -69,16 +70,19 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene(){
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
+    CommandLine commandLine = new CommandLine(myController);
     root = new Group();
     turtleFile = getTurtleImage(new Stage());
 
-    root.getChildren().addAll(setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
+    root.getChildren().addAll(commandLine.setupCommandLine(), createBox(), chooseTurtle(), backgroundColor(), languageSelect(), help());
     createBox();
     myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     return myScene;
   }
 
   private Node setupCommandLine(){
+    ScrollPane terminal = new ScrollPane();
+//    terminal.setPrefSize(216, 400);
     HBox commandLine = new HBox();
 
     textBox = new javafx.scene.control.TextArea();
@@ -99,8 +103,8 @@ public class Visualizer implements ViewExternalAPI{
     });
     commandLine.getChildren().add(clear);
 
-    commandLine.setLayoutX(XPOS_OFFSET);
-    commandLine.setLayoutY(2 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT);
+    commandLine.setLayoutX(2* XPOS_OFFSET + TURTLE_SCREEN_WIDTH);
+    commandLine.setLayoutY(YPOS_OFFSET);
     return commandLine;
   }
 
@@ -121,7 +125,7 @@ public class Visualizer implements ViewExternalAPI{
 
   private ColorPicker backgroundColor(){
     ColorPicker colorPicker = new ColorPicker();
-    colorPicker.setLayoutX( XPOS_OFFSET);
+    colorPicker.setLayoutX(XPOS_OFFSET);
     colorPicker.setLayoutY(3 * YPOS_OFFSET + TURTLE_SCREEN_HEIGHT + TEXTBOX_HEIGHT);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> {
@@ -189,6 +193,7 @@ public class Visualizer implements ViewExternalAPI{
     fileChooser.setTitle("Choose Turtle Image");
     fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+    fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
     return fileChooser.showOpenDialog(stage);
     }
 
