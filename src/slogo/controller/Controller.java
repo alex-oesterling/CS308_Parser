@@ -110,18 +110,6 @@ public class Controller {
     }
 
     private void makeCommandMap(){
-        /*sLogoCommands.putIfAbsent("Forward", resourceBundle.getString("Forward"));
-        numberOfArgsNeeded.putIfAbsent("Forward", TURTLE_AND_ONE_DOUBLE);
-
-        sLogoCommands.putIfAbsent("Backward", resourceBundle.getString("Backward"));
-        numberOfArgsNeeded.putIfAbsent("Backward", TURTLE_AND_ONE_DOUBLE);
-
-        sLogoCommands.putIfAbsent("Forward", resourceBundle.getString("Forward"));
-        numberOfArgsNeeded.putIfAbsent("Forward", TURTLE_AND_ONE_DOUBLE);
-
-        sLogoCommands.putIfAbsent("Backward", resourceBundle.getString("Backward"));
-        numberOfArgsNeeded.putIfAbsent("Backward", TURTLE_AND_ONE_DOUBLE);*/
-
         sLogoCommands = new HashMap<String, String>();
         Set<String> keys = resourceBundle.keySet();
         for(String key : keys){
