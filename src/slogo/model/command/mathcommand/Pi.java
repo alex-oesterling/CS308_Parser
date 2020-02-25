@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Pi extends MathCommand{
+import slogo.model.command.Command;
+
+public class Pi extends Command {
 
   /**
    * Default constructor, calls super constructor

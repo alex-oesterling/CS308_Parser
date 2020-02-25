@@ -15,6 +15,15 @@ abstract public class Command {
   }
 
   /**
+   * Command constructor that takes a boolean and converts
+   * it to a double, which is then set to the return value
+   * @param condition incoming boolean to change to a double value
+   */
+  public Command(boolean condition){
+    this(condition?1.0:0.0); //convert a boolean to a double
+  }
+
+  /**
    * Default command constructor
    */
   public Command(){

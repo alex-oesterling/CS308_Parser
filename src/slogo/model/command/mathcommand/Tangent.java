@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Tangent extends MathCommand {
+import slogo.model.command.Command;
+
+public class Tangent extends Command {
 
   /**
    * Default Tangent constructor, calls super constructor

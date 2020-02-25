@@ -1,6 +1,8 @@
 package slogo.model.command.booleancommand;
 
-public class Not extends BooleanCommand {
+import slogo.model.command.Command;
+
+public class Not extends Command {
 
   /**
    * Not constructor, flip the value of whatever given;

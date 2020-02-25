@@ -1,9 +1,9 @@
 package slogo.view;
 
 public interface ViewExternalAPI {
-  void updateXPos();
-  void updateYPos();
-  void updateOrientation();
+  void update(double newX, double newY, double newAngle);
   void updatePenColor();
   void updateSceneColor();
+  void clear();
+  void update();
 }
