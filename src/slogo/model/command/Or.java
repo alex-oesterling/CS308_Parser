@@ -18,10 +18,10 @@ public class Or extends Command {
     double c = 0.0;
     double f = 0.0;
     Or d = new Or(a,b);
-    System.out.println(a+"||"+b+": "+d.getResult());
+    System.out.println(a+"||"+b+": "+d.execute());
     d = new Or(a,c);
-    System.out.println(a+"||"+c+": "+d.getResult());
+    System.out.println(a+"||"+c+": "+d.execute());
     d = new Or(c,f);
-    System.out.println(c+"||"+f+": "+d.getResult());
+    System.out.println(c+"||"+f+": "+d.execute());
   }
 }

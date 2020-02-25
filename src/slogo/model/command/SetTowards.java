@@ -21,8 +21,12 @@ public class SetTowards extends Command {
         yPos = y;
     }
 
+    /**
+     * Point the turtle towards xPos, yPos
+     * @return angle changed
+     */
     @Override
-    public void execute() {
-        setResult(t.pointTowards(xPos, yPos));
+    public Double execute() {
+        return t.pointTowards(xPos, yPos);
     }
 }

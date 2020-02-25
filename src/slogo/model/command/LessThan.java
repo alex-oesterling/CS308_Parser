@@ -16,29 +16,29 @@ public class LessThan extends Command {
     double a = 3;
     double b = 1;
     LessThan c = new LessThan(a,b);
-    System.out.println(a+"<"+b+": "+c.getResult());
+    System.out.println(a+"<"+b+": "+c.execute());
 
     c = new LessThan(b,a);
-    System.out.println(b+"<"+a+": "+c.getResult());
+    System.out.println(b+"<"+a+": "+c.execute());
 
     a = 3;
     b = 3;
     c = new LessThan(a,b);
-    System.out.println(a+"<"+b+": "+c.getResult());
+    System.out.println(a+"<"+b+": "+c.execute());
 
     double aa = 3.1;
     b = 3;
     c = new LessThan(aa,b);
-    System.out.println(aa+"<"+b+": "+c.getResult());
+    System.out.println(aa+"<"+b+": "+c.execute());
 
     a = 3;
     double bb = 3.1;
     c = new LessThan(a,bb);
-    System.out.println(a+"<"+bb+": "+c.getResult());
+    System.out.println(a+"<"+bb+": "+c.execute());
 
     aa = 3.00000;
     bb = 3.00000;
     c = new LessThan(aa,bb);
-    System.out.println(aa+"<"+bb+": "+c.getResult());
+    System.out.println(aa+"<"+bb+": "+c.execute());
   }
 }
