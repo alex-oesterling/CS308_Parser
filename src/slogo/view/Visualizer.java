@@ -241,29 +241,33 @@ public class Visualizer implements ViewExternalAPI{
   @Override
   public void update(double newX, double newY, double orientation){
     ImageView turtleimage = turtleImages.get(0);
-    double oldX = turtleimage.getTranslateX();
-    double oldY = turtleimage.getTranslateY();
-    System.out.println(oldX);
-    System.out.println(oldY);
-    Path path = new Path();
-    turtlePaths.getChildren().add(path);
-    path.getElements().add(new MoveTo(oldX, oldY));
-    path.getElements().add(new LineTo(newX, newY));
-    System.out.println(turtleimage.getTranslateX());
-    System.out.println(turtleimage.getTranslateY());
-    PathTransition pt = new PathTransition(Duration.millis(2000), path, turtleimage);
-    pt.play();
-//    System.out.println(turtleimage.getLayoutX()+newX-oldX);
-//    System.out.println(turtleimage.getLayoutY()+newY-oldY);
-    if(penStatus){
-      path.setOpacity(0.5);
-    } else {
-      path.setOpacity(0.0);
-    }
+//    double oldX = turtleimage.getTranslateX();
+//    double oldY = turtleimage.getTranslateY();
+//    System.out.println(oldX);
+//    System.out.println(oldY);
+//    Path path = new Path();
+//    turtlePaths.getChildren().add(path);
+//    path.getElements().add(new MoveTo(oldX, oldY));
+//    path.getElements().add(new LineTo(newX, newY));
+////    System.out.println(turtleimage.getTranslateX());
+////    System.out.println(turtleimage.getTranslateY());
+//    PathTransition pt = new PathTransition(Duration.millis(2000), path, turtleimage);
+//    pt.play();
+////    System.out.println(turtleimage.getLayoutX()+newX-oldX);
+////    System.out.println(turtleimage.getLayoutY()+newY-oldY);
+//    if(penStatus){
+//      path.setOpacity(0.5);
+//    } else {
+//      path.setOpacity(0.0);
+//    }
+    TranslateTransition tt = new TranslateTransition(Duration.millis(2000), turtleimage);
+    tt.setToX(newX);
+    tt.setToY(newY);
 
     RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
     rt.setToAngle(orientation);
 
+    tt.play();
     rt.play();
   }
 
