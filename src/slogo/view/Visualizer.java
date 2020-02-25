@@ -7,14 +7,12 @@ import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -28,24 +26,15 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 import slogo.controller.Controller;
 import slogo.model.Parser;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ResourceBundle;
 import slogo.model.command.booleancommand.And;
 
 public class Visualizer implements ViewExternalAPI{
 
-  public static final String XML_FILEPATH = "user.dir";
   public static final Paint BACKGROUND = Color.AZURE;
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
@@ -60,24 +49,24 @@ public class Visualizer implements ViewExternalAPI{
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
-  Scene myScene;
-  Parser myParser;
-  Controller myController;
-  HelpWindow helpWindow;
-  BorderPane root;
-  Group view;
-  VBox variables;
-  VBox commands;
-  Line pen;
-  VBox group;
-  BorderPane viewPane;
-  Rectangle turtleArea;
-  List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
-  ResourceBundle myResources;
-  String language;
+  private Scene myScene;
+  private Parser myParser;
+  private Controller myController;
+  private HelpWindow helpWindow;
+  private BorderPane root;
+  private Group view;
+  private VBox variables;
+  private VBox commands;
+  private Line pen;
+  private VBox group;
+  private BorderPane viewPane;
+  private Rectangle turtleArea;
+  private List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
+  private ResourceBundle myResources;
+  private String language;
   private boolean penStatus = true;
   private Group turtlePaths;
-  private PathTransition pt;
+  private Turtle turtle;
 
   public Visualizer (Parser parser){
     turtleImages = new ArrayList<>();
@@ -90,6 +79,8 @@ public class Visualizer implements ViewExternalAPI{
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
 //    turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
+    turtle = new Turtle();
+    turtleImages.add(0, turtle.createTurtle());
     root = createView();
     myScene = new Scene(root);
     return myScene;
@@ -116,13 +107,12 @@ public class Visualizer implements ViewExternalAPI{
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    pt = new PathTransition();
-    pt.setDuration(Duration.millis(1000));
 
-    view.getChildren().addAll(turtleArea, chooseTurtle(), turtlePaths);
+    turtlePaths.getChildren().add(turtleImages.get(0));
+    view.getChildren().addAll(turtleArea, turtlePaths);
+
     return view;
   }
-
 
   private VBox showUserDefined(){
     group = new VBox();
@@ -163,8 +153,16 @@ public class Visualizer implements ViewExternalAPI{
     Label background = new Label(myResources.getString("BackgroundColor"));
     Label pen = new Label(myResources.getString("PenColor"));
     Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
+    Button chooseTurtle = new Button(myResources.getString("ChooseTurtle"));
+    chooseTurtle.setOnAction(e-> {
+      turtlePaths.getChildren().remove(turtleImages.get(0));
+      turtleImages.add(0, turtle.chooseTurtle());
+      turtlePaths.getChildren().add(turtleImages.get(0));
+            }
+    );
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help(), testUpdate());
+    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
+            help(), testUpdate());
     return ui;
   }
 
@@ -182,25 +180,6 @@ public class Visualizer implements ViewExternalAPI{
     return colorPicker;
   }
 
-  private ImageView chooseTurtle() {
-    ImageView turtleImage = new ImageView();
-    try {
-      BufferedImage bufferedImage = ImageIO.read(getTurtleImage(new Stage()));
-      Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-      turtleImage.setImage(image);
-      turtleImage.setFitWidth(TURTLE_WIDTH);
-      turtleImage.setFitHeight(TURTLE_HEIGHT);
-//      turtleImage.setX(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
-//      turtleImage.setY(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
-      turtleImage.setTranslateY(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
-      turtleImage.setTranslateX(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
-    } catch (IOException e) {
-        //FIXME add errors here
-    }
-    turtleImages.add(turtleImage);
-    pt.setNode(turtleImage);
-    return turtleImage;
-  }
 
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));
@@ -229,15 +208,6 @@ public class Visualizer implements ViewExternalAPI{
     return comboBox;
   }
 
-  private File getTurtleImage(Stage stage) {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Choose Turtle Image");
-    fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
-    fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
-    return fileChooser.showOpenDialog(stage);
-    }
-
   private Button testUpdate(){
     Button test = new Button("Test");
     test.setOnAction(e->update(200, 200, 90));
@@ -247,6 +217,7 @@ public class Visualizer implements ViewExternalAPI{
   @Override
   public void update(double newX, double newY, double orientation){
     ImageView turtleimage = turtleImages.get(0);
+
     double oldX = turtleimage.getTranslateX()+turtleimage.getBoundsInParent().getWidth()/2;
     double oldY = turtleimage.getTranslateY()+turtleimage.getBoundsInParent().getHeight()/2;
     if(newX != oldX || newY != oldY) {
@@ -259,6 +230,7 @@ public class Visualizer implements ViewExternalAPI{
       turtlePaths.getChildren().add(path);
       path.getElements().add(new MoveTo(oldX, oldY));
       path.getElements().add(new LineTo(newX, newY));
+      PathTransition pt = new PathTransition(Duration.millis(2000), path, turtleimage);
       pt.setPath(path);
       pt.play();
     }
@@ -267,10 +239,10 @@ public class Visualizer implements ViewExternalAPI{
     pauser.setDuration(Duration.millis(1000));
     pauser.play();
 
-//    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
-//    rt.setToAngle(orientation);
-//
-//    rt.play();
+    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
+    rt.setToAngle(orientation);
+
+    rt.play();
   }
 
   @Override
