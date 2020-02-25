@@ -5,6 +5,7 @@ import slogo.model.Turtle;
 public class HideTurtle extends Command {
 
     private static final double HIDDEN = 0;
+    private Turtle t;
 
     /**
      * Constructor for hide turtle which allows the turtle to be hidden by setting visibility to be false
@@ -12,7 +13,17 @@ public class HideTurtle extends Command {
      * @param body the turtle that is currently being used, will set to be hidden
      */
     public HideTurtle(Turtle body){
-        super(HIDDEN);
-        body.setVisibility(HIDDEN);
+        super();
+        t = body;
+    }
+
+    /**
+     * Set the turtle's visibility to hidden, and return false showing that it cannot be seen
+     * @return 0
+     */
+    @Override
+    public Double execute() {
+        t.setVisibility(HIDDEN);
+        return HIDDEN;
     }
 }
