@@ -3,6 +3,7 @@ package slogo.view;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.PathTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
@@ -76,6 +77,7 @@ public class Visualizer implements ViewExternalAPI{
   String language;
   private boolean penStatus = true;
   private Group turtlePaths;
+  private PathTransition pt;
 
   public Visualizer (Parser parser){
     turtleImages = new ArrayList<>();
@@ -114,6 +116,9 @@ public class Visualizer implements ViewExternalAPI{
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
+    pt = new PathTransition();
+    pt.setDuration(Duration.millis(1000));
+
     view.getChildren().addAll(turtleArea, chooseTurtle(), turtlePaths);
     return view;
   }
@@ -193,6 +198,7 @@ public class Visualizer implements ViewExternalAPI{
         //FIXME add errors here
     }
     turtleImages.add(turtleImage);
+    pt.setNode(turtleImage);
     return turtleImage;
   }
 
@@ -241,34 +247,30 @@ public class Visualizer implements ViewExternalAPI{
   @Override
   public void update(double newX, double newY, double orientation){
     ImageView turtleimage = turtleImages.get(0);
-//    double oldX = turtleimage.getTranslateX();
-//    double oldY = turtleimage.getTranslateY();
-//    System.out.println(oldX);
-//    System.out.println(oldY);
-//    Path path = new Path();
-//    turtlePaths.getChildren().add(path);
-//    path.getElements().add(new MoveTo(oldX, oldY));
-//    path.getElements().add(new LineTo(newX, newY));
-////    System.out.println(turtleimage.getTranslateX());
-////    System.out.println(turtleimage.getTranslateY());
-//    PathTransition pt = new PathTransition(Duration.millis(2000), path, turtleimage);
-//    pt.play();
-////    System.out.println(turtleimage.getLayoutX()+newX-oldX);
-////    System.out.println(turtleimage.getLayoutY()+newY-oldY);
-//    if(penStatus){
-//      path.setOpacity(0.5);
-//    } else {
-//      path.setOpacity(0.0);
-//    }
-    TranslateTransition tt = new TranslateTransition(Duration.millis(2000), turtleimage);
-    tt.setToX(newX);
-    tt.setToY(newY);
+    double oldX = turtleimage.getTranslateX()+turtleimage.getBoundsInParent().getWidth()/2;
+    double oldY = turtleimage.getTranslateY()+turtleimage.getBoundsInParent().getHeight()/2;
+    if(newX != oldX || newY != oldY) {
+      Path path = new Path();
+      if(penStatus){
+        path.setOpacity(0.5);
+      } else {
+        path.setOpacity(0.0);
+      }
+      turtlePaths.getChildren().add(path);
+      path.getElements().add(new MoveTo(oldX, oldY));
+      path.getElements().add(new LineTo(newX, newY));
+      pt.setPath(path);
+      pt.play();
+    }
 
-    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
-    rt.setToAngle(orientation);
+    PauseTransition pauser = new PauseTransition();
+    pauser.setDuration(Duration.millis(1000));
+    pauser.play();
 
-    tt.play();
-    rt.play();
+//    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
+//    rt.setToAngle(orientation);
+//
+//    rt.play();
   }
 
   @Override
