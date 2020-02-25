@@ -5,6 +5,8 @@ import slogo.model.Turtle;
 public class Backward extends Command {
 
     private static final Double BACK = -1.0;
+    private Double distance;
+    private Turtle t;
 
     /**
      * Backward constructor, to get the value of going backward
@@ -14,6 +16,17 @@ public class Backward extends Command {
      */
     public Backward(Turtle body, Double value) {
         super(value);
-        body.move(value*BACK);
+        t = body;
+        distance = value*BACK;
+    }
+
+    /**
+     * Allows the command backwards to be executed
+     * @return the distance traveled
+     */
+    @Override
+    public Double execute() {
+        t.move(distance*BACK);
+        return distance;
     }
 }
