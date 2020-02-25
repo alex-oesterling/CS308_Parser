@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import slogo.exceptions.InvalidCommandException;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
@@ -137,7 +136,7 @@ public class Controller {
         String name = commandStack.pop();
         Command newCommand = getCommand(name, numberOfParams);
         if(commandStack.size()!=0){
-            argumentStack.push(newCommand.getResult());
+            argumentStack.push(newCommand.execute());
         }
     }
 
