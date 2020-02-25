@@ -4,7 +4,7 @@ public class Turtle{
 
   private static final int DEFAULT_STARTING_X = 0;
   private static final int DEFAULT_STARTING_Y = 0;
-  private static final int DEFAULT_HEADING = 90;
+  private static final int DEFAULT_HEADING = 0;
   private static final double VISIBLE = 1;
   private static final double INVISIBLE = 0;
   private static final int QUAD1_BEGINS = 0;
