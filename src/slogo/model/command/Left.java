@@ -5,6 +5,8 @@ import slogo.model.Turtle;
 public class Left extends Command {
 
     private static final Double LEFT = -1.0;
+    private Turtle t;
+    private Double degrees;
 
     /**
      * Left constructor, to get the value to be a left value
@@ -13,7 +15,17 @@ public class Left extends Command {
      * @param value the value of how far it is being turned to the left (changed to negative)
      */
     public Left(Turtle body, Double value) {
-        super(value);
-        body.turn(value*LEFT);
+        super();
+        t = body;
+        degrees = value*LEFT;
+    }
+
+    /**
+     * Allows the left command to be executed
+     * @return the value turned in degrees
+     */
+    @Override
+    public Double execute() {
+        return t.turn(degrees);
     }
 }

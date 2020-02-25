@@ -4,6 +4,8 @@ import slogo.model.Turtle;
 
 public class Right extends Command {
 
+    private Turtle t;
+    private Double degrees;
     /**
      * Right constructor, to get the value of going right
      * Calls super and sets the right turn value
@@ -11,7 +13,17 @@ public class Right extends Command {
      * @param value the value of how far it is turning right
      */
     public Right(Turtle body, Double value) {
-        super(value);
-        body.turn(value);
+        super();
+        t = body;
+        degrees = value;
+    }
+
+    /**
+     * Allows the right command to be executed
+     * @return the degrees turned
+     */
+    @Override
+    public Double execute() {
+        return t.turn(degrees);
     }
 }

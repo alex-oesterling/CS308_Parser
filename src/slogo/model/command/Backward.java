@@ -7,7 +7,6 @@ public class Backward extends Command {
     private static final Double BACK = -1.0;
     private Double distance;
     private Turtle t;
-
     /**
      * Backward constructor, to get the value of going backward
      * Calls super and sets the backward value
