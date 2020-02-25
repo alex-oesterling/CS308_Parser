@@ -57,30 +57,29 @@ public class Visualizer implements ViewExternalAPI{
   private Group view;
   private VBox variables;
   private VBox commands;
-  private Line pen;
   private VBox group;
   private BorderPane viewPane;
   private Rectangle turtleArea;
-  private List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
+  private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
   private String language;
-  private boolean penStatus = true;
   private Group turtlePaths;
-  private Turtle turtle;
+  private Group turtles;
 
   public Visualizer (Parser parser){
-    turtleImages = new ArrayList<>();
-    myParser = parser;
+    view = new Group();
+    turtlePaths = new Group();
+    turtleList = new ArrayList<>();
+    turtles = new Group();
+    myParser = parser; //FIXME
     myController = new Controller(new And(0, 0), this); //FIXME  just made a random command
-    myController.addLanguage("English");
-    myController.addLanguage("Syntax");
+    myController.addLanguage("English"); //FIXME
+    myController.addLanguage("Syntax"); //FIXME
   }
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
 //    turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
-    turtle = new Turtle();
-    turtleImages.add(0, turtle.createTurtle());
     root = createView();
     myScene = new Scene(root);
     return myScene;
@@ -90,27 +89,26 @@ public class Visualizer implements ViewExternalAPI{
     viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
+
     Node turtleView = showUserDefined();
     Node commandLine = new CommandLine(myController).setupCommandLine();
     Node userInterface = createUI();
+
     viewPane.setMargin(commandLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setLeft(turtleView);
     viewPane.setCenter(commandLine);
     viewPane.setRight(userInterface);
+
     return viewPane;
   }
 
-  private Group createBox() {
-    view = new Group();
-    turtlePaths = new Group();
+  private Group createBox() { //FIXME discuss creating objects here or in config
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-
-    turtlePaths.getChildren().add(turtleImages.get(0));
-    view.getChildren().addAll(turtleArea, turtlePaths);
-
+    turtleList.add(new TurtleView(turtles, turtlePaths));
+    view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
   }
 
@@ -123,13 +121,13 @@ public class Visualizer implements ViewExternalAPI{
     variables = new VBox();
     ScrollPane userVariables = new ScrollPane();
     userVariables.setContent(variables);
-    userVariables.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4 );
+    userVariables.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4 ); //FIXME dependency on turtlearea width
     variables.heightProperty().addListener((obs, old, newValue) -> userVariables.setVvalue((Double)newValue));
 
     commands = new VBox();
     ScrollPane userCommands = new ScrollPane();
     userCommands.setContent(commands);
-    userCommands.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4);
+    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4);
     commands.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
     //fixme duplicated code to create boxes for saved commands -- extract method?
     userDefined.setLeft(userVariables);
@@ -138,7 +136,7 @@ public class Visualizer implements ViewExternalAPI{
     Label variablesLabel = new Label(myResources.getString("Variables"));
     Label commandsLabel = new Label(myResources.getString("Commands"));
     GridPane grid = new GridPane();
-    grid.setHgap(turtleArea.getWidth()/3);
+    grid.setHgap(TURTLE_SCREEN_WIDTH/3);
     GridPane.setConstraints(variablesLabel, 0, 0);
     GridPane.setConstraints(commandsLabel, 1, 0);
     grid.getChildren().addAll(variablesLabel, commandsLabel);
@@ -155,9 +153,7 @@ public class Visualizer implements ViewExternalAPI{
     Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
     Button chooseTurtle = new Button(myResources.getString("ChooseTurtle"));
     chooseTurtle.setOnAction(e-> {
-      turtlePaths.getChildren().remove(turtleImages.get(0));
-      turtleImages.add(0, turtle.chooseTurtle());
-      turtlePaths.getChildren().add(turtleImages.get(0));
+      turtleList.get(0).chooseTurtle();
             }
     );
     ui.setSpacing(VBOX_SPACING);
@@ -176,7 +172,7 @@ public class Visualizer implements ViewExternalAPI{
   private ColorPicker penColor(){
     ColorPicker colorPicker = new ColorPicker();
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> pen.setFill(colorPicker.getValue()));
+    colorPicker.setOnAction(e -> turtleList.get(0).updatePen(colorPicker.getValue()));
     return colorPicker;
   }
 
@@ -216,33 +212,7 @@ public class Visualizer implements ViewExternalAPI{
 
   @Override
   public void update(double newX, double newY, double orientation){
-    ImageView turtleimage = turtleImages.get(0);
-
-    double oldX = turtleimage.getTranslateX()+turtleimage.getBoundsInParent().getWidth()/2;
-    double oldY = turtleimage.getTranslateY()+turtleimage.getBoundsInParent().getHeight()/2;
-    if(newX != oldX || newY != oldY) {
-      Path path = new Path();
-      if(penStatus){
-        path.setOpacity(0.5);
-      } else {
-        path.setOpacity(0.0);
-      }
-      turtlePaths.getChildren().add(path);
-      path.getElements().add(new MoveTo(oldX, oldY));
-      path.getElements().add(new LineTo(newX, newY));
-      PathTransition pt = new PathTransition(Duration.millis(2000), path, turtleimage);
-      pt.setPath(path);
-      pt.play();
-    }
-
-    PauseTransition pauser = new PauseTransition();
-    pauser.setDuration(Duration.millis(1000));
-    pauser.play();
-
-//    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
-//    rt.setToAngle(orientation);
-//
-//    rt.play();
+    turtleList.get(0).update(newX, newY, orientation);
   }
 
   @Override
