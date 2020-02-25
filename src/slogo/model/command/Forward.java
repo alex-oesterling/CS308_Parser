@@ -20,7 +20,7 @@ public class Forward extends Command {
   }
 
   /**
-   * move turtle forward
+   * Allows the turtle to move forward
    * @return distance travelled
    */
   @Override
@@ -35,3 +35,4 @@ public class Forward extends Command {
     System.out.println("x: "+t.getX()+" y: "+t.getY()+" and H: "+t.getHeading());
   }
 }
+
