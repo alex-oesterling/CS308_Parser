@@ -10,13 +10,10 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
 import slogo.model.command.booleancommand.*;
-
-import slogo.model.command.turtlecommand.Forward;
 import slogo.view.Visualizer;
 
 public class Controller {
@@ -77,37 +74,6 @@ public class Controller {
         return list;
     }
 
-
-
-//
-//    //get command from the view and give to model, need a reference to the command class
-//    public void runCommand(String text){
-//        List<List<String>> commands = new ArrayList<List<String>>();
-//        List<String> lines = Arrays.asList(text.split("\n"));
-//        for(String line : lines){
-//            commands.add(Arrays.asList(line.split(WHITESPACE)));
-//        }
-//        for(List<String> line : commands){
-//            for(String command : line) {
-//                if (command.trim().length() > 0) {
-//                    System.out.println(getSymbol(command));
-//                    Class commandClass = null;
-//                    try {
-//                        commandClass = Class.forName(INFORMATION_PACKAGE + ".turtlecommand."+ command);
-//                        commandStack.push((Command) (commandClass.getConstructor().newInstance()));
-//                    } catch (ClassNotFoundException | //FIXME generic error handling by alex. could make better possible but low priority
-//                        InstantiationException |
-//                        InvocationTargetException |
-//                        NoSuchMethodException |
-//                        IllegalAccessException e) {
-//                        throw new InvalidCommandException(e);
-//                    }
-//                }
-//            }
-//        }
-////        myParser.readCommandFromString(command);
-//    }
-
     // utility function that reads given file and returns its entire contents as a single string
     private String readFileToString (String inputSource) {
         try {
@@ -121,7 +87,6 @@ public class Controller {
         }
     }
 
-    // given some text, prints results of parsing it using the given language
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
         List<Command> commandList = new ArrayList<>();
         for (String line : lines) {
@@ -194,9 +159,7 @@ public class Controller {
         }
         return myCommand;
         //FIXME it shouldn't be this mofo
-
     }
-
 
     private Constructor getCommandConstructor(Class command, double numberOfParams) throws NoSuchMethodException {
         if(numberOfParams == ONE_DOUBLE){
@@ -212,6 +175,10 @@ public class Controller {
         } else { //if (numberOfParams == TURTLE)
             return command.getConstructor(new Class[]{Turtle.class});
         }
+    }
+
+    private Command makeCommandObject(String name, String params){
+        return new Not(0.0);
     }
 
     private boolean checkArgumentStack(){
@@ -232,10 +199,6 @@ public class Controller {
         return numberOfParams;
     }
 
-    private Command makeCommandObject(String name, String params){
-        return new Not(0.0);
-    }
-
     /**
      * Gets parsed command from model
      * @return command
@@ -254,4 +217,32 @@ public class Controller {
         this.error = e;
     }
 
+    //
+//    //get command from the view and give to model, need a reference to the command class
+//    public void runCommand(String text){
+//        List<List<String>> commands = new ArrayList<List<String>>();
+//        List<String> lines = Arrays.asList(text.split("\n"));
+//        for(String line : lines){
+//            commands.add(Arrays.asList(line.split(WHITESPACE)));
+//        }
+//        for(List<String> line : commands){
+//            for(String command : line) {
+//                if (command.trim().length() > 0) {
+//                    System.out.println(getSymbol(command));
+//                    Class commandClass = null;
+//                    try {
+//                        commandClass = Class.forName(INFORMATION_PACKAGE + ".turtlecommand."+ command);
+//                        commandStack.push((Command) (commandClass.getConstructor().newInstance()));
+//                    } catch (ClassNotFoundException | //FIXME generic error handling by alex. could make better possible but low priority
+//                        InstantiationException |
+//                        InvocationTargetException |
+//                        NoSuchMethodException |
+//                        IllegalAccessException e) {
+//                        throw new InvalidCommandException(e);
+//                    }
+//                }
+//            }
+//        }
+////        myParser.readCommandFromString(command);
+//    }
 }

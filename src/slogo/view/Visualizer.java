@@ -60,7 +60,7 @@ public class Visualizer implements ViewExternalAPI{
   private ResourceBundle myResources;
   private String language;
 
-  public Visualizer (Parser parser){
+  public Visualizer (){
     turtleImages = new ArrayList<>();
     //myParser = parser;
     myController = new Controller(this, DEFAULT_LANGUAGE);
