@@ -40,7 +40,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
-import slogo.model.command.booleancommand.And;
+import slogo.model.command.And;
 
 public class Visualizer implements ViewExternalAPI{
 
