@@ -11,6 +11,5 @@ public class Sum extends Command {
    */
   public Sum(Double addend1, Double addend2){
     super(addend1+addend2);
-    System.out.println("sum "+addend1+" "+addend2+" = "+(addend1+addend2));
   }
 }
