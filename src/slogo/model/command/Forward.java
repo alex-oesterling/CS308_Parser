@@ -4,6 +4,9 @@ import slogo.model.Turtle;
 
 public class Forward extends Command {
 
+  private Turtle t;
+  private Double distance;
+
   /**
    * Forward constructor, to get the value for going forward
    * Calls super and sets the forward value
@@ -12,7 +15,13 @@ public class Forward extends Command {
    */
   public Forward(Turtle body, Double value) {
     super(value);
-    body.move(value);
+    t = body;
+    distance = value;
+  }
+
+  @Override
+  public void execute(){
+    t.move(distance);
   }
 
   public static void main(String[] args) {

@@ -38,5 +38,11 @@ abstract public class Command {
     return result;
   }
 
+  protected void setResult(Double value){
+    result = value;
+  }
+
+  abstract public void execute();
+
   //TODO add throwCommandParametersError()
 }
