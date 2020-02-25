@@ -28,11 +28,12 @@ public class Controller {
     Command myCommand;
     Visualizer myView;
 
-    public Controller(Parser parser, Visualizer visualizer) { //fixme alex changed constructor
+    public Controller(Command command, Visualizer visualizer) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
         commandStack = new Stack<>();
-        resourceBundle = ResourceBundle.getBundle(RESOURCES_PACKAGE);
+        myCommand = command;
+        resourceBundle = ResourceBundle.getBundle(RESOURCES_PACKAGE + "English");
         makeCommandMap();
     }
 
@@ -89,7 +90,7 @@ public class Controller {
                         InvocationTargetException |
                         NoSuchMethodException |
                         IllegalAccessException e) {
-                        throw new InvalidCommandException(e);
+                        throw new InvalidCommandException(e, getSymbol(command), command);
                     }
                 }
             }

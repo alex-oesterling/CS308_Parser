@@ -33,6 +33,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
+import slogo.model.command.booleancommand.And;
 
 public class Visualizer implements ViewExternalAPI{
 
@@ -72,8 +73,8 @@ public class Visualizer implements ViewExternalAPI{
   public Visualizer (Parser parser){
     turtleImages = new ArrayList<>();
     myParser = parser;
-    myController = new Controller(parser, this);
-    myController.addLanguage("English"); //FIXME set in view
+    myController = new Controller(new And(0, 0), this); //FIXME  just made a random command
+    myController.addLanguage("English");
     myController.addLanguage("Syntax");
   }
 
@@ -86,7 +87,6 @@ public class Visualizer implements ViewExternalAPI{
   }
 
   private BorderPane createView(){
-    BorderPane viewPane = new BorderPane();
     viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
@@ -124,12 +124,14 @@ public class Visualizer implements ViewExternalAPI{
     ScrollPane userVariables = new ScrollPane();
     userVariables.setContent(variables);
     userVariables.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4 );
+    variables.heightProperty().addListener((obs, old, newValue) -> userVariables.setVvalue((Double)newValue));
 
     commands = new VBox();
     ScrollPane userCommands = new ScrollPane();
     userCommands.setContent(commands);
     userCommands.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4);
-
+    commands.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
+    //fixme duplicated code to create boxes for saved commands -- extract method?
     userDefined.setLeft(userVariables);
     userDefined.setRight(userCommands);
 
@@ -142,6 +144,7 @@ public class Visualizer implements ViewExternalAPI{
     grid.getChildren().addAll(variablesLabel, commandsLabel);
 
     group.getChildren().addAll(grid, userDefined);
+    group.setVgrow(userDefined, Priority.ALWAYS);
     return group;
   }
 
