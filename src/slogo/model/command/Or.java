@@ -1,6 +1,4 @@
-package slogo.model.command.booleancommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Or extends Command {
 
@@ -10,7 +8,7 @@ public class Or extends Command {
    * @param value1 a
    * @param value2 b
    */
-  public Or(double value1, double value2){
+  public Or(double value1, Double value2){
     super(value1!=0.0||value2!=0.0);
   }
 

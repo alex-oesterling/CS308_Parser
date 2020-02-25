@@ -1,7 +1,6 @@
-package slogo.model.command.turtlecommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
 
 public class Right extends Command {
 
@@ -11,9 +10,8 @@ public class Right extends Command {
      * @param body the specific turtle being used, what the right value will be
      * @param value the value of how far it is turning right
      */
-    public Right(Turtle body, double value) {
+    public Right(Turtle body, Double value) {
         super(value);
         body.turn(value);
-        System.out.println("right "+value);
     }
 }

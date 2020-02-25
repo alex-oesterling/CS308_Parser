@@ -10,7 +10,7 @@ abstract public class Command {
    * Command constructor, sets result to return value
    * @param returnValue value returned by each specific command
    */
-  public Command(double returnValue){
+  public Command(Double returnValue){
     result = returnValue;
   }
 
@@ -34,7 +34,7 @@ abstract public class Command {
    * getter for result, what the command "returns"
    * @return result
    */
-  public double getResult(){
+  public Double getResult(){
     return result;
   }
 

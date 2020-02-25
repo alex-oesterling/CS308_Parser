@@ -1,7 +1,6 @@
-package slogo.model.command.turtlecommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
 
 public class SetPosition extends Command {
 
@@ -12,7 +11,7 @@ public class SetPosition extends Command {
      * @param xPos the new x position that the turtle will be at
      * @param yPos the new  y position that the turtle will be at
      */
-    public SetPosition(Turtle body, double xPos, double yPos){
+    public SetPosition(Turtle body, Double xPos, Double yPos){
         super(body.moveToPosition(xPos, yPos));
     }
 }

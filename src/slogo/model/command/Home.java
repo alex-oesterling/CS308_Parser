@@ -1,7 +1,6 @@
-package slogo.model.command.turtlecommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
 
 public class Home extends Command {
 
@@ -10,6 +9,5 @@ public class Home extends Command {
    */
   public Home(Turtle body) {
     super(body.goHome());
-    System.out.println("home");
   }
 }

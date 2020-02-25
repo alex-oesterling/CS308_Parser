@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Sine extends Command {
 
@@ -10,7 +8,7 @@ public class Sine extends Command {
    * performs sin(a)
    * @param a value to take the sine of
    */
-  public Sine(double a){
+  public Sine(Double a){
     super(Math.sin(a));
   }
 }

@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Random extends Command {
 
@@ -10,7 +8,7 @@ public class Random extends Command {
    * less than max
    * @param max maximum random value
    */
-  public Random(double max){
+  public Random(Double max){
     super(Math.random()*max);
   }
 }

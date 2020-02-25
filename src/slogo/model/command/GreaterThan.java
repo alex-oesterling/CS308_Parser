@@ -1,6 +1,4 @@
-package slogo.model.command.booleancommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class GreaterThan extends Command {
 
@@ -10,13 +8,13 @@ public class GreaterThan extends Command {
    * @param value1 a
    * @param value2 b
    */
-  public GreaterThan(double value1, double value2){
+  public GreaterThan(Double value1, Double value2){
     super(value1>value2);
   }
 
   public static void main(String[] args) {
-    int a = 3;
-    int b = 1;
+    double a = 3;
+    double b = 1;
     GreaterThan c = new GreaterThan(a,b);
     System.out.println(a+">"+b+": "+c.getResult());
 
@@ -42,18 +40,5 @@ public class GreaterThan extends Command {
     bb = 3.00000;
     c = new GreaterThan(aa,bb);
     System.out.println(aa+">"+bb+": "+c.getResult());
-
-    float aaa = 3.6f;
-    float bbb = 3.4f;
-    c = new GreaterThan(aaa,bbb);
-    System.out.println(aaa+">"+bbb+": "+c.getResult());
-
-    Integer aaaa = 1;
-    Integer bbbb = 0;
-    c = new GreaterThan(aaaa,bbbb);
-    System.out.println(aaaa+">"+bbbb+": "+c.getResult());
-
-    c = new GreaterThan(bbb, aaaa);
-    System.out.println(bbb+">"+aaaa+": "+c.getResult());
   }
 }

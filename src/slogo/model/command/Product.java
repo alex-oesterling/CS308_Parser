@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Product extends Command {
 
@@ -11,7 +9,7 @@ public class Product extends Command {
    * @param value1 a
    * @param value2 b
    */
-  public Product(double value1, double value2){
+  public Product(Double value1, Double value2){
     super(value1*value2);
   }
 

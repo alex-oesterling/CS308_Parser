@@ -1,8 +1,6 @@
-package slogo.model.command.turtlecommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
-
 
 public class SetTowards extends Command {
     /**
@@ -11,7 +9,7 @@ public class SetTowards extends Command {
      * @param xPos  the x position of where the turtle will turn to
      * @param yPos the y position of where the turtle will turn to
      */
-    public SetTowards(Turtle body, double xPos, double yPos){
+    public SetTowards(Turtle body, Double xPos, Double yPos){
         super(body.pointTowards(xPos, yPos));
     }
 }

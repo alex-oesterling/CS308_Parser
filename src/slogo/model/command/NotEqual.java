@@ -1,6 +1,4 @@
-package slogo.model.command.booleancommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class NotEqual extends Command {
 
@@ -9,7 +7,7 @@ public class NotEqual extends Command {
    * @param double1 first double
    * @param double2 second double
    */
-  public NotEqual(double double1, double double2){
+  public NotEqual(Double double1, Double double2){
     super(double1!=double2);
   }
 

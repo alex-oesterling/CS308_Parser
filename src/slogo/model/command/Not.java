@@ -1,6 +1,4 @@
-package slogo.model.command.booleancommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Not extends Command {
 
@@ -9,7 +7,7 @@ public class Not extends Command {
    * call super constructor, and update result
    * @param a
    */
-  public Not(double a){
+  public Not(Double a){
     super(!(a!=0.0));
   }
 

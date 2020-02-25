@@ -1,11 +1,10 @@
-package slogo.model.command.turtlecommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
 
 public class Backward extends Command {
 
-    private double back;
+    private static final Double BACK = -1.0;
 
     /**
      * Backward constructor, to get the value of going backward
@@ -15,7 +14,6 @@ public class Backward extends Command {
      */
     public Backward(Turtle body, Double value) {
         super(value);
-        back = value *-1;
-        body.move(back);
+        body.move(value*BACK);
     }
 }

@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Minus extends Command {
 
@@ -9,7 +7,7 @@ public class Minus extends Command {
    * sets the value to return as -a
    * @param value a
    */
-  public Minus(double value){
+  public Minus(Double value){
     super(-1*value);
   }
 }

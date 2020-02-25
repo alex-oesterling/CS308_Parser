@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Difference extends Command {
 
@@ -12,7 +10,7 @@ public class Difference extends Command {
    * @param minuend a
    * @param subtrahend b
    */
-  public Difference(double minuend, double subtrahend){
+  public Difference(Double minuend, Double subtrahend){
     super(minuend-subtrahend);
   }
 }

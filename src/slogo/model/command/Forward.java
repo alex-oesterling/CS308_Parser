@@ -1,7 +1,6 @@
-package slogo.model.command.turtlecommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
 
 public class Forward extends Command {
 
@@ -14,12 +13,11 @@ public class Forward extends Command {
   public Forward(Turtle body, Double value) {
     super(value);
     body.move(value);
-    System.out.println("forward "+value);
   }
 
   public static void main(String[] args) {
     Turtle t = new Turtle();
-    //Forward f = new Forward(t, (Double) 50);
+    Forward f = new Forward(t, 50.0);
     System.out.println("x: "+t.getX()+" y: "+t.getY()+" and H: "+t.getHeading());
   }
 }

@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class NaturalLog extends Command {
 
@@ -9,7 +7,7 @@ public class NaturalLog extends Command {
    * performs ln(a)
    * @param a
    */
-  public NaturalLog(double a){
+  public NaturalLog(Double a){
     super(Math.log(a));
   }
 }

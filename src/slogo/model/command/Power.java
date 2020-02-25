@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Power extends Command {
 
@@ -10,7 +8,7 @@ public class Power extends Command {
    * @param base a
    * @param exponent b
    */
-  public Power(double base, double exponent){
+  public Power(Double base, Double exponent){
     super(Math.pow(base, exponent));
   }
 }

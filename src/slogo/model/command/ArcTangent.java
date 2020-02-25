@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class ArcTangent extends Command {
 
@@ -9,7 +7,7 @@ public class ArcTangent extends Command {
    * calls super constructor and then sets the re
    * @param a
    */
-  public ArcTangent(double a){
+  public ArcTangent(Double a){
     super(Math.atan(a));
   }
 }

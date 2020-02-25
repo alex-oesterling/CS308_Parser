@@ -1,6 +1,4 @@
-package slogo.model.command.booleancommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class And extends Command {
 
@@ -9,7 +7,7 @@ public class And extends Command {
    * @param value1 condition 1
    * @param value2 condition 2
    */
-  public And(double value1, double value2){
+  public And(Double value1, Double value2){
    super(value1!=0.0&&value2!=0.0); //'convert' to booleans
   }
 

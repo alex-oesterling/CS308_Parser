@@ -1,11 +1,10 @@
-package slogo.model.command.turtlecommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
 
 public class Left extends Command {
 
-    private double left;
+    private static final Double LEFT = -1.0;
 
     /**
      * Left constructor, to get the value to be a left value
@@ -13,9 +12,8 @@ public class Left extends Command {
      * @param body the specific turtle being used, what the left is being set for
      * @param value the value of how far it is being turned to the left (changed to negative)
      */
-    public Left(Turtle body, double value) {
+    public Left(Turtle body, Double value) {
         super(value);
-        left = value * -1;
-        body.turn(left);
+        body.turn(value*LEFT);
     }
 }

@@ -1,7 +1,6 @@
-package slogo.model.command.turtlecommand.querycommand;
+package slogo.model.command;
 
 import slogo.model.Turtle;
-import slogo.model.command.Command;
 
 public class IsShowing extends Command {
 

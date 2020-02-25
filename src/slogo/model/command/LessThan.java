@@ -1,6 +1,4 @@
-package slogo.model.command.booleancommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class LessThan extends Command {
 
@@ -10,13 +8,13 @@ public class LessThan extends Command {
    * @param value1 a
    * @param value2 b
    */
-  public LessThan(double value1, double value2){
+  public LessThan(Double value1, Double value2){
     super(value1<value2);
   }
 
   public static void main(String[] args) {
-    int a = 3;
-    int b = 1;
+    double a = 3;
+    double b = 1;
     LessThan c = new LessThan(a,b);
     System.out.println(a+"<"+b+": "+c.getResult());
 
@@ -42,18 +40,5 @@ public class LessThan extends Command {
     bb = 3.00000;
     c = new LessThan(aa,bb);
     System.out.println(aa+"<"+bb+": "+c.getResult());
-
-    float aaa = 3.6f;
-    float bbb = 3.4f;
-    c = new LessThan(aaa,bbb);
-    System.out.println(aaa+"<"+bbb+": "+c.getResult());
-
-    Integer aaaa = 1;
-    Integer bbbb = 0;
-    c = new LessThan(aaaa,bbbb);
-    System.out.println(aaaa+"<"+bbbb+": "+c.getResult());
-
-    c = new LessThan(bbb, aaaa);
-    System.out.println(bbb+"<"+aaaa+": "+c.getResult());
   }
 }

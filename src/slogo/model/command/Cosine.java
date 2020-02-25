@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Cosine extends Command {
 
@@ -10,7 +8,7 @@ public class Cosine extends Command {
    *
    * @param a
    */
-  public Cosine(double a){
+  public Cosine(Double a){
     super(Math.cos(a));
   }
 }

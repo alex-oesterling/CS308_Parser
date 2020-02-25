@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Tangent extends Command {
 
@@ -10,7 +8,7 @@ public class Tangent extends Command {
    * performs tan(a)
    * @param a value to take the tangent of
    */
-  public Tangent(double a){
+  public Tangent(Double a){
     super(Math.tan(a));
   }
 }

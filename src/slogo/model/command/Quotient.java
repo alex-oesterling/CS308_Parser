@@ -1,6 +1,4 @@
-package slogo.model.command.mathcommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Quotient extends Command {
 
@@ -11,7 +9,7 @@ public class Quotient extends Command {
    * @param dividend number to be divided; a
    * @param divisor number to divide by; b
    */
-  public Quotient(double dividend, double divisor){
+  public Quotient(Double dividend, Double divisor){
     super(dividend/divisor);
   }
 }

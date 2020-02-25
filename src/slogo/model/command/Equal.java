@@ -1,6 +1,4 @@
-package slogo.model.command.booleancommand;
-
-import slogo.model.command.Command;
+package slogo.model.command;
 
 public class Equal extends Command {
 
@@ -9,7 +7,7 @@ public class Equal extends Command {
    * @param double1 first object
    * @param double2 second object
    */
-  public Equal(double double1, double double2){
+  public Equal(Double double1, Double double2){
     super(double1==double2);
   }
 
