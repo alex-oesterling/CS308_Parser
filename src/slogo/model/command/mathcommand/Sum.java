@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Sum extends MathCommand {
+import slogo.model.command.Command;
+
+public class Sum extends Command {
 
   /**
    * Default constructor for Sum, calls the super constructor

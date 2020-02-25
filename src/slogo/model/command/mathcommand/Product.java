@@ -1,6 +1,8 @@
 package slogo.model.command.mathcommand;
 
-public class Product extends MathCommand {
+import slogo.model.command.Command;
+
+public class Product extends Command {
 
   /**
    * Default Product constructor, calls the super constructor

@@ -1,28 +1,18 @@
 package slogo.view;
 
-
-import static slogo.view.Visualizer.TURTLE_SCREEN_HEIGHT;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-
 import slogo.controller.Controller;
-
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import slogo.controller.Controller;
 import slogo.exceptions.InvalidCommandException;
 
 
@@ -71,13 +61,10 @@ public class CommandLine {
     Button run = new Button(myResources.getString("RunCommand"));
     run.setMinWidth(BUTTON_WIDTH);
     run.setOnAction(e->submitCommand());
-    run.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(run);
 
     Button clear = new Button(myResources.getString("ClearCommand"));
-    clear.setOnAction(e->{
-      textBox.clear();
-    });
+    clear.setOnAction(e->textBox.clear());
     clear.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(clear);
 

@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -18,10 +19,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.Node;
+
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
 import slogo.model.Parser;
@@ -42,6 +44,10 @@ public class Visualizer implements ViewExternalAPI{
   public static final int TURTLE_WIDTH = 50;
   public static final int TURTLE_HEIGHT = 40;
   public static final int COLORPICKER_HEIGHT = 30;
+
+  public static final int VIEWPANE_PADDING = 10;
+  public static final int VIEWPANE_MARGIN = 0;
+  public static final int VBOX_SPACING = 10;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
@@ -52,13 +58,19 @@ public class Visualizer implements ViewExternalAPI{
   BorderPane root;
   Group view;
 
+  VBox variables;
+  VBox commands;
+  Line pen;
+  VBox group;
+  BorderPane viewPane;
+
   Rectangle turtleArea;
   List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
   ResourceBundle myResources;
   String language;
 
   public Visualizer (Parser parser){
-    turtleImages = new ArrayList<ImageView>();
+    turtleImages = new ArrayList<>();
     myParser = parser;
     myController = new Controller(parser, this);
     myController.addLanguage("English"); //FIXME set in view
@@ -75,14 +87,13 @@ public class Visualizer implements ViewExternalAPI{
 
   private BorderPane createView(){
     BorderPane viewPane = new BorderPane();
+    viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
-    viewPane.setPadding(new Insets(10, 10, 10, 10));
-    Node turtleView = createBox();
+    viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
+    Node turtleView = showUserDefined();
     Node commandLine = new CommandLine(myController).setupCommandLine();
     Node userInterface = createUI();
-
-    viewPane.setMargin(commandLine, new Insets(0, 10, 0, 10));
-
+    viewPane.setMargin(commandLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setLeft(turtleView);
     viewPane.setCenter(commandLine);
     viewPane.setRight(userInterface);
@@ -91,7 +102,6 @@ public class Visualizer implements ViewExternalAPI{
 
   private Group createBox() {
     view = new Group();
-//  turtleArea = new Rectangle(XPOS_OFFSET, YPOS_OFFSET, TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     GridPane turtlePane = new GridPane();
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     turtleArea.setFill(Color.WHITE);
@@ -100,29 +110,62 @@ public class Visualizer implements ViewExternalAPI{
     turtlePane.add(turtleArea, 0, 0);
     turtlePane.setHgrow(turtleArea, Priority.ALWAYS);
     turtlePane.setVgrow(turtleArea, Priority.ALWAYS);
-    view.getChildren().add(turtlePane);
-    view.getChildren().add(chooseTurtle());
+    view.getChildren().addAll(turtlePane, chooseTurtle());
     return view;
+  }
+
+  private VBox showUserDefined(){
+    group = new VBox();
+    group.setSpacing(VBOX_SPACING);
+    group.getChildren().add(createBox());
+
+    BorderPane userDefined = new BorderPane();
+    variables = new VBox();
+    ScrollPane userVariables = new ScrollPane();
+    userVariables.setContent(variables);
+    userVariables.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4 );
+
+    commands = new VBox();
+    ScrollPane userCommands = new ScrollPane();
+    userCommands.setContent(commands);
+    userCommands.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4);
+
+    userDefined.setLeft(userVariables);
+    userDefined.setRight(userCommands);
+
+    Label variablesLabel = new Label(myResources.getString("Variables"));
+    Label commandsLabel = new Label(myResources.getString("Commands"));
+    GridPane grid = new GridPane();
+    grid.setHgap(turtleArea.getWidth()/3);
+    GridPane.setConstraints(variablesLabel, 0, 0);
+    GridPane.setConstraints(commandsLabel, 1, 0);
+    grid.getChildren().addAll(variablesLabel, commandsLabel);
+
+    group.getChildren().addAll(grid, userDefined);
+    return group;
   }
 
   private Node createUI() {
     VBox ui = new VBox();
-    ui.setSpacing(10);
-    ui.getChildren().add(backgroundColor());
-    ui.getChildren().add(help());
-    ui.getChildren().add(languageSelect());
+    Label background = new Label(myResources.getString("BackgroundColor"));
+    Label pen = new Label(myResources.getString("PenColor"));
+    Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
+    ui.setSpacing(VBOX_SPACING);
+    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help());
     return ui;
   }
 
   private ColorPicker backgroundColor(){
     ColorPicker colorPicker = new ColorPicker();
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> {
-//      root.getChildren().remove(turtleArea);
-      Color c = colorPicker.getValue();
-      turtleArea.setFill(colorPicker.getValue());
-//      root.getChildren().add(turtleArea);
-    });
+    colorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
+    return colorPicker;
+  }
+
+  private ColorPicker penColor(){
+    ColorPicker colorPicker = new ColorPicker();
+    colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
+    colorPicker.setOnAction(e -> pen.setFill(colorPicker.getValue()));
     return colorPicker;
   }
 
@@ -143,13 +186,9 @@ public class Visualizer implements ViewExternalAPI{
     return turtleImage;
   }
 
-
-
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));
-    help.setOnAction(e-> {
-      helpWindow = new HelpWindow(language);
-    });
+    help.setOnAction(e-> helpWindow = new HelpWindow(language));
     return help;
   }
 

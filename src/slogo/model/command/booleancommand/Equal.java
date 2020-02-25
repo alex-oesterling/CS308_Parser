@@ -1,6 +1,8 @@
 package slogo.model.command.booleancommand;
 
-public class Equal extends BooleanCommand{
+import slogo.model.command.Command;
+
+public class Equal extends Command {
 
   /**
    * Equal constructor comparing doubles

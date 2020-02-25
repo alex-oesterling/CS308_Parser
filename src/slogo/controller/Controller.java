@@ -1,15 +1,9 @@
 package slogo.controller;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.ResourceBundle;
-import java.util.Stack;
 import java.util.regex.Pattern;
 import slogo.exceptions.InvalidCommandException;
 import slogo.model.Parser;
@@ -21,19 +15,25 @@ public class Controller {
     private static final String RESOURCES_PACKAGE = "resources.languages.";
     private static final String COMMAND_PACKAGE = "slogo.model.command";
     public static final String WHITESPACE = "\\s+";
+    private static final Integer TURTLE_AND_ONE_DOUBLE = -1;
 
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<Command> commandStack;
+    private ResourceBundle resourceBundle;
+    private Map<String, String> userCreatedCommands;
+    private Map<String, Integer> numberOfArgsNeeded;
+    private Map<String, String> sLogoCommands;
     Turtle turtle = new Turtle();
     Errors error = new Errors();
-    Command command;
-    Parser myParser;
+    Command myCommand;
     Visualizer myView;
 
-    public Controller(Parser parser, Visualizer visualizer) {
-        myParser = parser;
+    public Controller(Parser parser, Visualizer visualizer) { //fixme alex changed constructor
         myView = visualizer;
         mySymbols = new ArrayList<>();
+        commandStack = new Stack<>();
+        resourceBundle = ResourceBundle.getBundle(RESOURCES_PACKAGE);
+        makeCommandMap();
     }
 
     /**
@@ -102,23 +102,15 @@ public class Controller {
      * @return command
      */
     public double returnCommand(){
-        return command.getResult();
+        return myCommand.getResult();
     }
 
-    /**
-     * Gets x position from Turtle class
-     * @return double
-     */
-    public double getXPosition(){
-        return turtle.getX();
-    }
-
-    /**
-     * Gets y position from Turtle class
-     * @return double
-     */
-    public double getYPosition(){
-        return turtle.getY();
+    private void makeCommandMap(){
+        sLogoCommands = new HashMap<String, String>();
+        Set<String> keys = resourceBundle.keySet();
+        for(String key : keys){
+            sLogoCommands.putIfAbsent(key, resourceBundle.getString(key));
+        }
     }
 
     /**
