@@ -21,7 +21,6 @@ public class CommandLine {
   public static final int TEXTBOX_HEIGHT = 100;
   public static final int BUTTON_WIDTH = 50;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
-  public static final String INVALID_COMMAND = "Invalid command: ";
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
 
@@ -51,28 +50,28 @@ public class CommandLine {
     textBox.setEditable(true);
     textBox.wrapTextProperty();
 
-    textBox.setMaxWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
+    textBox.setPrefWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
     textBox.setMaxHeight(TEXTBOX_HEIGHT);
     textBox.setPromptText(myResources.getString("TextBoxFiller"));
+    userControls.setHgrow(textBox, Priority.ALWAYS);
     userControls.getChildren().add(textBox);
 
     VBox buttonBox = new VBox();
     Button run = new Button(myResources.getString("RunCommand"));
     run.setMinWidth(BUTTON_WIDTH);
-    run.setOnAction(e-> {
-      submitCommand();
-      textBox.clear();
-    });
+    run.setOnAction(e->submitCommand());
     buttonBox.getChildren().add(run);
 
     Button clear = new Button(myResources.getString("ClearCommand"));
     clear.setOnAction(e->textBox.clear());
+    clear.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(clear);
 
     userControls.getChildren().add(buttonBox);
     commandLine.setVgrow(terminal, Priority.ALWAYS);
     commandLine.getChildren().add(terminal);
     commandLine.getChildren().add(userControls);
+
     return commandLine;
   }
 
@@ -81,7 +80,7 @@ public class CommandLine {
       try {
         myController.sendCommands(textBox.getText());
       } catch (InvalidCommandException e){
-        Label recentCommand = new Label(INVALID_COMMAND + textBox.getText());
+        Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED);
         history.add(recentCommand);
         historyBox.getChildren().add(recentCommand);

@@ -2,6 +2,9 @@ package slogo.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.PathTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
@@ -12,13 +15,23 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 import slogo.controller.Controller;
 import slogo.model.Parser;
 
@@ -27,6 +40,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
+import slogo.model.command.booleancommand.And;
 
 public class Visualizer implements ViewExternalAPI{
 
@@ -38,6 +52,7 @@ public class Visualizer implements ViewExternalAPI{
   public static final int TURTLE_WIDTH = 50;
   public static final int TURTLE_HEIGHT = 40;
   public static final int COLORPICKER_HEIGHT = 30;
+
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
   public static final int VBOX_SPACING = 10;
@@ -59,6 +74,10 @@ public class Visualizer implements ViewExternalAPI{
   private List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
   private String language;
+  private boolean penStatus = true;
+  private Group turtlePaths;
+  private Parser myParser;
+  private BorderPane root;
 
   public Visualizer (){
     turtleImages = new ArrayList<>();
@@ -73,12 +92,13 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-    turtleFile = getTurtleImage(new Stage()); // do we want to select a new file for each new turtle or do we want to use the same turtlefile for all turtles?
-    myScene = new Scene(createView());
+//    turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
+    root = createView();
+    myScene = new Scene(root);
     return myScene;
   }
 
-  private Pane createView(){
+  private BorderPane createView(){
     viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
@@ -94,17 +114,15 @@ public class Visualizer implements ViewExternalAPI{
 
   private Group createBox() {
     view = new Group();
-    GridPane turtlePane = new GridPane();
+    turtlePaths = new Group();
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    turtlePane.add(turtleArea, 0, 0);
-    turtlePane.setHgrow(turtleArea, Priority.ALWAYS);
-    turtlePane.setVgrow(turtleArea, Priority.ALWAYS);
-    view.getChildren().addAll(turtlePane, chooseTurtle());
+    view.getChildren().addAll(turtleArea, chooseTurtle(), turtlePaths);
     return view;
   }
+
 
   private VBox showUserDefined(){
     group = new VBox();
@@ -116,12 +134,14 @@ public class Visualizer implements ViewExternalAPI{
     ScrollPane userVariables = new ScrollPane();
     userVariables.setContent(variables);
     userVariables.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4 );
+    variables.heightProperty().addListener((obs, old, newValue) -> userVariables.setVvalue((Double)newValue));
 
     commands = new VBox();
     ScrollPane userCommands = new ScrollPane();
     userCommands.setContent(commands);
     userCommands.setPrefSize(turtleArea.getWidth() / 2 ,turtleArea.getHeight() / 4);
-
+    commands.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
+    //fixme duplicated code to create boxes for saved commands -- extract method?
     userDefined.setLeft(userVariables);
     userDefined.setRight(userCommands);
 
@@ -134,6 +154,7 @@ public class Visualizer implements ViewExternalAPI{
     grid.getChildren().addAll(variablesLabel, commandsLabel);
 
     group.getChildren().addAll(grid, userDefined);
+    group.setVgrow(userDefined, Priority.ALWAYS);
     return group;
   }
 
@@ -143,7 +164,7 @@ public class Visualizer implements ViewExternalAPI{
     Label pen = new Label(myResources.getString("PenColor"));
     Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help());
+    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help(), testUpdate());
     return ui;
   }
 
@@ -164,13 +185,15 @@ public class Visualizer implements ViewExternalAPI{
   private ImageView chooseTurtle() {
     ImageView turtleImage = new ImageView();
     try {
-      BufferedImage bufferedImage = ImageIO.read(turtleFile);
+      BufferedImage bufferedImage = ImageIO.read(getTurtleImage(new Stage()));
       Image image = SwingFXUtils.toFXImage(bufferedImage, null);
       turtleImage.setImage(image);
       turtleImage.setFitWidth(TURTLE_WIDTH);
       turtleImage.setFitHeight(TURTLE_HEIGHT);
-      turtleImage.setX(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
-      turtleImage.setY(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
+//      turtleImage.setX(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
+//      turtleImage.setY(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
+      turtleImage.setTranslateY(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
+      turtleImage.setTranslateX(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
     } catch (IOException e) {
         //FIXME add errors here
     }
@@ -216,19 +239,43 @@ public class Visualizer implements ViewExternalAPI{
     return fileChooser.showOpenDialog(stage);
     }
 
-  @Override
-  public void updateXPos() {
-
+  private Button testUpdate(){
+    Button test = new Button("Test");
+    test.setOnAction(e->update(200, 200, 90));
+    return test;
   }
 
   @Override
-  public void updateYPos() {
+  public void update(double newX, double newY, double orientation){
+    ImageView turtleimage = turtleImages.get(0);
+//    double oldX = turtleimage.getTranslateX();
+//    double oldY = turtleimage.getTranslateY();
+//    System.out.println(oldX);
+//    System.out.println(oldY);
+//    Path path = new Path();
+//    turtlePaths.getChildren().add(path);
+//    path.getElements().add(new MoveTo(oldX, oldY));
+//    path.getElements().add(new LineTo(newX, newY));
+////    System.out.println(turtleimage.getTranslateX());
+////    System.out.println(turtleimage.getTranslateY());
+//    PathTransition pt = new PathTransition(Duration.millis(2000), path, turtleimage);
+//    pt.play();
+////    System.out.println(turtleimage.getLayoutX()+newX-oldX);
+////    System.out.println(turtleimage.getLayoutY()+newY-oldY);
+//    if(penStatus){
+//      path.setOpacity(0.5);
+//    } else {
+//      path.setOpacity(0.0);
+//    }
+    TranslateTransition tt = new TranslateTransition(Duration.millis(2000), turtleimage);
+    tt.setToX(newX);
+    tt.setToY(newY);
 
-  }
+    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
+    rt.setToAngle(orientation);
 
-  @Override
-  public void updateOrientation() {
-
+    tt.play();
+    rt.play();
   }
 
   @Override
@@ -238,6 +285,16 @@ public class Visualizer implements ViewExternalAPI{
 
   @Override
   public void updateSceneColor() {
+
+  }
+
+  @Override
+  public void clear() {
+
+  }
+
+  @Override
+  public void update() {
 
   }
 }

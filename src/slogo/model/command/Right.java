@@ -14,5 +14,6 @@ public class Right extends Command {
     public Right(Turtle body, double value) {
         super(value);
         body.turn(value);
+        System.out.println("right "+value);
     }
 }

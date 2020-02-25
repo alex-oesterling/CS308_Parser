@@ -10,5 +10,6 @@ public class Home extends Command {
    */
   public Home(Turtle body) {
     super(body.goHome());
+    System.out.println("home");
   }
 }

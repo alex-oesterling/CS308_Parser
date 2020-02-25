@@ -13,7 +13,7 @@ public class Backward extends Command {
      * @param body the specific turtle being used, what the backward value is being set for
      * @param value the value. the value of how far it is going back (changed to negative)
      */
-    public Backward(Turtle body, double value) {
+    public Backward(Turtle body, Double value) {
         super(value);
         back = value *-1;
         body.move(back);
