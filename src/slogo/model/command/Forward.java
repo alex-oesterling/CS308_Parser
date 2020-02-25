@@ -9,19 +9,24 @@ public class Forward extends Command {
 
   /**
    * Forward constructor, to get the value for going forward
-   * Calls super and sets the forward value
+   * Calls super
    * @param body the specific turtle being used, what the forward value will be
    * @param value the value of how far it is going forward
    */
   public Forward(Turtle body, Double value) {
-    super(value);
+    super();
     t = body;
     distance = value;
   }
 
+  /**
+   * move turtle forward
+   * @return distance travelled
+   */
   @Override
-  public void execute(){
+  public Double execute(){
     t.move(distance);
+    return distance;
   }
 
   public static void main(String[] args) {

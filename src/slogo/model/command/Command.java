@@ -34,15 +34,13 @@ abstract public class Command {
    * getter for result, what the command "returns"
    * @return result
    */
-  public Double getResult(){
+  public Double execute(){
     return result;
   }
 
   protected void setResult(Double value){
     result = value;
   }
-
-  abstract public void execute();
 
   //TODO add throwCommandParametersError()
 }
