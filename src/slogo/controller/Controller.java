@@ -1,52 +1,71 @@
 package slogo.controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import slogo.exceptions.InvalidCommandException;
+import slogo.model.Parser;
 import slogo.model.Turtle;
-import slogo.model.command.Command;
+import slogo.model.command.*;
+import slogo.model.command.booleancommand.*;
+
 import slogo.view.Visualizer;
 
 public class Controller {
-    private static final String RESOURCES_PACKAGE = "resources.languages.";
-    private static final String COMMAND_PACKAGE = "slogo.model.command";
+    private static final String LANGUAGES_PACKAGE = "resources.languages.";
+    private static final String INFORMATION_PACKAGE = "resources.information.";
     public static final String WHITESPACE = "\\s+";
-    private static final Integer TURTLE_AND_ONE_DOUBLE = -1;
 
     private List<Entry<String, Pattern>> mySymbols;
-    private Stack<Command> commandStack;
-    private ResourceBundle resourceBundle;
+    private Stack<Command> commandStack, argumentStack;
     private Map<String, String> userCreatedCommands;
-    private Map<String, Integer> numberOfArgsNeeded;
-    private Map<String, String> sLogoCommands;
-    Turtle turtle = new Turtle();
-    Errors error = new Errors();
-    Command myCommand;
-    Visualizer myView;
+    private Turtle turtle = new Turtle();
+    private Errors error = new Errors();
+    private String myCommands;
+    private Visualizer myView;
+    private Parser inputParser, parametersParser;
 
-    public Controller(Command command, Visualizer visualizer) {
+    public Controller(Visualizer visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
-        myCommand = command;
         commandStack = new Stack<>();
-        resourceBundle = ResourceBundle.getBundle(RESOURCES_PACKAGE);
-        makeCommandMap();
+        argumentStack = new Stack<>();
+        inputParser = new Parser(LANGUAGES_PACKAGE);
+        inputParser.addPatterns("Syntax");
+        parametersParser = new Parser(INFORMATION_PACKAGE);
+        parametersParser.addPatterns("Parameters");
     }
 
     /**
      * Adds the given resource file to this language's recognized types
      */
-    public void addLanguage (String syntax) {
-        ResourceBundle resources = ResourceBundle.getBundle(RESOURCES_PACKAGE + syntax);
-        for (String key : Collections.list(resources.getKeys())) {
-            String regex = resources.getString(key);
-            mySymbols.add(new SimpleEntry<>(key,
-                Pattern.compile(regex, Pattern.CASE_INSENSITIVE)));
-        }
+    public void addLanguage (String language) {
+        inputParser.addPatterns(language);
     }
+
+    /**
+     * get a new String of commands
+     */
+    public void sendCommands(String commands){
+        myCommands = commands;
+        parseText(inputParser, asList(myCommands.split(WHITESPACE)));
+    }
+
+    private List<String> asList(String[] array){
+        List<String> list = new ArrayList<>();
+        for(String s : array){
+            list.add(s);
+        }
+        return list;
+    }
+
 
     /**
      * Returns language's type associated with the given text if one exists
@@ -82,7 +101,7 @@ public class Controller {
                     System.out.println(getSymbol(command));
                     Class commandClass = null;
                     try {
-                        commandClass = Class.forName(COMMAND_PACKAGE + ".turtlecommand."+ command);
+                        commandClass = Class.forName(INFORMATION_PACKAGE + ".turtlecommand."+ command);
                         commandStack.push((Command) (commandClass.getConstructor().newInstance()));
                     } catch (ClassNotFoundException | //FIXME generic error handling by alex. could make better possible but low priority
                         InstantiationException |
@@ -97,21 +116,57 @@ public class Controller {
 //        myParser.readCommandFromString(command);
     }
 
+    // utility function that reads given file and returns its entire contents as a single string
+    private String readFileToString (String inputSource) {
+        try {
+            // this one line is dense, hard to read, and throws exceptions so better to wrap in method
+            return new String(Files.readAllBytes(Paths.get(new URI(inputSource))));
+        }
+        catch (URISyntaxException | IOException e) {
+            // NOT ideal way to handle exception, but this is just a simple test program
+            System.out.println("ERROR: Unable to read input file " + e.getMessage());
+            return "";
+        }
+    }
+
+    // given some text, prints results of parsing it using the given language
+    private List<Command> parseText (Parser lang, Parser params, List<String> lines) {
+        List<Command> commandList = new ArrayList<>();
+        for (String line : lines) {
+            if (line.trim().length() > 0) {
+                //TODO make command objects
+                String commandName = lang.getSymbol(line);
+                String commandParams = params.getSymbol(line);
+                System.out.println(String.format("%s : %s, requires %s", line, commandName, commandParams));
+                Command command = makeCommandObject(commandName, commandParams);
+                commandList.add(command);
+            }
+        }
+        System.out.println();
+        return commandList;
+    }
+
+    private Command makeCommandObject(String name, String params){
+        return new Not(0.0);
+    }
+
     /**
      * Gets parsed command from model
      * @return command
      */
     public double returnCommand(){
-        return myCommand.getResult();
+        //FIXME return a list of turtle movements?
+        return 0.0;// myCommand.getResult();
     }
 
+    /*
     private void makeCommandMap(){
         sLogoCommands = new HashMap<String, String>();
         Set<String> keys = resourceBundle.keySet();
         for(String key : keys){
             sLogoCommands.putIfAbsent(key, resourceBundle.getString(key));
         }
-    }
+    }*/
 
     /**
      * Takes an error from the model
