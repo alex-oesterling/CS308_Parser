@@ -15,9 +15,9 @@ public class Not extends Command {
     double a = 3.0;
     double b = 0;
     Not c = new Not(a);
-    System.out.println("!"+a+" : "+c.getResult());
+    System.out.println("!"+a+" : "+c.execute());
     c = new Not(b);
-    System.out.println("!"+b+" : "+c.getResult());
+    System.out.println("!"+b+" : "+c.execute());
   }
 
 }
