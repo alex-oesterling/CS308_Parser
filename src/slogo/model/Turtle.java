@@ -144,8 +144,17 @@ public class Turtle{
     } else if(heading>QUAD4_BEGINS){
       theta = QUAD4_ENDS - heading;
     }
+    theta = convertToRadians(theta);
     xPosition += distance * Math.sin(theta);
     yPosition += distance * Math.cos(theta);
+  }
+
+  private double convertToRadians(double theta){
+    return theta*Math.PI/QUAD3_BEGINS;
+  }
+
+  private double convertToDegrees(double theta){
+    return theta*QUAD3_BEGINS/Math.PI;
   }
 
   /**
@@ -262,6 +271,8 @@ public class Turtle{
     if((xPos < 0) != (yPos < 0)){
       theta = Math.atan(yPos/xPos); //value within quadrants II and IV
     }
+
+    theta = convertToDegrees(theta);
 
     //in quadrant ii
     if(xPos > 0 && yPos < 0){
