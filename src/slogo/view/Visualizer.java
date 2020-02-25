@@ -239,10 +239,10 @@ public class Visualizer implements ViewExternalAPI{
     pauser.setDuration(Duration.millis(1000));
     pauser.play();
 
-    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
-    rt.setToAngle(orientation);
-
-    rt.play();
+//    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
+//    rt.setToAngle(orientation);
+//
+//    rt.play();
   }
 
   @Override
