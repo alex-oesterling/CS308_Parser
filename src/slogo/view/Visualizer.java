@@ -207,7 +207,7 @@ public class Visualizer implements ViewExternalAPI{
     fileChooser.setTitle("Choose Turtle Image");
     fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
-    fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
+   // fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
     return fileChooser.showOpenDialog(stage);
     }
 
