@@ -43,29 +43,32 @@ public class Visualizer implements ViewExternalAPI{
   public static final int VBOX_SPACING = 10;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
+  private static final String DEFAULT_LANGUAGE = "English";
 
-  Scene myScene;
-  Parser myParser;
-  Controller myController;
-  HelpWindow helpWindow;
-  VBox variables;
-  VBox commands;
-  Group view;
-  Line pen;
-  VBox group;
-  BorderPane viewPane;
-  Rectangle turtleArea;
-  File turtleFile;
-  List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
-  ResourceBundle myResources;
-  String language;
+  private Scene myScene;
+  private Controller myController;
+  private HelpWindow helpWindow;
+  private VBox variables;
+  private VBox commands;
+  private Group view;
+  private Line pen;
+  private VBox group;
+  private BorderPane viewPane;
+  private Rectangle turtleArea;
+  private File turtleFile;
+  private List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
+  private ResourceBundle myResources;
+  private String language;
 
   public Visualizer (Parser parser){
     turtleImages = new ArrayList<>();
-    myParser = parser;
-    myController = new Controller(parser, this);
-    myController.addLanguage("English"); //FIXME set in view
-    myController.addLanguage("Syntax");
+    //myParser = parser;
+    myController = new Controller(this, DEFAULT_LANGUAGE);
+    //myController.addLanguage("English"); //FIXME set in view
+    //myController.addLanguage("Syntax");
+    /**FIXME @Author Dana Mulligan: the way we're doing it is different now. we only need you to pass in the language in the controller object
+     * and use myController.addLanguage(newLanguage) every time the language is changed
+     */
   }
 
   public Scene setupScene() {
@@ -198,6 +201,8 @@ public class Visualizer implements ViewExternalAPI{
     comboBox.setOnAction(event -> {
       //TODO: pass in value of combobox to some method to change the language
       language = comboBox.getValue().toString();
+      //FIXME updating language because I think this is where that should happen... change this if I'm wrong
+      myController.addLanguage(language);
     });
     return comboBox;
   }
