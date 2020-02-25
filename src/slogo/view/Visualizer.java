@@ -2,6 +2,9 @@ package slogo.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.PathTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
@@ -20,11 +23,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 import slogo.controller.Controller;
 import slogo.model.Parser;
 
@@ -58,17 +65,17 @@ public class Visualizer implements ViewExternalAPI{
   HelpWindow helpWindow;
   BorderPane root;
   Group view;
-
   VBox variables;
   VBox commands;
   Line pen;
   VBox group;
   BorderPane viewPane;
-
   Rectangle turtleArea;
   List<ImageView> turtleImages; //FIXME Map between name and turtle instead of list (number to turtle)
   ResourceBundle myResources;
   String language;
+  private boolean penStatus = true;
+  private Group turtlePaths;
 
   public Visualizer (Parser parser){
     turtleImages = new ArrayList<>();
@@ -102,17 +109,15 @@ public class Visualizer implements ViewExternalAPI{
 
   private Group createBox() {
     view = new Group();
-    GridPane turtlePane = new GridPane();
+    turtlePaths = new Group();
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    turtlePane.add(turtleArea, 0, 0);
-    turtlePane.setHgrow(turtleArea, Priority.ALWAYS);
-    turtlePane.setVgrow(turtleArea, Priority.ALWAYS);
-    view.getChildren().addAll(turtlePane, chooseTurtle());
+    view.getChildren().addAll(turtleArea, chooseTurtle(), turtlePaths);
     return view;
   }
+
 
   private VBox showUserDefined(){
     group = new VBox();
@@ -154,7 +159,7 @@ public class Visualizer implements ViewExternalAPI{
     Label pen = new Label(myResources.getString("PenColor"));
     Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help());
+    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), help(), testUpdate());
     return ui;
   }
 
@@ -180,8 +185,10 @@ public class Visualizer implements ViewExternalAPI{
       turtleImage.setImage(image);
       turtleImage.setFitWidth(TURTLE_WIDTH);
       turtleImage.setFitHeight(TURTLE_HEIGHT);
-      turtleImage.setX(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
-      turtleImage.setY(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
+//      turtleImage.setX(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
+//      turtleImage.setY(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
+      turtleImage.setTranslateY(turtleArea.getX()+turtleArea.getWidth()/2-turtleImage.getBoundsInLocal().getWidth()/2);
+      turtleImage.setTranslateX(turtleArea.getY()+turtleArea.getHeight()/2-turtleImage.getBoundsInLocal().getHeight()/2);
     } catch (IOException e) {
         //FIXME add errors here
     }
@@ -225,19 +232,39 @@ public class Visualizer implements ViewExternalAPI{
     return fileChooser.showOpenDialog(stage);
     }
 
-  @Override
-  public void updateXPos() {
-
+  private Button testUpdate(){
+    Button test = new Button("Test");
+    test.setOnAction(e->update(200, 200, 90));
+    return test;
   }
 
   @Override
-  public void updateYPos() {
+  public void update(double newX, double newY, double orientation){
+    ImageView turtleimage = turtleImages.get(0);
+    double oldX = turtleimage.getTranslateX();
+    double oldY = turtleimage.getTranslateY();
+    System.out.println(oldX);
+    System.out.println(oldY);
+    Path path = new Path();
+    turtlePaths.getChildren().add(path);
+    path.getElements().add(new MoveTo(oldX, oldY));
+    path.getElements().add(new LineTo(newX, newY));
+    System.out.println(turtleimage.getTranslateX());
+    System.out.println(turtleimage.getTranslateY());
+    PathTransition pt = new PathTransition(Duration.millis(2000), path, turtleimage);
+    pt.play();
+//    System.out.println(turtleimage.getLayoutX()+newX-oldX);
+//    System.out.println(turtleimage.getLayoutY()+newY-oldY);
+    if(penStatus){
+      path.setOpacity(0.5);
+    } else {
+      path.setOpacity(0.0);
+    }
 
-  }
+    RotateTransition rt = new RotateTransition(Duration.millis(2000), turtleimage);
+    rt.setToAngle(orientation);
 
-  @Override
-  public void updateOrientation() {
-
+    rt.play();
   }
 
   @Override
@@ -247,6 +274,16 @@ public class Visualizer implements ViewExternalAPI{
 
   @Override
   public void updateSceneColor() {
+
+  }
+
+  @Override
+  public void clear() {
+
+  }
+
+  @Override
+  public void update() {
 
   }
 }
