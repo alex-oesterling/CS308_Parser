@@ -15,7 +15,6 @@ public class Parser {
     // note, it is a list because order matters (some patterns may be more generic)
     private List<Entry<String, Pattern>> mySymbols;
 
-
     /**
      * Create an empty parser
      */
