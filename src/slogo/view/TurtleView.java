@@ -1,8 +1,10 @@
 package slogo.view;
 
+import java.io.SequenceInputStream;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
@@ -119,6 +121,7 @@ public class TurtleView{
         newY += TURTLE_SCREEN_HEIGHT/2;
         double oldX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
         double oldY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
+        SequentialTransition animation = new SequentialTransition();
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
             if(penStatus){
@@ -133,16 +136,13 @@ public class TurtleView{
             path.getElements().add(new LineTo(newX, newY));
             PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
             pt.setPath(path);
-            pt.play();
+            animation.getChildren().add(pt);
         }
-
-        PauseTransition pauser = new PauseTransition();
-        pauser.setDuration(Duration.millis(PAUSE_TRANSITION_DURATION));
-        pauser.play();
 
         RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(orientation);
-        rt.play();
+        animation.getChildren().add(rt);
+        animation.play();
     }
 
     public void resetTurtle(){
