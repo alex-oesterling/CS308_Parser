@@ -28,7 +28,12 @@ abstract public class Command {
    * Allows certain commands to be executed and returns the result
    * @return result
    */
-  public Double execute(){ return result; }
+  public Double getResult(){
+    return result;
+  }
+  public Double execute(){
+    return getResult();
+  }
 
   protected void setResult(Double value){
     result = value;

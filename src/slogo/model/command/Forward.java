@@ -14,7 +14,7 @@ public class Forward extends Command {
    * @param value the value of how far it is going forward
    */
   public Forward(Turtle body, Double value) {
-    super();
+    super(value);
     t = body;
     distance = value;
   }
