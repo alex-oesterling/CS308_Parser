@@ -34,8 +34,11 @@ abstract public class Command {
    * getter for result, what the command "returns"
    * @return result
    */
-  public Double execute(){
+  public Double getResult(){
     return result;
+  }
+  public Double execute(){
+    return getResult();
   }
 
   protected void setResult(Double value){

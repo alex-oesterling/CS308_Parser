@@ -14,7 +14,7 @@ public class Forward extends Command {
    * @param value the value of how far it is going forward
    */
   public Forward(Turtle body, Double value) {
-    super();
+    super(value);
     t = body;
     distance = value;
   }
@@ -32,6 +32,7 @@ public class Forward extends Command {
   public static void main(String[] args) {
     Turtle t = new Turtle();
     Forward f = new Forward(t, 50.0);
+    f.execute();
     System.out.println("x: "+t.getX()+" y: "+t.getY()+" and H: "+t.getHeading());
   }
 }
