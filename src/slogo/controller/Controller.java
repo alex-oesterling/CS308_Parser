@@ -125,7 +125,7 @@ public class Controller {
                 }
             }
         }
-        while(commandStack.size()>0){
+        while(commandStack.size()>0 ){
             tryToMakeCommands(commandList);
             //commandList.addAll(tryToMakeCommands(commandList));
         }
@@ -137,6 +137,13 @@ public class Controller {
         for(Command c : l){
             System.out.println(c);
             System.out.println(c.execute());
+            if(c instanceof ClearScreen){
+                myView.clear(); //TODO clear all the lines on the screen (DON'T MOVE TURTLE WE WILL DO IT)
+            } else if(c instanceof HideTurtle || c instanceof ShowTurtle){
+                myView.updateTurtleView(c.getResult()); //TODO write this, where it takes in a double. if the double is nonzero, turtle is showing, otherwise not showing
+            } else if(c instanceof PenDown || c instanceof PenUp){
+                myView.updatePenStatus(c.getResult()); //TODO write this, where it takes in a double. if the double is nonzero, pen is drawing. otherwise not drawing
+            }
             System.out.println("DURING:: x: "+turtle.getX()+" y: "+turtle.getY()+" heading: "+turtle.getHeading());
             myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
         }
@@ -320,7 +327,7 @@ public class Controller {
     }
 
     private boolean checkArgumentStack(){
-        return argumentStack.size() >= parametersStack.peek();
+        return !parametersStack.isEmpty() && argumentStack.size() >= parametersStack.peek();
     }
 
     private double getParamsNeeded(String commandParams){
