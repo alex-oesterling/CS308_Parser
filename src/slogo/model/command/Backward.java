@@ -28,4 +28,13 @@ public class Backward extends Command {
         t.move(distance*BACK);
         return distance;
     }
+
+    /**
+     * Get the distance to be returned
+     * @return distance
+     */
+    @Override
+    public Double getResult() {
+        return distance;
+    }
 }

@@ -28,4 +28,13 @@ public class Left extends Command {
     public Double execute() {
         return t.turn(degrees);
     }
+
+    /**
+     * Get the degrees to be turned left
+     * @return degrees
+     */
+    @Override
+    public Double getResult() {
+        return degrees;
+    }
 }
