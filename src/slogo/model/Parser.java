@@ -55,5 +55,7 @@ public class Parser {
    * @param regex list of choices to match to
    * @return if the text is in the file
    */
-    private boolean match (String text, Pattern regex) { return regex.matcher(text).matches(); }
+    private boolean match (String text, Pattern regex) {
+        return regex.matcher(text).matches();
+    }
   }

@@ -10,33 +10,25 @@ abstract public class Command {
    * Command constructor, sets result to return value
    * @param returnValue value returned by each specific command
    */
-  public Command(Double returnValue){
-    result = returnValue;
-  }
+  public Command(Double returnValue){ result = returnValue; }
 
   /**
    * Command constructor that takes a boolean and converts
    * it to a double, which is then set to the return value
    * @param condition incoming boolean to change to a double value
    */
-  public Command(boolean condition){
-    this(condition?1.0:0.0); //convert a boolean to a double
-  }
+  public Command(boolean condition){ this(condition?1.0:0.0); } //convert a boolean to a double
 
   /**
    * Default command constructor
    */
-  public Command(){
-    this(DEFAULT_COMMAND_RESULT);
-  }
+  public Command(){ this(DEFAULT_COMMAND_RESULT); }
 
   /**
-   * getter for result, what the command "returns"
+   * Allows certain commands to be executed and returns the result
    * @return result
    */
-  public Double execute(){
-    return result;
-  }
+  public Double execute(){ return result; }
 
   protected void setResult(Double value){
     result = value;
