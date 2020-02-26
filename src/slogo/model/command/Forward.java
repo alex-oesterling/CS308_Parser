@@ -1,6 +1,10 @@
 package slogo.model.command;
 
+import slogo.controller.Controller;
 import slogo.model.Turtle;
+import slogo.view.Visualizer;
+
+import java.sql.SQLOutput;
 
 public class Forward extends Command {
 
@@ -26,6 +30,15 @@ public class Forward extends Command {
   @Override
   public Double execute(){
     t.move(distance);
+    return distance;
+  }
+
+  /**
+   * Get the distance to be returned
+   * @return distance
+   */
+  @Override
+  public Double getResult() {
     return distance;
   }
 
