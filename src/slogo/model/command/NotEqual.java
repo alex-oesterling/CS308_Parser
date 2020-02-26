@@ -11,18 +11,4 @@ public class NotEqual extends Command {
     super(double1!=double2);
   }
 
-  public static void main(String[] args) {
-    double a = 1.0;
-    double b = 0.0;
-    double c = 1.0;
-    double d = -1.0;
-    NotEqual e = new NotEqual(a,b);
-    System.out.println(a+"!="+b+": "+e.execute());
-    e = new NotEqual(a,c);
-    System.out.println(a+"!="+c+": "+e.execute());
-    e = new NotEqual(a,d);
-    System.out.println(a+"!="+d+": "+e.execute());
-    e = new NotEqual(d,b);
-    System.out.println(d+"!="+b+": "+e.execute());
-  }
 }

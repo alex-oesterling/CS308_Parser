@@ -11,17 +11,4 @@ public class Equal extends Command {
     super(double1==double2);
   }
 
-  public static void main(String[] args) {
-    double a = 1.0;
-    double b = 0.0;
-    double c = 1.0;
-    double d = -1.0;
-    Equal e = new Equal(a,b);
-    System.out.println(a+"=="+b+": "+e.execute());
-    e = new Equal(a,c);
-    System.out.println(a+"=="+c+": "+e.execute());
-    e = new Equal(a,d);
-    System.out.println(a+"=="+d+": "+e.execute());
-    e = new Equal(d,b);
-    System.out.println(d+"=="+b+": "+e.execute());  }
 }

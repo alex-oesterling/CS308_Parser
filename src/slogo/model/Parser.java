@@ -9,14 +9,13 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
 public class Parser {
-    // where to find resources specifically for this class
+
     private String resourcesPackage;
-    // "types" and the regular expression patterns that recognize those types
-    // note, it is a list because order matters (some patterns may be more generic)
-    private List<Entry<String, Pattern>> mySymbols;
+    private List<Entry<String, Pattern>> mySymbols;       // note, it is a list because order matters (some patterns may be more generic)
 
     /**
-     * Create an empty parser
+     * Create a parser that initializes the specific resource package and a new arrayList mySymbols
+     * @param resourcesPackageName the specific resource package being parsed
      */
     public Parser (String resourcesPackageName) {
       resourcesPackage = resourcesPackageName;
@@ -25,6 +24,7 @@ public class Parser {
 
     /**
      * Adds the given resource file to this language's recognized types
+     * @param syntax the specific resource type e.g. language or syntax or parameters
      */
     public void addPatterns (String syntax) {
       ResourceBundle resources = ResourceBundle.getBundle(resourcesPackage + syntax);
@@ -36,6 +36,8 @@ public class Parser {
 
     /**
      * Returns language's type associated with the given text if one exists
+     * @param text each specific string to determine what type of syntax it is
+     * @return the language type or no match
      */
     public String getSymbol (String text) {
       final String ERROR = "NO MATCH";
@@ -54,7 +56,6 @@ public class Parser {
    * @return if the text is in the file
    */
     private boolean match (String text, Pattern regex) {
-      // THIS IS THE IMPORTANT LINE
-      return regex.matcher(text).matches();
+        return regex.matcher(text).matches();
     }
   }

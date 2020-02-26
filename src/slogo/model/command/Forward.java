@@ -29,11 +29,5 @@ public class Forward extends Command {
     return distance;
   }
 
-  public static void main(String[] args) {
-    Turtle t = new Turtle();
-    Forward f = new Forward(t, 50.0);
-    f.execute();
-    System.out.println("x: "+t.getX()+" y: "+t.getY()+" and H: "+t.getHeading());
-  }
 }
 
