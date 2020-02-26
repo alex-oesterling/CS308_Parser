@@ -102,17 +102,21 @@ public class Turtle{
    */
   public double turn(double deltaTheta){
     heading+=deltaTheta;
-    makeHeadingValid();
+    heading = makeHeadingValid(heading);
     return deltaTheta;
   }
-
   /**
    * Turns the turtle to face the point (x,y)
    * @param xPos the x position to set the turtle to
    * @param yPos the y position to set the turtle to
    * @return the degrees turned
    */
-  public double pointTowards(double xPos, double yPos){
+  public void pointTowards(double xPos, double yPos){
+    setHeading(headingTowards(xPos,yPos));
+  }
+
+
+  public double headingTowards(double xPos, double yPos){
     double theta = Math.atan(xPos/yPos);                         //value within quadrant; good for quadrants I and III
     if((xPos < 0) != (yPos < 0)){ theta = Math.atan(yPos/xPos);} //value within quadrants II and IV
 
@@ -122,7 +126,7 @@ public class Turtle{
     else if (xPos < 0 && yPos < 0){ theta += QUAD3_BEGINS; }     //in quadrant iii
     else if(xPos < 0 && yPos > 0){ theta += QUAD4_BEGINS; }      //in quadrant iv
 
-    return setHeadingAndGetDeltaTheta(theta);
+    return makeHeadingValid(theta);
   }
 
   private double convertToDegrees(double theta){
@@ -130,21 +134,27 @@ public class Turtle{
   }
 
   /**
-   * Set heading to a given value, and make it valid
+   * Get the delta theta between heading and a new heading
    * (between 0 and 360)
    * @param theta new heading
    * @return difference between the two headings
    */
-  public double setHeadingAndGetDeltaTheta(double theta){
+  public double getDeltaTheta(double theta, double comparisonHeading){
     double oldHeading = heading;
-    heading = theta;
-    makeHeadingValid();
-    return Math.min(Math.abs(oldHeading-heading), QUAD4_ENDS-oldHeading+heading);
+    comparisonHeading = theta;
+    comparisonHeading = makeHeadingValid(comparisonHeading);
+    return Math.min(Math.abs(oldHeading-comparisonHeading), QUAD4_ENDS-oldHeading+comparisonHeading);
   }
 
-  private void makeHeadingValid() {
-    heading %= QUAD4_ENDS;                                      //make it a value between -360 and 360
-    if(heading < QUAD1_BEGINS){ heading += QUAD4_ENDS; }        //make it a value between 0 and 360
+  public void setHeading(double theta){
+    heading = theta;
+    heading = makeHeadingValid(heading);
+  }
+
+  private double makeHeadingValid(double headingToChange) {
+    headingToChange %= QUAD4_ENDS;                                      //make it a value between -360 and 360
+    if(headingToChange < QUAD1_BEGINS){ headingToChange += QUAD4_ENDS; }        //make it a value between 0 and 360
+    return headingToChange;
   }
 
   /**
@@ -154,18 +164,28 @@ public class Turtle{
     return moveToPosition(homeX, homeY);
   }
 
+  public double distanceToPosition(double xPos, double yPos){
+    double deltaX = xPosition - xPos;
+    double deltaY = yPosition - yPos;
+
+    xPosition = xPos;
+    yPosition = yPos;
+
+    return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+  }
+
   /**
    * Set the turtle's position to a specified location,
    * and return the distance it travelled
-   * @param newXPos new X position
+   * @param xPos new X position
    * @param newYPos new Y position
    * @return distance travelled by turtle
    */
-  public double moveToPosition(double newXPos, double newYPos){
-    double deltaX = xPosition - newXPos;
+  public double moveToPosition(double xPos, double newYPos){
+    double deltaX = xPosition - xPos;
     double deltaY = yPosition - newYPos;
 
-    xPosition = newXPos;
+    xPosition = xPos;
     yPosition = newYPos;
 
     return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
