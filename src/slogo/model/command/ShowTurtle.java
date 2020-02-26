@@ -12,7 +12,7 @@ public class ShowTurtle extends Command {
      * @param body the turtle that is currently being used, will set to be shown
      */
     public ShowTurtle(Turtle body){
-        super();
+        super(SHOWING);
         t = body;
     }
 

@@ -1,5 +1,6 @@
 package slogo.model.command;
 
+import java.util.Set;
 import slogo.model.Turtle;
 
 public class SetTowards extends Command {
@@ -20,6 +21,10 @@ public class SetTowards extends Command {
         xPos = x;
         yPos = y;
     }
+    @Override
+    public Double getResult(){
+        return t.headingTowards(xPos, yPos);
+    }
 
     /**
      * Point the turtle towards xPos, yPos
@@ -27,6 +32,14 @@ public class SetTowards extends Command {
      */
     @Override
     public Double execute() {
-        return t.pointTowards(xPos, yPos);
+        t.pointTowards(xPos,yPos);
+        return this.getResult();
+    }
+
+    public static void main(String[] args) {
+        Turtle t = new Turtle();
+        SetTowards st = new SetTowards(t, 10.0, 10.0);
+        System.out.println(st.getResult());
+        System.out.println(st.execute());
     }
 }

@@ -28,6 +28,11 @@ public class SetPosition extends Command {
      */
     @Override
     public Double execute() {
-        return t.moveToPosition(xPos, yPos);
+        return t.distanceToPosition(xPos, yPos);
+    }
+
+    public static void main(String[] args) {
+        Turtle t = new Turtle();
+        //SetPosition sp = new SetPosition(t,);
     }
 }
