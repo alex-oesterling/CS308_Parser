@@ -5,6 +5,8 @@ public class Turtle{
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 0;
+  private static final int POSITIVE = 1;
+  private static final int NEGATIVE = -1;
   private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
   private static final int QUAD3_BEGINS = 180;
@@ -80,14 +82,26 @@ public class Turtle{
    */
   public void move(double distance){
     double theta = heading;
+    int xSign = POSITIVE;
+    int ySign = POSITIVE;
 
-    if(heading>QUAD2_BEGINS && heading<QUAD3_BEGINS){ theta = QUAD3_BEGINS - heading; }
-    else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){ theta = heading - QUAD3_BEGINS; }
-    else if(heading>QUAD4_BEGINS){ theta = QUAD4_ENDS - heading; }
+    if(heading>QUAD2_BEGINS && heading<QUAD3_BEGINS){
+      theta = QUAD3_BEGINS - heading;
+      ySign = NEGATIVE;
+    }
+    else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){
+      theta = heading - QUAD3_BEGINS;
+      xSign = NEGATIVE;
+      ySign = NEGATIVE;
+    }
+    else if(heading>QUAD4_BEGINS){
+      theta = QUAD4_ENDS - heading;
+      xSign = NEGATIVE;
+    }
 
     theta = convertToRadians(theta);
-    xPosition += distance * Math.sin(theta);
-    yPosition += distance * Math.cos(theta);
+    xPosition += xSign * distance * Math.sin(theta);
+    yPosition += ySign * distance * Math.cos(theta);
   }
 
   private double convertToRadians(double theta){
@@ -195,10 +209,11 @@ public class Turtle{
    * @return distance travelled by turtle
    */
   public double moveToPosition(double xPos, double yPos){
+    double distance = distanceToPosition(xPos, yPos);
     xPosition = xPos;
     yPosition = yPos;
 
-    return distanceToPosition(xPos, yPos);
+    return distance;
   }
 
   /**
