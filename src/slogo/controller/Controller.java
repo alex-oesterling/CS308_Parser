@@ -138,7 +138,7 @@ public class Controller {
             System.out.println(c);
             System.out.println(c.execute());
             System.out.println("DURING:: x: "+turtle.getX()+" y: "+turtle.getY()+" heading: "+turtle.getHeading());
-            //myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
+            myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
         }
     }
 
