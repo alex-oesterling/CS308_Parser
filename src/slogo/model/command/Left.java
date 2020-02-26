@@ -15,9 +15,9 @@ public class Left extends Command {
      * @param value the value of how far it is being turned to the left (changed to negative)
      */
     public Left(Turtle body, Double value) {
-        super();
+        super(value);
         t = body;
-        degrees = value*LEFT;
+        degrees = value;
     }
 
     /**
@@ -26,6 +26,16 @@ public class Left extends Command {
      */
     @Override
     public Double execute() {
-        return t.turn(degrees);
+        t.turn(degrees*LEFT);
+        return this.getResult();
     }
+
+    /**
+     * Get the degrees to be turned left
+     * @return degrees
+     */
+    /*@Override
+    public Double getResult() {
+        return degrees;
+    }*/
 }

@@ -16,7 +16,7 @@ public class Backward extends Command {
     public Backward(Turtle body, Double value) {
         super(value);
         t = body;
-        distance = value*BACK;
+        distance = value;
     }
 
     /**
@@ -28,4 +28,14 @@ public class Backward extends Command {
         t.move(distance*BACK);
         return distance;
     }
+
+    /**
+     * Get the distance to be returned
+     * @return distance
+     */
+    @Override
+    public Double getResult() {
+        return distance;
+    }
+
 }

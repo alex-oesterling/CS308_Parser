@@ -13,7 +13,7 @@ public class Right extends Command {
      * @param value the value of how far it is turning right
      */
     public Right(Turtle body, Double value) {
-        super();
+        super(value);
         t = body;
         degrees = value;
     }
@@ -26,4 +26,13 @@ public class Right extends Command {
     public Double execute() {
         return t.turn(degrees);
     }
+
+    /**
+     * Get the degrees to be turned right
+     * @return degrees
+     */
+    /*@Override
+    public Double getResult() {
+        return degrees;
+    }*/
 }
