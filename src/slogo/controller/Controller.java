@@ -123,6 +123,9 @@ public class Controller {
         for(Command c : l){
             System.out.println(c);
             System.out.println(c.execute());
+            System.out.println("DURING:: x: "+turtle.getX()+" y: "+turtle.getY()+" heading: "+turtle.getHeading());
+
+            //myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
         }
     }
 
@@ -374,7 +377,7 @@ public class Controller {
         String test3 = "fd not 0"; //two linked commands of different types x:1, y:0, h:90
         String test4 = "fd pi"; //two linked commands of different types x:3.14, y:0, h:90
         String test5 = "pi"; //no turtle involved x:0, y:0, h:90
-        String test6 = "fd and 2 3"; //final: x:1, y:0, h: 90
+        String test6 = "fd fd fd 30"; //final: x:1, y:0, h: 90
 
         c.sendCommands(test6);
         System.out.println(" AFTER:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
