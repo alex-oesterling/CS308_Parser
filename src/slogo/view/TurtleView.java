@@ -1,11 +1,12 @@
 package slogo.view;
 
-import java.util.List;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -33,6 +34,7 @@ public class TurtleView{
     public static final int PAUSE_TRANSITION_DURATION = 1000;
     public static final double PATH_OPACITY = 0.75;
     public static final double PATH_NO_OPACITY = 0.0;
+    private static final String ERROR_DIALOG = "Please Choose Another File";
 
     private Group myPaths;
     private Group myTurtles;
@@ -71,9 +73,34 @@ public class TurtleView{
             myTurtles.getChildren().remove(myImage);
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
-        } catch (IOException e) {
-            //FIXME add errors here
+        } catch (IllegalArgumentException e){
+            return;
+        } catch (Exception e) {
+            retryLoadFile("Please choose a valid image");
         }
+    }
+
+    private void retryLoadFile(String message) {
+        boolean badFile;
+        displayError(message);
+        do {
+            badFile = false;
+            try {
+                chooseTurtle();
+            } catch (NullPointerException e){
+                return;
+            } catch (Exception e){
+                displayError(message);
+                badFile = true;
+            }
+        } while (badFile);
+    }
+
+    private void displayError(String message) {
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText(message);
+        errorAlert.setContentText(ERROR_DIALOG);
+        errorAlert.showAndWait();
     }
 
     private File getTurtleImage(Stage stage) {
@@ -111,7 +138,6 @@ public class TurtleView{
 
         RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(orientation);
-
         rt.play();
     }
 

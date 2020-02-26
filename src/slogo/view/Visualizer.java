@@ -31,6 +31,7 @@ public class Visualizer implements ViewExternalAPI{
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
   public static final int COLORPICKER_HEIGHT = 30;
 
+
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
   public static final int VBOX_SPACING = 10;
@@ -42,11 +43,11 @@ public class Visualizer implements ViewExternalAPI{
   private Controller myController;
   private HelpWindow helpWindow;
   private BorderPane root;
-  private Group view;
+//  private Group view;
   private VBox variables;
   private VBox commands;
-  private VBox group;
-  private BorderPane viewPane;
+//  private VBox group;
+//  private BorderPane viewPane;
   private Rectangle turtleArea;
   private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
@@ -55,7 +56,6 @@ public class Visualizer implements ViewExternalAPI{
   private Group turtles;
 
   public Visualizer (Parser parser){
-    view = new Group();
     turtlePaths = new Group();
     turtleList = new ArrayList<>();
     turtles = new Group();
@@ -73,7 +73,7 @@ public class Visualizer implements ViewExternalAPI{
   }
 
   private BorderPane createView(){
-    viewPane = new BorderPane();
+    BorderPane viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
@@ -89,48 +89,46 @@ public class Visualizer implements ViewExternalAPI{
     return viewPane;
   }
 
-  private Group createBox() { //FIXME discuss creating objects here or in config
+  private Group createBox() {
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
     turtleList.add(new TurtleView(turtles, turtlePaths));
+    Group view = new Group();
     view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
   }
 
   private VBox showUserDefined(){
-    group = new VBox();
+    VBox group = new VBox();
     group.setSpacing(VBOX_SPACING);
     group.getChildren().add(createBox());
 
     BorderPane userDefined = new BorderPane();
-    variables = new VBox();
-    ScrollPane userVariables = new ScrollPane();
-    userVariables.setContent(variables);
-    userVariables.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4 ); //FIXME dependency on turtlearea width
-    variables.heightProperty().addListener((obs, old, newValue) -> userVariables.setVvalue((Double)newValue));
 
-    commands = new VBox();
-    ScrollPane userCommands = new ScrollPane();
-    userCommands.setContent(commands);
-    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4);
-    commands.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
-    //fixme duplicated code to create boxes for saved commands -- extract method?
-    userDefined.setLeft(userVariables);
-    userDefined.setRight(userCommands);
+    variables = makeHistory("Variables");
+    commands = makeHistory("Commands");
 
-    Label variablesLabel = new Label(myResources.getString("Variables"));
-    Label commandsLabel = new Label(myResources.getString("Commands"));
-    GridPane grid = new GridPane();
-    grid.setHgap(TURTLE_SCREEN_WIDTH/3);
-    GridPane.setConstraints(variablesLabel, 0, 0);
-    GridPane.setConstraints(commandsLabel, 1, 0);
-    grid.getChildren().addAll(variablesLabel, commandsLabel);
+    userDefined.setLeft(commands);
+    userDefined.setRight(variables);
 
-    group.getChildren().addAll(grid, userDefined);
+    group.getChildren().addAll(userDefined);
     group.setVgrow(userDefined, Priority.ALWAYS);
     return group;
+  }
+
+  private VBox makeHistory(String labelname) {
+    VBox total = new VBox();
+    VBox history = new VBox();
+    ScrollPane userCommands = new ScrollPane();
+    userCommands.setContent(history);
+    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4); //fixme
+    history.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
+    Label label = new Label(myResources.getString(labelname));
+    total.getChildren().addAll(label, userCommands);
+    total.setVgrow(userCommands, Priority.ALWAYS);
+    return total;
   }
 
   private Node createUI() {
@@ -159,7 +157,7 @@ public class Visualizer implements ViewExternalAPI{
     ColorPicker colorPicker = new ColorPicker();
     colorPicker.setValue(Color.BLACK);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> turtleList.get(0).updatePen(colorPicker.getValue()));
+    colorPicker.setOnAction(e -> updatePenColor(colorPicker.getValue()));
     return colorPicker;
   }
 
@@ -203,8 +201,8 @@ public class Visualizer implements ViewExternalAPI{
   }
 
   @Override
-  public void updatePenColor() {
-
+  public void updatePenColor(Color color) {
+    turtleList.get(0).updatePen(color);
   }
 
   @Override
@@ -214,11 +212,6 @@ public class Visualizer implements ViewExternalAPI{
 
   @Override
   public void clear() {
-
-  }
-
-  @Override
-  public void update() {
 
   }
 }
