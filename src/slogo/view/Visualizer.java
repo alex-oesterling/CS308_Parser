@@ -78,7 +78,6 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-//    turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
     turtle = new Turtle();
     turtleImages.add(0, turtle.createTurtle());
     root = createView();

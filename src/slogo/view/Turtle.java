@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -52,5 +51,4 @@ public class Turtle {
         fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
         return fileChooser.showOpenDialog(stage);
     }
-
 }
