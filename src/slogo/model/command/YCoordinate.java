@@ -10,7 +10,7 @@ public class YCoordinate extends Command {
      * @param body turtle
      */
     public YCoordinate(Turtle body){
-        super();
+        super(body.getY());
         t = body;
     }
 

@@ -15,11 +15,14 @@ public class IsPenDown extends Command {
     }
 
     /**
-     * Allows the isPenDown command to be executed and tells whether the turtle is drawing or not
-     * @return 1 if drawing or 0 if not drawing
+     * Return if the pen is down on a turtle or not
+     * this is separate from setting it in the constructor
+     * in case a specific IsPenDown object's execute() is
+     * called many times; i.e. object is in a loop
+     * @return drawing status of the turtle; 1 if drawing or 0 if not drawing
      */
     @Override
-    public Double execute() {
+    public Double getResult(){
         return t.getDrawingStatus();
     }
 }

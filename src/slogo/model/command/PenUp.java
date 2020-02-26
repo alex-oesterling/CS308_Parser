@@ -13,7 +13,7 @@ public class PenUp extends Command {
      * @param body the current turtle that will have its pen set up and not drawing
      */
     public PenUp(Turtle body){
-        super();
+        super(NOT_DRAWING);
         t = body;
     }
 

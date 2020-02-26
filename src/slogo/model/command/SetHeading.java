@@ -19,12 +19,26 @@ public class SetHeading extends Command {
         heading = value;
     }
 
+    @Override
+    public Double getResult(){
+        return t.getDeltaTheta(heading, t.getHeading());
+    }
     /**
      * Allows the SetHeading command to be executed
      * @return the value of the heading, where the turtle is facing
      */
     @Override
     public Double execute() {
-        return t.setHeadingAndGetDeltaTheta(heading);
+        t.setHeading(heading);
+        return this.getResult();
+    }
+
+    public static void main(String[] args) {
+        Turtle t = new Turtle();
+        SetHeading sh = new SetHeading(t, 45.0);
+        System.out.println(sh.getResult());
+        System.out.println(t.getHeading());
+        sh.execute();
+        System.out.println(t.getHeading());
     }
 }

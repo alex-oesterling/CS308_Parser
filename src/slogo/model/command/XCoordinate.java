@@ -10,7 +10,7 @@ public class XCoordinate extends Command {
    * @param body turtle
    */
   public XCoordinate(Turtle body){
-    super();
+    super(body.getX());
     t = body;
   }
 
