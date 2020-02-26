@@ -10,9 +10,11 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import slogo.exceptions.InvalidCommandException;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
+import slogo.view.ViewExternal;
 import slogo.view.Visualizer;
 
 public class Controller {
@@ -32,13 +34,13 @@ public class Controller {
     private Turtle turtle = new Turtle();
     private Errors error = new Errors();
     private String myCommands;
-    private Visualizer myView;
+    private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
     private ResourceBundle languagesBundle;
 
     private static final boolean RUN_DUVALL = false;
 
-    public Controller(Visualizer visualizer, String language) {
+    public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
         commandStack = new Stack<>();
@@ -125,7 +127,7 @@ public class Controller {
                 }
             }
         }
-        while(commandStack.size()>0){
+        while(commandStack.size()>0 ){
             tryToMakeCommands(commandList);
             //commandList.addAll(tryToMakeCommands(commandList));
         }
@@ -137,8 +139,15 @@ public class Controller {
         for(Command c : l){
             System.out.println(c);
             System.out.println(c.execute());
+            if(c instanceof ClearScreen){
+                myView.clear(); //TODO clear all the lines on the screen (DON'T MOVE TURTLE WE WILL DO IT)
+            } else if(c instanceof HideTurtle || c instanceof ShowTurtle){
+                myView.updateTurtleView(c.getResult()); //TODO write this, where it takes in a double. if the double is nonzero, turtle is showing, otherwise not showing
+            } else if(c instanceof PenDown || c instanceof PenUp){
+                myView.updatePenStatus(c.getResult()); //TODO write this, where it takes in a double. if the double is nonzero, pen is drawing. otherwise not drawing
+            }
             System.out.println("DURING:: x: "+turtle.getX()+" y: "+turtle.getY()+" heading: "+turtle.getHeading());
-            //myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
+            myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
         }
     }
 
@@ -320,7 +329,7 @@ public class Controller {
     }
 
     private boolean checkArgumentStack(){
-        return argumentStack.size() >= parametersStack.peek();
+        return !parametersStack.isEmpty() && argumentStack.size() >= parametersStack.peek();
     }
 
     private double getParamsNeeded(String commandParams){
@@ -380,22 +389,22 @@ public class Controller {
         return turtle;
     }
 
-    public static void main(String[] args) {
-        Controller c = new Controller(new Visualizer(), "English");
-        Turtle tom = new Turtle();
-        //c.addLanguage("English");
-        System.out.println("BEFORE:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
-
-        String test = "fd 50 left 90 fd 20"; //two commands that should execute on their own x:50, y:20, h:0
-        String test2 = "fd + 30 30"; //two linked commands x:60, y:0, h:90
-        String test3 = "fd not 0"; //two linked commands of different types x:1, y:0, h:90
-        String test4 = "fd pi"; //two linked commands of different types x:3.14, y:0, h:90
-        String test5 = "pi"; //no turtle involved x:0, y:0, h:90
-        String test6 = "fd fd fd 30"; //final: x:1, y:90, h: 0
-        String test7 = "fd sum sum sum 10 20 30 40";
-
-        c.sendCommands(test6);
-        System.out.println(" AFTER:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
-
-    }
+//    public static void main(String[] args) {
+//        Controller c = new Controller(new ViewExternal(), "English");
+//        Turtle tom = new Turtle();
+//        //c.addLanguage("English");
+//        System.out.println("BEFORE:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
+//
+//        String test = "fd 50 left 90 fd 20"; //two commands that should execute on their own x:50, y:20, h:0
+//        String test2 = "fd + 30 30"; //two linked commands x:60, y:0, h:90
+//        String test3 = "fd not 0"; //two linked commands of different types x:1, y:0, h:90
+//        String test4 = "fd pi"; //two linked commands of different types x:3.14, y:0, h:90
+//        String test5 = "pi"; //no turtle involved x:0, y:0, h:90
+//        String test6 = "fd fd fd 30"; //final: x:1, y:90, h: 0
+//        String test7 = "fd sum sum sum 10 20 30 40";
+//
+//        c.sendCommands(test6);
+//        System.out.println(" AFTER:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
+//
+//    }
 }

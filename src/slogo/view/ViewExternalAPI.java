@@ -1,9 +1,12 @@
 package slogo.view;
 
+import javafx.scene.paint.Color;
+
 public interface ViewExternalAPI {
   void update(double newX, double newY, double newAngle);
-  void updatePenColor();
+  void updatePenColor(Color color);
   void updateSceneColor();
   void clear();
-  void update();
+  void updateTurtleView(double value);
+  void updatePenStatus(double value);
 }

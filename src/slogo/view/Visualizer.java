@@ -3,10 +3,6 @@ package slogo.view;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.PathTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -14,35 +10,26 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
-import javafx.util.Duration;
 import slogo.controller.Controller;
 import slogo.model.Parser;
 import java.util.ResourceBundle;
-import slogo.model.command.And;
 
-public class Visualizer implements ViewExternalAPI{
+public class Visualizer{
 
   public static final Paint BACKGROUND = Color.AZURE;
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
-  public static final int TURTLE_WIDTH = 50;
-  public static final int TURTLE_HEIGHT = 40;
   public static final int COLORPICKER_HEIGHT = 30;
+
 
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
@@ -57,36 +44,36 @@ public class Visualizer implements ViewExternalAPI{
   private Controller myController;
   private HelpWindow helpWindow;
   private BorderPane root;
-  private Group view;
+//  private Group view;
   private VBox variables;
   private VBox commands;
-  private VBox group;
-  private BorderPane viewPane;
+//  private VBox group;
+//  private BorderPane viewPane;
   private Rectangle turtleArea;
   private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
   private String language;
   private Group turtlePaths;
   private Group turtles;
+  private ViewExternal viewExternal;
 
   public Visualizer (){
-    view = new Group();
     turtlePaths = new Group();
     turtleList = new ArrayList<>();
     turtles = new Group();
-    myController = new Controller(this, DEFAULT_LANGUAGE);
+    viewExternal = new ViewExternal(this);
+    myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
   }
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-//  turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
     root = createView();
     myScene = new Scene(root);
     return myScene;
   }
 
   private BorderPane createView(){
-    viewPane = new BorderPane();
+    BorderPane viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
@@ -102,48 +89,46 @@ public class Visualizer implements ViewExternalAPI{
     return viewPane;
   }
 
-  private Group createBox() { //FIXME discuss creating objects here or in config
+  private Group createBox() {
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
     turtleList.add(new TurtleView(turtles, turtlePaths));
+    Group view = new Group();
     view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
   }
 
   private VBox showUserDefined(){
-    group = new VBox();
+    VBox group = new VBox();
     group.setSpacing(VBOX_SPACING);
     group.getChildren().add(createBox());
 
     BorderPane userDefined = new BorderPane();
-    variables = new VBox();
-    ScrollPane userVariables = new ScrollPane();
-    userVariables.setContent(variables);
-    userVariables.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4 ); //FIXME dependency on turtlearea width
-    variables.heightProperty().addListener((obs, old, newValue) -> userVariables.setVvalue((Double)newValue));
 
-    commands = new VBox();
-    ScrollPane userCommands = new ScrollPane();
-    userCommands.setContent(commands);
-    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4);
-    commands.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
-    //fixme duplicated code to create boxes for saved commands -- extract method?
-    userDefined.setLeft(userVariables);
-    userDefined.setRight(userCommands);
+    variables = makeHistory("Variables");
+    commands = makeHistory("Commands");
 
-    Label variablesLabel = new Label(myResources.getString("Variables"));
-    Label commandsLabel = new Label(myResources.getString("Commands"));
-    GridPane grid = new GridPane();
-    grid.setHgap(TURTLE_SCREEN_WIDTH/3);
-    GridPane.setConstraints(variablesLabel, 0, 0);
-    GridPane.setConstraints(commandsLabel, 1, 0);
-    grid.getChildren().addAll(variablesLabel, commandsLabel);
+    userDefined.setLeft(commands);
+    userDefined.setRight(variables);
 
-    group.getChildren().addAll(grid, userDefined);
+    group.getChildren().addAll(userDefined);
     group.setVgrow(userDefined, Priority.ALWAYS);
     return group;
+  }
+
+  private VBox makeHistory(String labelname) {
+    VBox total = new VBox();
+    VBox history = new VBox();
+    ScrollPane userCommands = new ScrollPane();
+    userCommands.setContent(history);
+    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4); //fixme
+    history.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
+    Label label = new Label(myResources.getString(labelname));
+    total.getChildren().addAll(label, userCommands);
+    total.setVgrow(userCommands, Priority.ALWAYS);
+    return total;
   }
 
   private Node createUI() {
@@ -154,11 +139,15 @@ public class Visualizer implements ViewExternalAPI{
     Button chooseTurtle = new Button(myResources.getString("ChooseTurtle"));
     chooseTurtle.setOnAction(e-> {
       turtleList.get(0).chooseTurtle();
-            }
-    );
+            });
+    Button reset = new Button(myResources.getString("ResetCommand"));
+    reset.setOnAction(e->{
+      clear();
+      turtleList.get(0).resetTurtle();
+    });
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
-            help(), testUpdate());
+            reset, help());
     return ui;
   }
 
@@ -171,8 +160,9 @@ public class Visualizer implements ViewExternalAPI{
 
   private ColorPicker penColor(){
     ColorPicker colorPicker = new ColorPicker();
+    colorPicker.setValue(Color.BLACK);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> turtleList.get(0).updatePen(colorPicker.getValue()));
+    colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
     return colorPicker;
   }
 
@@ -205,35 +195,8 @@ public class Visualizer implements ViewExternalAPI{
     });
     return comboBox;
   }
-
-  private Button testUpdate(){
-    Button test = new Button("Test");
-    test.setOnAction(e->update(200, 200, 90));
-    return test;
+  public void clear(){
+    turtlePaths.getChildren().clear();
   }
-
-  @Override
-  public void update(double newX, double newY, double orientation){
-    turtleList.get(0).update(newX, newY, orientation);
-  }
-
-  @Override
-  public void updatePenColor() {
-
-  }
-
-  @Override
-  public void updateSceneColor() {
-
-  }
-
-  @Override
-  public void clear() {
-
-  }
-
-  @Override
-  public void update() {
-
-  }
+  public List<TurtleView> getTurtleList(){return turtleList;}
 }

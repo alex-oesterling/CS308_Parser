@@ -1,11 +1,12 @@
 package slogo.view;
 
-import java.util.List;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -27,6 +28,14 @@ public class TurtleView{
     public static final int TURTLE_HEIGHT = 40;
     public static final int TURTLE_SCREEN_WIDTH = 500;
     public static final int TURTLE_SCREEN_HEIGHT = 500;
+    public static final int PATH_STROKE_WIDTH = 3;
+    public static final int PATH_TRANSITION_DURATION = 2000;
+    public static final int ROTATE_TRANSITION_DURATION = 2000;
+    public static final int PAUSE_TRANSITION_DURATION = 1000;
+    public static final int TURTLE_RESET_ANGLE = 0;
+    public static final double PATH_OPACITY = 0.75;
+    public static final double PATH_NO_OPACITY = 0.0;
+    private static final String ERROR_DIALOG = "Please Choose Another File";
 
     private Group myPaths;
     private Group myTurtles;
@@ -46,8 +55,8 @@ public class TurtleView{
         ImageView turtleImage = new ImageView("resources/turtles/turtle1.png");
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
-        turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH/2-turtleImage.getBoundsInLocal().getWidth()/2);
-        turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT/2-turtleImage.getBoundsInLocal().getHeight()/2);
+        turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
+        turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().add(turtleImage);
         return turtleImage;
     }
@@ -60,14 +69,39 @@ public class TurtleView{
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
             turtleImage.setFitHeight(TURTLE_HEIGHT);
-            turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH/2-turtleImage.getBoundsInLocal().getWidth()/2);
-            turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT/2-turtleImage.getBoundsInLocal().getHeight()/2);
+            turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
+            turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
             myTurtles.getChildren().remove(myImage);
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
-        } catch (IOException e) {
-            //FIXME add errors here
+        } catch (IllegalArgumentException e){
+            return;
+        } catch (Exception e) {
+            retryLoadFile("Please choose a valid image");
         }
+    }
+
+    private void retryLoadFile(String message) {
+        boolean badFile;
+        displayError(message);
+        do {
+            badFile = false;
+            try {
+                chooseTurtle();
+            } catch (NullPointerException e){
+                return;
+            } catch (Exception e){
+                displayError(message);
+                badFile = true;
+            }
+        } while (badFile);
+    }
+
+    private void displayError(String message) {
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText(message);
+        errorAlert.setContentText(ERROR_DIALOG);
+        errorAlert.showAndWait();
     }
 
     private File getTurtleImage(Stage stage) {
@@ -80,35 +114,54 @@ public class TurtleView{
     }
 
     public void update(double newX, double newY, double orientation){
-        double oldX = myImage.getTranslateX()+myImage.getLayoutBounds().getWidth()/2;
-        double oldY = myImage.getTranslateY()+myImage.getLayoutBounds().getHeight()/2;
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
+        double oldX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
+        double oldY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
             if(penStatus){
-                path.setOpacity(0.5);
+                path.setOpacity(PATH_OPACITY);
+                path.setStrokeWidth(PATH_STROKE_WIDTH);
             } else {
-                path.setOpacity(0.0);
+                path.setOpacity(PATH_NO_OPACITY);
             }
             path.setStroke(myPenColor);
             myPaths.getChildren().add(path);
             path.getElements().add(new MoveTo(oldX, oldY));
             path.getElements().add(new LineTo(newX, newY));
-            PathTransition pt = new PathTransition(Duration.millis(2000), path, myImage);
+            PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
             pt.setPath(path);
             pt.play();
         }
 
         PauseTransition pauser = new PauseTransition();
-        pauser.setDuration(Duration.millis(1000));
+        pauser.setDuration(Duration.millis(PAUSE_TRANSITION_DURATION));
         pauser.play();
 
-        RotateTransition rt = new RotateTransition(Duration.millis(2000), myImage);
+        RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(orientation);
+        rt.play();
+    }
 
+    public void resetTurtle(){
+        myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
+        myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
+        RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
+        rt.setToAngle(TURTLE_RESET_ANGLE);
         rt.play();
     }
 
     public void updatePen(Color color){
         myPenColor = color;
+    }
+
+    public void updateTurtleView(double value){
+        myImage.setVisible(value != 0.0);
+    }
+
+    public void updatePenStatus(double value){
+        penStatus = (value != 0.0);
     }
 }
