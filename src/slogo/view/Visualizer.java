@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,7 +21,6 @@ import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
 import slogo.model.Parser;
 import java.util.ResourceBundle;
-import slogo.model.command.And;
 
 public class Visualizer{
 
