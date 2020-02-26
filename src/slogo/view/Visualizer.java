@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -21,7 +22,7 @@ import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
 import slogo.model.Parser;
 import java.util.ResourceBundle;
-import slogo.model.command.booleancommand.And;
+import slogo.model.command.And;
 
 public class Visualizer implements ViewExternalAPI{
 
@@ -37,8 +38,10 @@ public class Visualizer implements ViewExternalAPI{
   public static final int VBOX_SPACING = 10;
   public static final String RESOURCE = "resources.languages";
   public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
+  private static final String DEFAULT_LANGUAGE = "English";
 
   private Scene myScene;
+  private File turtleFile;
   private Parser myParser;
   private Controller myController;
   private HelpWindow helpWindow;
@@ -55,14 +58,11 @@ public class Visualizer implements ViewExternalAPI{
   private Group turtlePaths;
   private Group turtles;
 
-  public Visualizer (Parser parser){
+  public Visualizer (){
     turtlePaths = new Group();
     turtleList = new ArrayList<>();
     turtles = new Group();
-    myParser = parser; //FIXME
-    myController = new Controller(new And(0, 0), this); //FIXME  just made a random command
-    myController.addLanguage("English"); //FIXME
-    myController.addLanguage("Syntax"); //FIXME
+    myController = new Controller(this, DEFAULT_LANGUAGE);
   }
 
   public Scene setupScene() {
@@ -185,6 +185,8 @@ public class Visualizer implements ViewExternalAPI{
     comboBox.setOnAction(event -> {
       //TODO: pass in value of combobox to some method to change the language
       language = comboBox.getValue().toString();
+      //FIXME updating language because I think this is where that should happen... change this if I'm wrong
+      myController.addLanguage(language);
     });
     return comboBox;
   }

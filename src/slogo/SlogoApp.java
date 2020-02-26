@@ -14,8 +14,7 @@ public class SlogoApp {
   private Stage stage;
 
   public SlogoApp(Stage stage){
-    Parser myParser = new Parser();
-    Visualizer myVisualizer = new Visualizer(myParser);
+    Visualizer myVisualizer = new Visualizer();
 
     stage = stage;
     stage.setScene(myVisualizer.setupScene());

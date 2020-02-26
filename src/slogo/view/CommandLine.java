@@ -78,7 +78,7 @@ public class CommandLine {
   private void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
       try {
-        myController.runCommand(textBox.getText());
+        myController.sendCommands(textBox.getText());
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED);
