@@ -147,6 +147,7 @@ public class Visualizer{
     Button reset = new Button(myResources.getString("ResetCommand"));
     reset.setOnAction(e->{
       clear();
+      myController.reset();
       turtleList.get(0).resetTurtle();
     });
     ui.setSpacing(VBOX_SPACING);

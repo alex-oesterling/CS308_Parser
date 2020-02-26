@@ -42,6 +42,8 @@ public class TurtleView{
     private boolean penStatus;
     private ImageView myImage;
     private Color myPenColor;
+    private double currentX;
+    private double currentY;
 
     public TurtleView(Group turtles, Group paths){
         penStatus = true;
@@ -69,8 +71,8 @@ public class TurtleView{
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
             turtleImage.setFitHeight(TURTLE_HEIGHT);
-            turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
-            turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
+            turtleImage.setTranslateX(currentX - turtleImage.getBoundsInLocal().getWidth() / 2);
+            turtleImage.setTranslateY(currentY - turtleImage.getBoundsInLocal().getHeight() / 2);
             myTurtles.getChildren().remove(myImage);
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
@@ -117,6 +119,8 @@ public class TurtleView{
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
         newY += TURTLE_SCREEN_HEIGHT/2;
+        currentX = newX;
+        currentY = newY;
         double oldX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
         double oldY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
         if(newX != oldX || newY != oldY) {
