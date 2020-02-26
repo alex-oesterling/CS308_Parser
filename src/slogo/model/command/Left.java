@@ -30,12 +30,4 @@ public class Left extends Command {
         return this.getResult();
     }
 
-    /**
-     * Get the degrees to be turned left
-     * @return degrees
-     */
-    /*@Override
-    public Double getResult() {
-        return degrees;
-    }*/
 }

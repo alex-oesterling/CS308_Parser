@@ -15,6 +15,17 @@ public class Heading extends Command {
     }
 
     /**
+     * Return the current heading of the turtle
+     * this is separate from setting it in super in
+     * case this command is called within a loop
+     * @return the turtle's heading
+     */
+    @Override
+    public Double getResult(){
+        return t.getHeading();
+    }
+
+    /**
      * Allows the heading command to be execute and return the turtle's heading in degrees
      * @return turtle heading in degrees
      */

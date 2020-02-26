@@ -16,11 +16,23 @@ public class Home extends Command {
   }
 
   /**
+   * Override super getResult();
+   * this is done here instead of setting in constructor
+   * in case the turtle moves and the same command object is executed again
+   * @return distance to Home
+   */
+  @Override
+  public Double getResult(){
+    return t.distanceToPosition(Turtle.DEFAULT_STARTING_X, Turtle.DEFAULT_STARTING_Y);
+  }
+
+  /**
    * Allows home command to be executed and sends turtle back to starting position
    * @return the distance the turtle moved
    */
   @Override
   public Double execute() {
-    return t.goHome();
+    t.goHome();
+    return t.distanceToPosition(Turtle.DEFAULT_STARTING_X, Turtle.DEFAULT_STARTING_Y);
   }
 }

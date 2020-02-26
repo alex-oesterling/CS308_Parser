@@ -16,12 +16,24 @@ public class ClearScreen extends Command {
     }
 
     /**
+     * Override super getResult();
+     * this is done here instead of setting in constructor
+     * in case the turtle moves and the same command object is executed again
+     * @return distance to Home, the distance the turtle will travel when executed
+     */
+    @Override
+    public Double getResult(){
+        return t.distanceToPosition(Turtle.DEFAULT_STARTING_X, Turtle.DEFAULT_STARTING_Y);
+    }
+
+    /**
      * Allows the clear screen command to be executed, clears the
      * screen and returns the distance the turtle moved
      * @return distance the turtle moved
      */
     @Override
     public Double execute() {
-        return t.goHome();
+        t.goHome();
+        return this.getResult();
     }
 }

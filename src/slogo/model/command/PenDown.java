@@ -12,7 +12,7 @@ public class PenDown extends Command {
      * @param body the current turtle that will have its pen set to down
      */
     public PenDown(Turtle body){
-        super();
+        super(DRAWING);
         t = body;
     }
 

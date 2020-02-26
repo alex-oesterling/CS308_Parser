@@ -11,16 +11,19 @@ public class IsShowing extends Command {
      * @param body turtle to check
      */
     public IsShowing(Turtle body){
-        super();
+        super(body.isTurtleVisible());
         t = body;
     }
 
     /**
-     * Allows the isShowing command to be executed to tell whether the turtle is showing or not
-     * @return 0 if not showing, 1 if showing
+     * Return if the pen is down on a turtle or not
+     * this is separate from setting it in the constructor
+     * in case a specific IsPenDown object's execute() is
+     * called many times; i.e. object is in a loop
+     * @return drawing status of the turtle
      */
     @Override
-    public Double execute() {
-       return t.isTurtleVisible();
+    public Double getResult(){
+        return t.isTurtleVisible();
     }
 }

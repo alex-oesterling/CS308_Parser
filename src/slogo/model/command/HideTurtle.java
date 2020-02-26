@@ -13,7 +13,7 @@ public class HideTurtle extends Command {
      * @param body the turtle that is currently being used, will set to be hidden
      */
     public HideTurtle(Turtle body){
-        super();
+        super(HIDDEN);
         t = body;
     }
 
