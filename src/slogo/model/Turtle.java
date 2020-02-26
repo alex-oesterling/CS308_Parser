@@ -90,7 +90,9 @@ public class Turtle{
     yPosition += distance * Math.cos(theta);
   }
 
-  private double convertToRadians(double theta){ return theta*Math.PI/QUAD3_BEGINS; }
+  private double convertToRadians(double theta){
+    return theta*Math.PI/QUAD3_BEGINS;
+  }
 
   /**
    * Change the heading of the turtle, and make sure
@@ -123,7 +125,9 @@ public class Turtle{
     return setHeadingAndGetDeltaTheta(theta);
   }
 
-  private double convertToDegrees(double theta){ return theta*QUAD3_BEGINS/Math.PI; }
+  private double convertToDegrees(double theta){
+    return theta*QUAD3_BEGINS/Math.PI;
+  }
 
   /**
    * Set heading to a given value, and make it valid
@@ -146,7 +150,9 @@ public class Turtle{
   /**
    * Put the turtle back where it started
    */
-  public double goHome(){ return moveToPosition(homeX, homeY); }
+  public double goHome(){
+    return moveToPosition(homeX, homeY);
+  }
 
   /**
    * Set the turtle's position to a specified location,
@@ -169,43 +175,57 @@ public class Turtle{
    * Tell the view if the turtle should be shown or not
    * @return turtleIsVisible
    */
-  public double isTurtleVisible(){ return turtleIsVisible; }
+  public double isTurtleVisible(){
+    return turtleIsVisible;
+  }
 
   /**
    * Return the drawing capabilities of the turtle
    * @return pen status
    */
-  public double getDrawingStatus(){ return turtleIsDrawing; }
+  public double getDrawingStatus(){
+    return turtleIsDrawing;
+  }
 
   /**
    * Return the heading of the current turtle in degrees (as a double)
    * @return  heading, in degrees
    */
-  public double getHeading(){ return heading; }
+  public double getHeading(){
+    return heading;
+  }
 
   /**
    * Return the unique id of the turtle
    * @return the object's hashcode
    */
-  public int getId(){ return this.hashCode(); }
+  public int getId(){
+    return this.hashCode();
+  }
 
   /**
    * Getter for String of the pen color name
    * @return
    */
-  public String getPenColor(){ return penColorName; }
+  public String getPenColor(){
+    return penColorName;
+  }
 
   /**
    * Get the x position
    * @return xPosition
    */
-  public double getX(){ return xPosition; }
+  public double getX(){
+    return xPosition;
+  }
 
   /**
    * Get the y position
    * @return yPos
    */
-  public double getY(){ return yPosition; }
+  public double getY(){
+    return yPosition;
+  }
 
   /**
    * Set the pen as up or down
@@ -220,7 +240,9 @@ public class Turtle{
    * Set a new Pen color
    * @param newColor
    */
-  public void setPenColor(String newColor){ penColorName = newColor.toUpperCase(); }
+  public void setPenColor(String newColor){
+    penColorName = newColor.toUpperCase();
+  }
   //TODO check that newColor is valid
 
   /**
@@ -236,13 +258,17 @@ public class Turtle{
    * Set the x position
    * @param newXPosition value to set xPosition to
    */
-  public void setX(double newXPosition){ xPosition = newXPosition; }
+  public void setX(double newXPosition){
+    xPosition = newXPosition;
+  }
   //TODO check that newXPosition is valid
 
   /**
    * Set the y position
    * @param newYPosition value to set yPosition to
    */
-  public void setY(double newYPosition){ yPosition = newYPosition; }
+  public void setY(double newYPosition){
+    yPosition = newYPosition;
+  }
   //TODO check that newYPosition is valid
 }
