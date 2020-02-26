@@ -24,7 +24,7 @@ import slogo.model.Parser;
 import java.util.ResourceBundle;
 import slogo.model.command.And;
 
-public class Visualizer implements ViewExternalAPI{
+public class Visualizer{
 
   public static final Paint BACKGROUND = Color.AZURE;
   public static final int TURTLE_SCREEN_WIDTH = 500;
@@ -57,12 +57,14 @@ public class Visualizer implements ViewExternalAPI{
   private String language;
   private Group turtlePaths;
   private Group turtles;
+  private ViewExternal viewExternal;
 
   public Visualizer (){
     turtlePaths = new Group();
     turtleList = new ArrayList<>();
     turtles = new Group();
-    myController = new Controller(this, DEFAULT_LANGUAGE);
+    viewExternal = new ViewExternal(this);
+    myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
   }
 
   public Scene setupScene() {
@@ -140,9 +142,14 @@ public class Visualizer implements ViewExternalAPI{
     chooseTurtle.setOnAction(e-> {
       turtleList.get(0).chooseTurtle();
             });
+    Button reset = new Button(myResources.getString("ResetCommand"));
+    reset.setOnAction(e->{
+      clear();
+      turtleList.get(0).resetTurtle();
+    });
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
-            help(), testUpdate());
+            reset, help());
     return ui;
   }
 
@@ -157,7 +164,7 @@ public class Visualizer implements ViewExternalAPI{
     ColorPicker colorPicker = new ColorPicker();
     colorPicker.setValue(Color.BLACK);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> updatePenColor(colorPicker.getValue()));
+    colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
     return colorPicker;
   }
 
@@ -190,30 +197,8 @@ public class Visualizer implements ViewExternalAPI{
     });
     return comboBox;
   }
-
-  private Button testUpdate(){
-    Button test = new Button("Test");
-    test.setOnAction(e->update(200, 200, 90));
-    return test;
+  public void clear(){
+    turtlePaths.getChildren().clear();
   }
-
-  @Override
-  public void update(double newX, double newY, double orientation){
-    turtleList.get(0).update(newX, newY, orientation);
-  }
-
-  @Override
-  public void updatePenColor(Color color) {
-    turtleList.get(0).updatePen(color);
-  }
-
-  @Override
-  public void updateSceneColor() {
-
-  }
-
-  @Override
-  public void clear() {
-
-  }
+  public List<TurtleView> getTurtleList(){return turtleList;}
 }
