@@ -1,7 +1,5 @@
 package slogo.view;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.paint.Color;
 
 public class ViewExternal implements ViewExternalAPI {

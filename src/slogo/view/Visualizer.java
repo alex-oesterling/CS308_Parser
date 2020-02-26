@@ -188,9 +188,7 @@ public class Visualizer{
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
     comboBox.setOnAction(event -> {
-      //TODO: pass in value of combobox to some method to change the language
       language = comboBox.getValue().toString();
-      //FIXME updating language because I think this is where that should happen... change this if I'm wrong
       myController.addLanguage(language);
     });
     return comboBox;
