@@ -44,21 +44,35 @@ public class Controller {
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
         parametersStack = new Stack<>();
+        //makeParser(commandParser, LANGUAGES_PACKAGE, language);
+        //makeParser(syntaxParser, LANGUAGES_PACKAGE, "Syntax");
+        //makeParser(parametersParser, INFORMATION_PACKAGE, "Parameters");
+
         commandParser = new Parser(LANGUAGES_PACKAGE);
         commandParser.addPatterns(language);
+
         syntaxParser = new Parser(LANGUAGES_PACKAGE);
         syntaxParser.addPatterns("Syntax");
+
         parametersParser = new Parser(INFORMATION_PACKAGE);
         parametersParser.addPatterns("Parameters");
 
     }
 
+    /* //commented out because it doesn't work currently
+    private void makeParser(Parser parser, String packageName, String language) {
+        parser = new Parser(packageName);
+        parser.addPatterns(language);
+        //languagesBundle = ResourceBundle.getBundle(LANGUAGES_PACKAGE+language);
+    }*/
+
     /**
-     * Adds the given resource file to this language's recognized types
+     * change to a new language of input
+     * @param language input language: English, Spanish, Urdu, etc.
      */
-    public void addLanguage (String language) {
+    public void addLanguage(String language){
+        commandParser = new Parser(LANGUAGES_PACKAGE);
         commandParser.addPatterns(language);
-        languagesBundle = ResourceBundle.getBundle(LANGUAGES_PACKAGE+language);
     }
 
     /**
@@ -124,7 +138,7 @@ public class Controller {
             System.out.println(c);
             System.out.println(c.execute());
             System.out.println("DURING:: x: "+turtle.getX()+" y: "+turtle.getY()+" heading: "+turtle.getHeading());
-            myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
+            //myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
         }
     }
 
