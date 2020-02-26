@@ -2,10 +2,6 @@ package slogo.view;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.PathTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -13,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -21,13 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
-import javafx.util.Duration;
 import slogo.controller.Controller;
 import slogo.model.Parser;
 import java.util.ResourceBundle;
@@ -39,8 +29,6 @@ public class Visualizer implements ViewExternalAPI{
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
-  public static final int TURTLE_WIDTH = 50;
-  public static final int TURTLE_HEIGHT = 40;
   public static final int COLORPICKER_HEIGHT = 30;
 
   public static final int VIEWPANE_PADDING = 10;
@@ -79,7 +67,6 @@ public class Visualizer implements ViewExternalAPI{
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
-//    turtleFile = getTurtleImage(new Stage()); //FIXME: we have to pick a turtlefile before creating our scene -- I propose in the chooseTurtle method we call getTurtleImage -- so each time we create a new imageview we have to pick a file but it prevents dependencies on the order of our code
     root = createView();
     myScene = new Scene(root);
     return myScene;
@@ -154,8 +141,7 @@ public class Visualizer implements ViewExternalAPI{
     Button chooseTurtle = new Button(myResources.getString("ChooseTurtle"));
     chooseTurtle.setOnAction(e-> {
       turtleList.get(0).chooseTurtle();
-            }
-    );
+            });
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
             help(), testUpdate());
@@ -171,6 +157,7 @@ public class Visualizer implements ViewExternalAPI{
 
   private ColorPicker penColor(){
     ColorPicker colorPicker = new ColorPicker();
+    colorPicker.setValue(Color.BLACK);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> turtleList.get(0).updatePen(colorPicker.getValue()));
     return colorPicker;
