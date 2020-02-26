@@ -113,6 +113,9 @@ public class TurtleView{
     }
 
     public void update(double newX, double newY, double orientation){
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
         double oldX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
         double oldY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
         if(newX != oldX || newY != oldY) {
