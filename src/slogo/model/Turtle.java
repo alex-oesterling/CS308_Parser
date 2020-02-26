@@ -2,8 +2,8 @@ package slogo.model;
 
 public class Turtle{
 
-  private static final int DEFAULT_STARTING_X = 0;
-  private static final int DEFAULT_STARTING_Y = 0;
+  public static final int DEFAULT_STARTING_X = 0;
+  public static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 0;
   private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
@@ -115,7 +115,13 @@ public class Turtle{
     setHeading(headingTowards(xPos,yPos));
   }
 
-
+  /**
+   * Calculate the angle from North (in degrees) needed to connect
+   * a line from the origin to the point
+   * @param xPos x value of the point
+   * @param yPos y value of the point
+   * @return a value between 0 and 360 degrees of the angle CW from north to the point
+   */
   public double headingTowards(double xPos, double yPos){
     double theta = Math.atan(xPos/yPos);                         //value within quadrant; good for quadrants I and III
     if((xPos < 0) != (yPos < 0)){ theta = Math.atan(yPos/xPos);} //value within quadrants II and IV
@@ -146,8 +152,12 @@ public class Turtle{
     return Math.min(Math.abs(oldHeading-comparisonHeading), QUAD4_ENDS-oldHeading+comparisonHeading);
   }
 
-  public void setHeading(double theta){
-    heading = theta;
+  /**
+   * Set the heading to a new angle
+   * @param degreesCWFromNorth angle to set the heading in DEGREES
+   */
+  public void setHeading(double degreesCWFromNorth){
+    heading = degreesCWFromNorth;
     heading = makeHeadingValid(heading);
   }
 
@@ -164,12 +174,15 @@ public class Turtle{
     return moveToPosition(homeX, homeY);
   }
 
+  /**
+   * Calculate the distance from the turtle's current point to a specific point
+   * @param xPos x value of the point
+   * @param yPos y value of the point
+   * @return distance away from point
+   */
   public double distanceToPosition(double xPos, double yPos){
     double deltaX = xPosition - xPos;
     double deltaY = yPosition - yPos;
-
-    xPosition = xPos;
-    yPosition = yPos;
 
     return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
   }
@@ -178,17 +191,14 @@ public class Turtle{
    * Set the turtle's position to a specified location,
    * and return the distance it travelled
    * @param xPos new X position
-   * @param newYPos new Y position
+   * @param yPos new Y position
    * @return distance travelled by turtle
    */
-  public double moveToPosition(double xPos, double newYPos){
-    double deltaX = xPosition - xPos;
-    double deltaY = yPosition - newYPos;
-
+  public double moveToPosition(double xPos, double yPos){
     xPosition = xPos;
-    yPosition = newYPos;
+    yPosition = yPos;
 
-    return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+    return distanceToPosition(xPos, yPos);
   }
 
   /**
