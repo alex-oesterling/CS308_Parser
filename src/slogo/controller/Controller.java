@@ -369,6 +369,7 @@ public class Controller {
 
     public static void main(String[] args) {
         Controller c = new Controller(new Visualizer(), "English");
+        Turtle tom = new Turtle();
         //c.addLanguage("English");
         System.out.println("BEFORE:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
 
