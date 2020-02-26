@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -56,6 +57,7 @@ public class Visualizer{
   private Group turtlePaths;
   private Group turtles;
   private ViewExternal viewExternal;
+  private CommandLine commandLine;
 
   public Visualizer (){
     turtlePaths = new Group();
@@ -63,12 +65,14 @@ public class Visualizer{
     turtles = new Group();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
+    commandLine = new CommandLine(myController);
   }
 
   public Scene setupScene() {
     myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
     root = createView();
-    myScene = new Scene(root);
+    Scene myScene = new Scene(root);
+    myScene.addEventFilter(KeyEvent.KEY_PRESSED, e->commandLine.scrollHistory(e.getCode()));
     return myScene;
   }
 
@@ -78,12 +82,12 @@ public class Visualizer{
     viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
     Node turtleView = showUserDefined();
-    Node commandLine = new CommandLine(myController).setupCommandLine();
+    Node cLine = commandLine.setupCommandLine();
     Node userInterface = createUI();
 
-    viewPane.setMargin(commandLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
+    viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setLeft(turtleView);
-    viewPane.setCenter(commandLine);
+    viewPane.setCenter(cLine);
     viewPane.setRight(userInterface);
 
     return viewPane;
@@ -188,9 +192,7 @@ public class Visualizer{
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
     comboBox.setOnAction(event -> {
-      //TODO: pass in value of combobox to some method to change the language
       language = comboBox.getValue().toString();
-      //FIXME updating language because I think this is where that should happen... change this if I'm wrong
       myController.addLanguage(language);
     });
     return comboBox;

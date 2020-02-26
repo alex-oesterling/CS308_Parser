@@ -113,16 +113,14 @@ public class Controller {
             if (line.trim().length() > 0) {
                 String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
                 if(commandSyntax.equals("Command")){
-                    String commandName;
-                    try{
-                        commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
-                    }
-                    catch (InvalidCommandException e){
-                        throw new InvalidCommandException(e, commandSyntax, line);
+                    String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
+                    if (commandName.equals("NO MATCH")){
+                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
                     }
                     //if(!commandName.contains("NO MATCH")){
                     validCommand(params, commandName, commandList);
                     //}
+
                 } else if (commandSyntax.equals("Constant")){
                     Double argumentValue = Double.parseDouble(line);
                     argumentStack.push(argumentValue);
