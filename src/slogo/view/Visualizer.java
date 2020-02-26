@@ -142,9 +142,14 @@ public class Visualizer{
     chooseTurtle.setOnAction(e-> {
       turtleList.get(0).chooseTurtle();
             });
+    Button reset = new Button(myResources.getString("ResetCommand"));
+    reset.setOnAction(e->{
+      turtlePaths.getChildren().clear();
+      turtleList.get(0).resetTurtle();
+    });
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
-            help(), testUpdate());
+            reset, help(), testUpdate());
     return ui;
   }
 

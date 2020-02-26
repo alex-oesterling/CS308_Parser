@@ -32,6 +32,7 @@ public class TurtleView{
     public static final int PATH_TRANSITION_DURATION = 2000;
     public static final int ROTATE_TRANSITION_DURATION = 2000;
     public static final int PAUSE_TRANSITION_DURATION = 1000;
+    public static final int TURTLE_RESET_ANGLE = 0;
     public static final double PATH_OPACITY = 0.75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
@@ -141,6 +142,14 @@ public class TurtleView{
 
         RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(orientation);
+        rt.play();
+    }
+
+    public void resetTurtle(){
+        myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
+        myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
+        RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
+        rt.setToAngle(TURTLE_RESET_ANGLE);
         rt.play();
     }
 
