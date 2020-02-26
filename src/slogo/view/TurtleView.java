@@ -72,7 +72,7 @@ public class TurtleView{
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
         } catch (IOException e) {
-            //FIXME add errors here
+
         }
     }
 
