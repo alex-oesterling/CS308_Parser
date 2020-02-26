@@ -36,6 +36,8 @@ public class Controller {
     private Parser commandParser, parametersParser, syntaxParser;
     private ResourceBundle languagesBundle;
 
+    private static final boolean RUN_DUVALL = false;
+
     public Controller(Visualizer visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
@@ -127,7 +129,14 @@ public class Controller {
     private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
         commandStack.push(commandName); //add string to stack
         String commandParams = params.getSymbol(commandName); //get Parameters string, such as "OneDouble" or "TurtleOneDouble"
-        double paramsNeeded  = getParamsNeededDUVALL(commandParams); //convert that string to a double
+
+        double paramsNeeded;
+        if(RUN_DUVALL){
+            paramsNeeded = getParamsNeededDUVALL(commandParams);
+        } else {
+            paramsNeeded  = getParamsNeeded(commandParams); //convert that string to a double
+        }
+
         //System.out.println("putting paramsNeeded("+paramsNeeded+") on the paramsStack");
         parametersStack.push(paramsNeeded); //add that value to the params stack
         return tryToMakeCommands(commandList);
@@ -144,7 +153,14 @@ public class Controller {
         double numberOfParams = parametersStack.pop(); //to be used in creating the command
         //System.out.println("line 116: num of params: "+numberOfParams);
         String name = commandStack.pop();
-        Command newCommand = getCommandDUVALL(name, numberOfParams);
+
+        Command newCommand;
+        if(RUN_DUVALL) {
+            newCommand = getCommandDUVALL(name, numberOfParams);
+        } else {
+            newCommand = getCommand(name, numberOfParams);
+        }
+
         if(commandStack.size()!=0){
             argumentStack.push(newCommand.execute());
         }
