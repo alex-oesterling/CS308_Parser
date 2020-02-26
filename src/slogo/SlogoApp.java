@@ -9,11 +9,8 @@ public class SlogoApp {
    */
   public static final String TITLE = "Parser";
 
-  private Stage stage;
-
   public SlogoApp(Stage stage){
     Visualizer myVisualizer = new Visualizer();
-
     stage.setScene(myVisualizer.setupScene());
     stage.setTitle(TITLE);
     stage.show();

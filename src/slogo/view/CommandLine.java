@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -28,6 +29,7 @@ public class CommandLine {
   private ResourceBundle myResources;
   private TextArea textBox;
   private List<Label> history;
+  private int historyIndex;
   private VBox historyBox;
 
   public CommandLine(Controller controller){
@@ -35,6 +37,7 @@ public class CommandLine {
     myController = controller;
     history = new ArrayList<>();
     historyBox = new VBox();
+    historyIndex = -1;
   }
 
   public Node setupCommandLine(){
@@ -63,7 +66,10 @@ public class CommandLine {
     buttonBox.getChildren().add(run);
 
     Button clear = new Button(myResources.getString("ClearCommand"));
-    clear.setOnAction(e->textBox.clear());
+    clear.setOnAction(e->{
+      textBox.clear();
+      historyIndex = 0;
+    });
     clear.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(clear);
 
@@ -82,14 +88,24 @@ public class CommandLine {
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED);
-        history.add(recentCommand);
         historyBox.getChildren().add(recentCommand);
+        historyIndex=0;
         return;
       }
       Label recentCommand = new Label(textBox.getText());
       history.add(recentCommand);
       historyBox.getChildren().add(recentCommand);
       textBox.clear();
+    }
+  }
+
+  public void scrollHistory(KeyCode input){
+    if (input == KeyCode.UP && historyIndex < history.size()-1) {
+      historyIndex++;
+      textBox.setText(history.get(history.size()-historyIndex-1).getText());
+    } else if (input == KeyCode.DOWN && historyIndex > 0){
+      historyIndex--;
+      textBox.setText(history.get(history.size()-historyIndex-1).getText());
     }
   }
 }

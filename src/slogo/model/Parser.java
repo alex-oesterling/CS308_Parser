@@ -1,5 +1,7 @@
 package slogo.model;
 
+import slogo.exceptions.InvalidCommandException;
+
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +48,6 @@ public class Parser {
           return e.getKey();
         }
       }
-      // FIXME: perhaps throw an exception instead
       return ERROR;
     }
 

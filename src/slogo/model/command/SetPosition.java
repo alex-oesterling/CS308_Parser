@@ -27,7 +27,10 @@ public class SetPosition extends Command {
      * @return distance travelled by the turtle
      */
     @Override
-    public Double execute() {
+    public Double execute(){
+        return t.moveToPosition(xPos, yPos);
+    }
+    public Double getResult() {
         return t.distanceToPosition(xPos, yPos);
     }
 
