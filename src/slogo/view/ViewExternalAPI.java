@@ -7,4 +7,6 @@ public interface ViewExternalAPI {
   void updatePenColor(Color color);
   void updateSceneColor();
   void clear();
+  void updateTurtleView(double value);
+  void updatePenStatus(double value);
 }

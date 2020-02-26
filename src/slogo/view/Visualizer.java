@@ -63,7 +63,7 @@ public class Visualizer{
     turtlePaths = new Group();
     turtleList = new ArrayList<>();
     turtles = new Group();
-    viewExternal = new ViewExternal(turtleList);
+    viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
   }
 
@@ -144,12 +144,12 @@ public class Visualizer{
             });
     Button reset = new Button(myResources.getString("ResetCommand"));
     reset.setOnAction(e->{
-      turtlePaths.getChildren().clear();
+      clear();
       turtleList.get(0).resetTurtle();
     });
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
-            reset, help(), testUpdate());
+            reset, help());
     return ui;
   }
 
@@ -197,10 +197,8 @@ public class Visualizer{
     });
     return comboBox;
   }
-
-  private Button testUpdate(){
-    Button test = new Button("Test");
-    test.setOnAction(e->viewExternal.update(200, 200, 90));
-    return test;
+  public void clear(){
+    turtlePaths.getChildren().clear();
   }
+  public List<TurtleView> getTurtleList(){return turtleList;}
 }

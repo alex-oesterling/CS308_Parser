@@ -156,4 +156,12 @@ public class TurtleView{
     public void updatePen(Color color){
         myPenColor = color;
     }
+
+    public void updateTurtleView(double value){
+        myImage.setVisible(value != 0.0);
+    }
+
+    public void updatePenStatus(double value){
+        penStatus = (value != 0.0);
+    }
 }

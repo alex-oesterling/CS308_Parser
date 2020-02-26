@@ -5,19 +5,19 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 public class ViewExternal implements ViewExternalAPI {
-  private List<TurtleView> turtleList;
+  private Visualizer myVisualizer;
 
-  public ViewExternal(List<TurtleView> turtles){
-    turtleList = turtles;
+  public ViewExternal(Visualizer view){
+    myVisualizer = view;
   }
   @Override
   public void update(double newX, double newY, double orientation){
-    turtleList.get(0).update(newX, newY, orientation);
+    myVisualizer.getTurtleList().get(0).update(newX, newY, orientation);
   }
 
   @Override
   public void updatePenColor(Color color) {
-    turtleList.get(0).updatePen(color);
+    myVisualizer.getTurtleList().get(0).updatePen(color);
   }
 
   @Override
@@ -27,6 +27,16 @@ public class ViewExternal implements ViewExternalAPI {
 
   @Override
   public void clear() {
+    myVisualizer.clear();
+  }
 
+  @Override
+  public void updateTurtleView(double value) {
+    myVisualizer.getTurtleList().get(0).updateTurtleView(value);
+  }
+
+  @Override
+  public void updatePenStatus(double value) {
+    myVisualizer.getTurtleList().get(0).updatePenStatus(value);
   }
 }
