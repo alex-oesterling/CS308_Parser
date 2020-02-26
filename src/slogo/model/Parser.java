@@ -48,7 +48,7 @@ public class Parser {
           return e.getKey();
         }
       }
-      throw new InvalidCommandException(new Throwable(), "", text);
+      return ERROR;
     }
 
   /** Returns true if the given text matches the given regular expression pattern
