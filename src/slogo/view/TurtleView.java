@@ -1,8 +1,8 @@
 package slogo.view;
 
 import javafx.animation.PathTransition;
-import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
@@ -15,12 +15,10 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class TurtleView{
     public static final String XML_FILEPATH = "user.dir";
@@ -29,11 +27,10 @@ public class TurtleView{
     public static final int TURTLE_SCREEN_WIDTH = 500;
     public static final int TURTLE_SCREEN_HEIGHT = 500;
     public static final int PATH_STROKE_WIDTH = 3;
-    public static final int PATH_TRANSITION_DURATION = 2000;
-    public static final int ROTATE_TRANSITION_DURATION = 2000;
-    public static final int PAUSE_TRANSITION_DURATION = 1000;
+    public static final int PATH_TRANSITION_DURATION = 500;
+    public static final int ROTATE_TRANSITION_DURATION = 500;
     public static final int TURTLE_RESET_ANGLE = 0;
-    public static final double PATH_OPACITY = 0.75;
+    public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
 
@@ -42,6 +39,10 @@ public class TurtleView{
     private boolean penStatus;
     private ImageView myImage;
     private Color myPenColor;
+    private double currentX;
+    private double currentY;
+    private SequentialTransition st;
+    private double heading;
 
     public TurtleView(Group turtles, Group paths){
         penStatus = true;
@@ -49,12 +50,17 @@ public class TurtleView{
         myTurtles = turtles;
         myImage = createTurtle();
         myPenColor = Color.BLACK;
+        st = new SequentialTransition();
+        currentX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
+        currentY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
+        heading = 0;
     }
 
     private ImageView createTurtle(){
         ImageView turtleImage = new ImageView("resources/turtles/turtle1.png");
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
+        st = new SequentialTransition();
         turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
         turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().add(turtleImage);
@@ -69,8 +75,8 @@ public class TurtleView{
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
             turtleImage.setFitHeight(TURTLE_HEIGHT);
-            turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
-            turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
+            turtleImage.setTranslateX(currentX - turtleImage.getBoundsInLocal().getWidth() / 2);
+            turtleImage.setTranslateY(currentY - turtleImage.getBoundsInLocal().getHeight() / 2);
             myTurtles.getChildren().remove(myImage);
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
@@ -117,8 +123,12 @@ public class TurtleView{
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
         newY += TURTLE_SCREEN_HEIGHT/2;
-        double oldX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
-        double oldY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
+        double oldX = currentX;
+        double oldY = currentY;
+        double oldHeading = heading;
+        currentX = newX;
+        currentY = newY;
+        heading = orientation;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
             if(penStatus){
@@ -133,16 +143,19 @@ public class TurtleView{
             path.getElements().add(new LineTo(newX, newY));
             PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
             pt.setPath(path);
-            pt.play();
+            st.getChildren().add(pt);
         }
+        if(orientation != oldHeading) {
+            RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION),
+                myImage);
+            rt.setToAngle(orientation);
+            st.getChildren().add(rt);
+        }
+    }
 
-        PauseTransition pauser = new PauseTransition();
-        pauser.setDuration(Duration.millis(PAUSE_TRANSITION_DURATION));
-        pauser.play();
-
-        RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
-        rt.setToAngle(orientation);
-        rt.play();
+    public void playAnimation(){
+        st.play();
+        st = new SequentialTransition();
     }
 
     public void resetTurtle(){
@@ -151,6 +164,9 @@ public class TurtleView{
         RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(TURTLE_RESET_ANGLE);
         rt.play();
+        heading = 0;
+        currentY = 0;
+        currentX = 0;
     }
 
     public void updatePen(Color color){
