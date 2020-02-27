@@ -22,8 +22,8 @@ public class CommandLine {
   public static final int TEXTBOX_HEIGHT = 100;
   public static final int BUTTON_WIDTH = 50;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
-  public static final String RESOURCE = "resources.languages";
-  public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
+  public static final String RESOURCES = "resources.";
+  public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
 
   private Controller myController;
   private ResourceBundle myResources;
@@ -33,7 +33,7 @@ public class CommandLine {
   private VBox historyBox;
 
   public CommandLine(Controller controller){
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
     myController = controller;
     history = new ArrayList<>();
     historyBox = new VBox();
@@ -89,7 +89,9 @@ public class CommandLine {
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED);
         historyBox.getChildren().add(recentCommand);
+        history.add(recentCommand);
         historyIndex=0;
+        textBox.clear();
         return;
       }
       Label recentCommand = new Label(textBox.getText());

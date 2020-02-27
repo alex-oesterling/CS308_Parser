@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.io.SequenceInputStream;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
@@ -126,6 +127,7 @@ public class TurtleView{
         currentY = newY;
         double oldX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
         double oldY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
+        SequentialTransition animation = new SequentialTransition();
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
             if(penStatus){
@@ -140,20 +142,13 @@ public class TurtleView{
             path.getElements().add(new LineTo(newX, newY));
             PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
             pt.setPath(path);
-            st.getChildren().add(pt);
-//            pt.play();
+            animation.getChildren().add(pt);
         }
-
-        PauseTransition pauser = new PauseTransition();
-        pauser.setDuration(Duration.millis(PAUSE_TRANSITION_DURATION));
-        //pauser.play();
-        st.getChildren().add(pauser);
 
         RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(orientation);
-//        rt.play();
-        st.getChildren().add(rt);
-        st.play();
+        animation.getChildren().add(rt);
+        animation.play();
     }
 
     public void resetTurtle(){
