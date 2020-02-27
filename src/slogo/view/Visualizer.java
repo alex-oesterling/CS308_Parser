@@ -30,13 +30,17 @@ public class Visualizer{
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
   public static final int COLORPICKER_HEIGHT = 30;
+  private static final String STYLESHEET = "styling.css";
+  private static final String RESOURCES = "resources";
+  private static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES + ".";
+  public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
 
 
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
   public static final int VBOX_SPACING = 10;
-  public static final String RESOURCE = "resources.languages";
-  public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
+  public static final String LANGUAGE_PACKAGE = RESOURCES + ".languages.";
+  public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String DEFAULT_LANGUAGE = "English";
 
   private Scene myScene;
@@ -69,9 +73,12 @@ public class Visualizer{
   }
 
   public Scene setupScene() {
-    myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
     root = createView();
     Scene myScene = new Scene(root);
+    myScene.getStylesheets()
+        .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
+            .toExternalForm());
     myScene.addEventFilter(KeyEvent.KEY_PRESSED, e->commandLine.scrollHistory(e.getCode()));
     return myScene;
   }
