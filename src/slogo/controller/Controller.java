@@ -30,7 +30,7 @@ public class Controller {
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
     private Stack<Double> argumentStack, parametersStack;
-    private Map<String, String> userCreatedCommands;
+    private Map<String, List> userCreatedCommands;
     private Turtle turtle = new Turtle();
     private Errors error = new Errors();
     private String myCommands;
@@ -114,20 +114,25 @@ public class Controller {
             if (line.trim().length() > 0) {
                 String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
                 if(commandSyntax.equals("Command")){
-                    doCommandWork(params, lang, commandList, line, commandSyntax);
+                    doCommandWork(params, lang, commandList, line, commandSyntax, lines);
                 } else if (commandSyntax.equals("Constant")){
                     doConstantWork(line, commandList);
                     //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
-                    if(!userCreatedCommands.containsKey(line)){
-                        userCreatedCommands.put(line, lines.get(1));
-                        System.out.println(userCreatedCommands);
-                    }else {
-                        String variableCommand = userCreatedCommands.get(line);
-                        String comSyntax = syntax.getSymbol(variableCommand);
-                        if(comSyntax.equals("Constant")){
-                            doConstantWork(variableCommand, commandList);
-                        }
+                    if(userCreatedCommands.containsKey(line)){
+                        List variableDoesWhat = (List) userCreatedCommands.get(line);
+                        /*for (Object s : variableDoesWhat){
+                            if (s == "Command"){
+                                doCommandWork(params, lang, commandList, (String) s, commandSyntax, variableDoesWhat);
+                            }
+                            else if (s == "Constant"){
+                                doConstantWork((String) s, commandList);
+                            }
+                        }*/
+                    }
+                    else{
+                        System.out.println("This variable does not exist yet");
+                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
                     }
                 }
             }
@@ -146,13 +151,31 @@ public class Controller {
         tryToMakeCommands(commandList);
     }
 
-    private void doCommandWork(Parser params, Parser lang, List commandList, String line, String commandSyntax){
+    private void doCommandWork(Parser params, Parser lang, List commandList, String line, String commandSyntax, List lines){
         String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
         if (commandName.equals("NO MATCH")){
             throw new InvalidCommandException(new Throwable(), commandSyntax, line);
         }
+        else if (commandName.equals("MakeVariable")){
+            dealWithMakingVariables(lines, line, commandSyntax);
+        }
         validCommand(params, commandName, commandList);
     }
+
+    private void dealWithMakingVariables(List lines, String line, String commandSyntax){
+        lines.remove(line);
+        String variable = (String) lines.get(0);
+        if (!userCreatedCommands.containsKey(variable)){
+            lines.remove(variable);
+            userCreatedCommands.put(variable, lines);
+            System.out.println(userCreatedCommands);
+        }
+        else{
+            System.out.println("This variable already exists");
+            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+        }
+    }
+
 
     private void printCommandList(List<Command> l){
         for(Command c : l){
@@ -174,6 +197,7 @@ public class Controller {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
             }
         }
+        myView.playAnimation();//FIXME added by alex, makes the commands play in order (series) rather than on top of each other (parallel)
     }
 
     private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
