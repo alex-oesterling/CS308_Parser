@@ -42,6 +42,7 @@ public class Controller {
     public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
+        userCreatedCommands = new HashMap<>();
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
         parametersStack = new Stack<>();
@@ -102,17 +103,21 @@ public class Controller {
             if (line.trim().length() > 0) {
                 String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
                 if(commandSyntax.equals("Command")){
-                    String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
-                    if (commandName.equals("NO MATCH")){
-                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-                    }
-                    validCommand(params, commandName, commandList);
+                    doCommandWork(params, lang, commandList, line, commandSyntax);
                 } else if (commandSyntax.equals("Constant")){
-                    Double argumentValue = Double.parseDouble(line);
-                    argumentStack.push(argumentValue);
-                    tryToMakeCommands(commandList);
+                    doConstantWork(line, commandList);
+                    //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
-
+                    if(!userCreatedCommands.containsKey(line)){
+                        userCreatedCommands.put(line, lines.get(1));
+                        System.out.println(userCreatedCommands);
+                    }else {
+                        String variableCommand = userCreatedCommands.get(line);
+                        String comSyntax = syntax.getSymbol(variableCommand);
+                        if(comSyntax.equals("Constant")){
+                            doConstantWork(variableCommand, commandList);
+                        }
+                    }
                 }
             }
         }
@@ -122,6 +127,20 @@ public class Controller {
         printCommandList(commandList);
         executeCommandList(commandList);
         return commandList;
+    }
+
+    private void doConstantWork(String line, List commandList){
+        Double argumentValue = Double.parseDouble(line);
+        argumentStack.push(argumentValue);
+        tryToMakeCommands(commandList);
+    }
+
+    private void doCommandWork(Parser params, Parser lang, List commandList, String line, String commandSyntax){
+        String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
+        if (commandName.equals("NO MATCH")){
+            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+        }
+        validCommand(params, commandName, commandList);
     }
 
     private void printCommandList(List<Command> l){
