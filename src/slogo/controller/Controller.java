@@ -15,7 +15,6 @@ import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
 import slogo.view.ViewExternal;
-import slogo.view.Visualizer;
 
 public class Controller {
     private static final String LANGUAGES_PACKAGE = "resources.languages.";
@@ -121,10 +120,20 @@ public class Controller {
             tryToMakeCommands(commandList);
         }
         printCommandList(commandList);
+        executeCommandList(commandList);
         return commandList;
     }
 
     private void printCommandList(List<Command> l){
+        Collections.reverse(l);
+        for(Command c : l) {
+            System.out.println(c);
+            System.out.println(c.getResult());
+        }
+    }
+
+    private void executeCommandList(List<Command> l){
+        Collections.reverse(l);
         for(Command c : l){
             System.out.println(c);
             System.out.println(c.execute());
