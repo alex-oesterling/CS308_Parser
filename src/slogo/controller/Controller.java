@@ -30,7 +30,7 @@ public class Controller {
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
     private Stack<Double> argumentStack, parametersStack;
-    private Map<String, String> userCreatedCommands;
+    private Map<String, List> userCreatedCommands;
     private Turtle turtle = new Turtle();
     private Errors error = new Errors();
     private String myCommands;
@@ -43,6 +43,7 @@ public class Controller {
     public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
+        userCreatedCommands = new HashMap<>();
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
         parametersStack = new Stack<>();
@@ -113,21 +114,18 @@ public class Controller {
             if (line.trim().length() > 0) {
                 String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
                 if(commandSyntax.equals("Command")){
-                    String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
-                    if (commandName.equals("NO MATCH")){
-                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-                    }
-                    //if(!commandName.contains("NO MATCH")){
-                    validCommand(params, commandName, commandList);
-                    //}
-
+                    doCommandWork(params, lang, commandList, line, commandSyntax, lines);
                 } else if (commandSyntax.equals("Constant")){
-                    Double argumentValue = Double.parseDouble(line);
-                    argumentStack.push(argumentValue);
-                    tryToMakeCommands(commandList);
+                    doConstantWork(line, commandList);
                     //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
-
+                    /*if(userCreatedCommands.containsKey(line)){
+                        System.out.println(userCreatedCommands.get(line));
+                    }
+                    else{
+                        System.out.println("This variable does not exist yet");
+                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+                    }*/
                 }
             }
         }
@@ -138,6 +136,36 @@ public class Controller {
         printCommandList(commandList);
         return commandList;
     }
+
+    private void doConstantWork(String line, List commandList){
+        Double argumentValue = Double.parseDouble(line);
+        argumentStack.push(argumentValue);
+        tryToMakeCommands(commandList);
+    }
+
+    private void doCommandWork(Parser params, Parser lang, List commandList, String line, String commandSyntax, List lines){
+        String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
+        if (commandName.equals("NO MATCH")){
+            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+        }
+        else if (commandName.equals("MakeVariable")){
+            //dealWithMakingVariables(lines, line, commandSyntax);
+        }
+        validCommand(params, commandName, commandList);
+    }
+
+    /*private void dealWithMakingVariables(List lines, String line, String commandSyntax){
+        lines.remove(line);
+        Object variable = lines.get(0);
+        if (!userCreatedCommands.containsKey(variable)){
+            userCreatedCommands.put()
+        }
+        else{
+            System.out.println("This variable already exists");
+            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+        }
+    }*/
+
 
     private void printCommandList(List<Command> l){
         for(Command c : l){
