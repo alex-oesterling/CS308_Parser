@@ -1,8 +1,6 @@
 package slogo.view;
 
-import java.io.SequenceInputStream;
 import javafx.animation.PathTransition;
-import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.embed.swing.SwingFXUtils;
@@ -17,12 +15,10 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class TurtleView{
     public static final String XML_FILEPATH = "user.dir";
@@ -33,9 +29,8 @@ public class TurtleView{
     public static final int PATH_STROKE_WIDTH = 3;
     public static final int PATH_TRANSITION_DURATION = 500;
     public static final int ROTATE_TRANSITION_DURATION = 500;
-    public static final int PAUSE_TRANSITION_DURATION = 500;
     public static final int TURTLE_RESET_ANGLE = 0;
-    public static final double PATH_OPACITY = 0.75;
+    public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
 
@@ -58,6 +53,7 @@ public class TurtleView{
         st = new SequentialTransition();
         currentX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
         currentY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
+        heading = 0;
     }
 
     private ImageView createTurtle(){
@@ -129,9 +125,10 @@ public class TurtleView{
         newY += TURTLE_SCREEN_HEIGHT/2;
         double oldX = currentX;
         double oldY = currentY;
+        double oldHeading = heading;
         currentX = newX;
         currentY = newY;
-        SequentialTransition animation = new SequentialTransition();
+        heading = orientation;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
             if(penStatus){
@@ -148,10 +145,12 @@ public class TurtleView{
             pt.setPath(path);
             st.getChildren().add(pt);
         }
-
-        RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
-        rt.setToAngle(orientation);
-        st.getChildren().add(rt);
+        if(orientation != oldHeading) {
+            RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION),
+                myImage);
+            rt.setToAngle(orientation);
+            st.getChildren().add(rt);
+        }
     }
 
     public void playAnimation(){
@@ -165,6 +164,9 @@ public class TurtleView{
         RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(TURTLE_RESET_ANGLE);
         rt.play();
+        heading = 0;
+        currentY = 0;
+        currentX = 0;
     }
 
     public void updatePen(Color color){

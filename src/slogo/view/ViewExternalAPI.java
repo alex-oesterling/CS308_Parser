@@ -10,4 +10,6 @@ public interface ViewExternalAPI {
   void updateTurtleView(double value);
   void updatePenStatus(double value);
   void playAnimation();
+//  void setOpacity();
+
 }
