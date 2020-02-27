@@ -159,6 +159,7 @@ public class Controller {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
             }
         }
+        myView.playAnimation();//FIXME added by alex, makes the commands play in order (series) rather than on top of each other (parallel)
     }
 
     private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {

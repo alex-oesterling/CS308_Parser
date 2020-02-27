@@ -9,4 +9,5 @@ public interface ViewExternalAPI {
   void clear();
   void updateTurtleView(double value);
   void updatePenStatus(double value);
+  void playAnimation();
 }

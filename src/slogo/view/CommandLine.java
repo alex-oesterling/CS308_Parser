@@ -68,7 +68,7 @@ public class CommandLine {
     Button clear = new Button(myResources.getString("ClearCommand"));
     clear.setOnAction(e->{
       textBox.clear();
-      historyIndex = 0;
+      historyIndex = -1;
     });
     clear.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(clear);
@@ -89,8 +89,7 @@ public class CommandLine {
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED);
         historyBox.getChildren().add(recentCommand);
-        history.add(recentCommand);
-        historyIndex=0;
+        history.add(new Label(textBox.getText()));
         textBox.clear();
         return;
       }
@@ -98,6 +97,7 @@ public class CommandLine {
       history.add(recentCommand);
       historyBox.getChildren().add(recentCommand);
       textBox.clear();
+      historyIndex = -1;
     }
   }
 
@@ -105,6 +105,7 @@ public class CommandLine {
     if (input == KeyCode.UP && historyIndex < history.size()-1) {
       historyIndex++;
       textBox.setText(history.get(history.size()-historyIndex-1).getText());
+
     } else if (input == KeyCode.DOWN && historyIndex > 0){
       historyIndex--;
       textBox.setText(history.get(history.size()-historyIndex-1).getText());

@@ -47,6 +47,7 @@ public class TurtleView{
     private double currentX;
     private double currentY;
     private SequentialTransition st;
+    private double heading;
 
     public TurtleView(Group turtles, Group paths){
         penStatus = true;
@@ -54,6 +55,9 @@ public class TurtleView{
         myTurtles = turtles;
         myImage = createTurtle();
         myPenColor = Color.BLACK;
+        st = new SequentialTransition();
+        currentX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
+        currentY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
     }
 
     private ImageView createTurtle(){
@@ -123,10 +127,10 @@ public class TurtleView{
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
         newY += TURTLE_SCREEN_HEIGHT/2;
+        double oldX = currentX;
+        double oldY = currentY;
         currentX = newX;
         currentY = newY;
-        double oldX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
-        double oldY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
         SequentialTransition animation = new SequentialTransition();
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
@@ -142,13 +146,17 @@ public class TurtleView{
             path.getElements().add(new LineTo(newX, newY));
             PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
             pt.setPath(path);
-            animation.getChildren().add(pt);
+            st.getChildren().add(pt);
         }
 
         RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
         rt.setToAngle(orientation);
-        animation.getChildren().add(rt);
-        animation.play();
+        st.getChildren().add(rt);
+    }
+
+    public void playAnimation(){
+        st.play();
+        st = new SequentialTransition();
     }
 
     public void resetTurtle(){
