@@ -145,7 +145,7 @@ public class Turtle{
     if(xPos > 0 && yPos < 0){ theta += QUAD2_BEGINS; }           //in quadrant ii
     else if (xPos < 0 && yPos < 0){ theta += QUAD3_BEGINS; }     //in quadrant iii
     else if(xPos < 0 && yPos > 0){ theta += QUAD4_BEGINS; }      //in quadrant iv
-
+    System.out.println(theta);
     return makeHeadingValid(theta);
   }
 
@@ -175,9 +175,9 @@ public class Turtle{
     heading = makeHeadingValid(heading);
   }
 
-  private double makeHeadingValid(double headingToChange) {
-    headingToChange %= QUAD4_ENDS;                                      //make it a value between -360 and 360
-    if(headingToChange < QUAD1_BEGINS){ headingToChange += QUAD4_ENDS; }        //make it a value between 0 and 360
+  private double makeHeadingValid(double headingToChange) { //FIXME commented out by Alex Oesterling to handle turtle rotating correctly -- Just so basic looks nice
+//    headingToChange %= QUAD4_ENDS;                                      //make it a value between -360 and 360
+//    if(headingToChange < QUAD1_BEGINS){ headingToChange += QUAD4_ENDS; }        //make it a value between 0 and 360
     return headingToChange;
   }
 

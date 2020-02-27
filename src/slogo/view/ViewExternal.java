@@ -37,4 +37,9 @@ public class ViewExternal implements ViewExternalAPI {
   public void updatePenStatus(double value) {
     myVisualizer.getTurtleList().get(0).updatePenStatus(value);
   }
+
+  @Override
+  public void playAnimation(){
+    myVisualizer.getTurtleList().get(0).playAnimation();
+  }
 }
