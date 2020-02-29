@@ -108,13 +108,21 @@ public class Controller {
                     doConstantWork(line, commandList);
                     //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
-                    /*if(userCreatedCommands.containsKey(line)){
-                        System.out.println(userCreatedCommands.get(line));
+                    if(userCreatedCommands.containsKey(line)){
+                        List variableDoesWhat = (List) userCreatedCommands.get(line);
+                        /*for (Object s : variableDoesWhat){
+                            if (s == "Command"){
+                                doCommandWork(params, lang, commandList, (String) s, commandSyntax, variableDoesWhat);
+                            }
+                            else if (s == "Constant"){
+                                doConstantWork((String) s, commandList);
+                            }
+                        }*/
                     }
                     else{
                         System.out.println("This variable does not exist yet");
                         throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-                    }*/
+                    }
                 }
             }
         }
@@ -138,22 +146,24 @@ public class Controller {
             throw new InvalidCommandException(new Throwable(), commandSyntax, line);
         }
         else if (commandName.equals("MakeVariable")){
-            //dealWithMakingVariables(lines, line, commandSyntax);
+            dealWithMakingVariables(lines, line, commandSyntax);
         }
         validCommand(params, commandName, commandList);
     }
 
-    /*private void dealWithMakingVariables(List lines, String line, String commandSyntax){
+    private void dealWithMakingVariables(List lines, String line, String commandSyntax){
         lines.remove(line);
-        Object variable = lines.get(0);
+        String variable = (String) lines.get(0);
         if (!userCreatedCommands.containsKey(variable)){
-            userCreatedCommands.put()
+            lines.remove(variable);
+            userCreatedCommands.put(variable, lines);
+            System.out.println(userCreatedCommands);
         }
         else{
             System.out.println("This variable already exists");
             throw new InvalidCommandException(new Throwable(), commandSyntax, line);
         }
-    }*/
+    }
 
 
     private void printCommandList(List<Command> l){
