@@ -9,13 +9,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import slogo.exceptions.InvalidCommandException;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
 import slogo.view.ViewExternal;
-import slogo.view.Visualizer;
 
 public class Controller {
     private static final String LANGUAGES_PACKAGE = "resources.languages.";
@@ -30,7 +30,7 @@ public class Controller {
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
     private Stack<Double> argumentStack, parametersStack;
-    private Map<String, String> userCreatedCommands;
+    private Map<String, List> userCreatedCommands;
     private Turtle turtle = new Turtle();
     private Errors error = new Errors();
     private String myCommands;
@@ -39,16 +39,15 @@ public class Controller {
     private ResourceBundle languagesBundle;
 
     private static final boolean RUN_DUVALL = false;
+    private static boolean IS_VARIABLE = false;
 
     public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
+        userCreatedCommands = new HashMap<>();
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
         parametersStack = new Stack<>();
-        //makeParser(commandParser, LANGUAGES_PACKAGE, language);
-        //makeParser(syntaxParser, LANGUAGES_PACKAGE, "Syntax");
-        //makeParser(parametersParser, INFORMATION_PACKAGE, "Parameters");
 
         commandParser = new Parser(LANGUAGES_PACKAGE);
         commandParser.addPatterns(language);
@@ -60,13 +59,6 @@ public class Controller {
         parametersParser.addPatterns("Parameters");
 
     }
-
-    /* //commented out because it doesn't work currently
-    private void makeParser(Parser parser, String packageName, String language) {
-        parser = new Parser(packageName);
-        parser.addPatterns(language);
-        //languagesBundle = ResourceBundle.getBundle(LANGUAGES_PACKAGE+language);
-    }*/
 
     /**
      * change to a new language of input
@@ -109,37 +101,91 @@ public class Controller {
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
         boolean startingToRead = true;
         List<Command> commandList = new ArrayList<>();
-        for (String line : lines) {
+        ListIterator<String> iterator = lines.listIterator();
+        while(iterator.hasNext() && !IS_VARIABLE) {
+            String line =  iterator.next();
             if (line.trim().length() > 0) {
                 String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
                 if(commandSyntax.equals("Command")){
-                    String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
-                    if (commandName.equals("NO MATCH")){
-                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-                    }
-                    //if(!commandName.contains("NO MATCH")){
-                    validCommand(params, commandName, commandList);
-                    //}
-
+                    doCommandWork(params, lang, commandList, line, commandSyntax, lines);
                 } else if (commandSyntax.equals("Constant")){
-                    Double argumentValue = Double.parseDouble(line);
-                    argumentStack.push(argumentValue);
-                    tryToMakeCommands(commandList);
+                    doConstantWork(line, commandList);
                     //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
-
+                    if(userCreatedCommands.containsKey(line)){
+                        doVariable(line, syntax, lang, params, commandList);
+                    }
+                    else{
+                        System.out.println("This variable does not exist yet");
+                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+                        //FIXME Need to add an exception (better one) here
+                    }
                 }
             }
         }
+        IS_VARIABLE = false;
         while(commandStack.size()>0 ){
             tryToMakeCommands(commandList);
-            //commandList.addAll(tryToMakeCommands(commandList));
         }
         printCommandList(commandList);
+        executeCommandList(commandList);
         return commandList;
     }
 
+    private void doVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
+        List<String> variableDoesWhat = userCreatedCommands.get(line);
+        for (String s : variableDoesWhat){
+            String comSyntax = syntax.getSymbol(s);
+            if (comSyntax.equals("Command")){
+                doCommandWork(params, lang, commandList, s, comSyntax, variableDoesWhat);
+            }
+            else if (comSyntax.equals("Constant")){
+                doConstantWork(s, commandList);
+            }
+        }
+    }
+
+    private void doConstantWork(String line, List<Command> commandList){
+        Double argumentValue = Double.parseDouble(line);
+        argumentStack.push(argumentValue);
+        tryToMakeCommands(commandList);
+    }
+
+    private void doCommandWork(Parser params, Parser lang, List<Command> commandList, String line, String commandSyntax, List<String> lines){
+        String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
+        if (commandName.equals("NO MATCH")){ throw new InvalidCommandException(new Throwable(), commandSyntax, line); }
+        else if (commandName.equals("MakeVariable")){ dealWithMakingVariables(lines, line, commandSyntax); }
+        else { validCommand(params, commandName, commandList); }
+    }
+
+    private void dealWithMakingVariables(List<String> lines, String line, String commandSyntax){
+        IS_VARIABLE = true;
+        List<String> copyLines = new CopyOnWriteArrayList(lines);
+        copyLines.remove(line);
+        String variable = copyLines.get(0);
+
+        copyLines.remove(variable);
+        userCreatedCommands.put(variable, copyLines);
+        System.out.println(userCreatedCommands);
+
+        //if (!userCreatedCommands.containsKey(variable)){
+        //}
+//        else{
+//            System.out.println("This variable already exists");
+//            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+//        }
+    }
+
     private void printCommandList(List<Command> l){
+        Collections.reverse(l);
+        for(Command c : l) {
+            System.out.println(c);
+            System.out.println(c.getResult());
+        }
+    }
+
+    private void executeCommandList(List<Command> l){
+        Collections.reverse(l);
         for(Command c : l){
             System.out.println(c);
             System.out.println(c.execute());
@@ -149,15 +195,15 @@ public class Controller {
                 myView.clear();
                 myView.updatePenStatus(1);
             } else if(c instanceof HideTurtle || c instanceof ShowTurtle){
-                myView.updateTurtleView(c.getResult()); //TODO write this, where it takes in a double. if the double is nonzero, turtle is showing, otherwise not showing
+                myView.updateTurtleView(c.getResult());
             } else if(c instanceof PenDown || c instanceof PenUp){
-                myView.updatePenStatus(c.getResult()); //TODO write this, where it takes in a double. if the double is nonzero, pen is drawing. otherwise not drawing
+                myView.updatePenStatus(c.getResult());
             } else {
                 System.out.println(
                     "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
                         .getHeading());
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
-            }
+           }
         }
         myView.playAnimation();//FIXME added by alex, makes the commands play in order (series) rather than on top of each other (parallel)
     }
@@ -205,11 +251,8 @@ public class Controller {
 
     private Command getCommand(String commandName, double numberOfParams){
         try{
-            //System.out.println("Name: "+name);
             Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
-            //System.out.println("Class.forName finished");
-            Constructor commandConstructor = getCommandConstructor(commandClass, numberOfParams); //failing here right now
-            //System.out.println("Constructor created");
+            Constructor commandConstructor = getCommandConstructor(commandClass, numberOfParams);
             return makeCommand(commandName, numberOfParams, commandConstructor, commandClass);
         } catch (ClassNotFoundException e){
             System.out.println("ClassNotFoundException");
@@ -236,46 +279,24 @@ public class Controller {
     }
     private Command getCommandDUVALL(String commandName, double numberOfParams){
         try{
-            //System.out.println("Name: "+name);
             Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
-            //System.out.println("Class.forName finished");
-            //Constructor commandConstructor = getCommandConstructor(commandClass, numberOfParams); //failing here right now
-            //System.out.println("Constructor created");
             return makeCommandDUVALL(commandClass);
         } catch (ClassNotFoundException e){
             System.out.println("ClassNotFoundException");
             e.printStackTrace();
             //FIXME !!!!!!!!!!!!
-        } /*catch (NoSuchMethodException e){
-            System.out.println("NoSuchMethodException!!");
-            e.printStackTrace();
-            //FIXME part 2
-        } /*catch (IllegalAccessException e) {
-            System.out.println("IllegalAccessException");
-            e.printStackTrace();
-            //FIXME
-        } catch (InstantiationException e) {
-            System.out.println("InstantiationException");
-            e.printStackTrace();
-            //FIXME
-        } catch (InvocationTargetException e) {
-            System.out.println("InvocationTargetException");
-            e.printStackTrace();
-            //FIXME
-        }*/
+        }
         return new Not(1.0); //FIXME !!!!
     }
 
     private Command makeCommand(String name, double numberOfParams, Constructor constructor, Class myClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Command myCommand = new Not(1.0);
-        //System.out.println("line162: numberOfParams");
         if(numberOfParams == ONE_DOUBLE) {
             myCommand = (Command) constructor.newInstance(argumentStack.pop());
         } else if(numberOfParams == TWO_DOUBLE) {
             myCommand = (Command) constructor.newInstance(argumentStack.pop(), argumentStack.pop());
         } else if(numberOfParams == ONE_DOUBLE+TURTLE) {
             myCommand = (Command) constructor.newInstance(turtle, argumentStack.pop());
-            //System.out.println("popping!! popperoo!");
         } else if(numberOfParams == TWO_DOUBLE+TURTLE) {
             myCommand = (Command) constructor.newInstance(turtle, argumentStack.pop(), argumentStack.pop());
         } else if(numberOfParams == ZERO_DOUBLE) {
@@ -283,7 +304,6 @@ public class Controller {
         } else if(numberOfParams == TURTLE) {
             myCommand = (Command) constructor.newInstance(turtle);
         }
-        //argumentStack.push(myCommand.getResult());
         return myCommand;
     }
 
@@ -348,32 +368,24 @@ public class Controller {
         double numberOfParams = ZERO_DOUBLE;
         if (commandParams.contains("OneDouble")){
             numberOfParams = ONE_DOUBLE;
-            //System.out.println("you have one double param: + "+numberOfParams);
         }
         else if (commandParams.contains("TwoDouble")){
             numberOfParams = TWO_DOUBLE;
-            //System.out.println("you have two double params: + "+numberOfParams);
         }
         if (commandParams.contains("Turtle")){
             numberOfParams += TURTLE;
-            //System.out.println("You have a turtle parameter: "+numberOfParams);
         }
-        //System.out.println("Number of params after getParamsNeeded("+commandParams+"): "+numberOfParams);
         return numberOfParams;
     }
 
     private double getParamsNeededDUVALL(String commandParams){
-        //System.out.println("line 204: "+commandParams);
         double numberOfParams = ZERO_DOUBLE;
         if (commandParams.contains("OneDouble")){
             numberOfParams = ONE_DOUBLE;
-            //System.out.println("you have one double param: + "+numberOfParams);
         }
         else if (commandParams.contains("TwoDouble")){
             numberOfParams = TWO_DOUBLE;
-            //System.out.println("you have two double params: + "+numberOfParams);
         }
-        //System.out.println("Number of params after getParamsNeeded("+commandParams+"): "+numberOfParams);
         return numberOfParams;
     }
 
@@ -401,23 +413,4 @@ public class Controller {
         commandStack.clear();
         parametersStack.clear();
     }
-
-//    public static void main(String[] args) {
-//        Controller c = new Controller(new ViewExternal(), "English");
-//        Turtle tom = new Turtle();
-//        //c.addLanguage("English");
-//        System.out.println("BEFORE:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
-//
-//        String test = "fd 50 left 90 fd 20"; //two commands that should execute on their own x:50, y:20, h:0
-//        String test2 = "fd + 30 30"; //two linked commands x:60, y:0, h:90
-//        String test3 = "fd not 0"; //two linked commands of different types x:1, y:0, h:90
-//        String test4 = "fd pi"; //two linked commands of different types x:3.14, y:0, h:90
-//        String test5 = "pi"; //no turtle involved x:0, y:0, h:90
-//        String test6 = "fd fd fd 30"; //final: x:1, y:90, h: 0
-//        String test7 = "fd sum sum sum 10 20 30 40";
-//
-//        c.sendCommands(test6);
-//        System.out.println(" AFTER:: x: "+c.getTurtle().getX()+" y: "+c.getTurtle().getY()+" heading: "+c.getTurtle().getHeading());
-//
-//    }
 }

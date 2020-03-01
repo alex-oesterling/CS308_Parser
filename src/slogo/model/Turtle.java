@@ -1,5 +1,7 @@
 package slogo.model;
 
+import slogo.view.Visualizer;
+
 public class Turtle{
 
   public static final int DEFAULT_STARTING_X = 0;
@@ -17,6 +19,9 @@ public class Turtle{
   private static final double DRAWING = 1.0;
   private static final double NOT_DRAWING = 0.0;
   private static final String DEFAULT_PEN_COLOR = "BLACK";
+  //Fixme take out importing of the visualizer class
+  private static final double VIEW_BOUNDS_X = Visualizer.TURTLE_SCREEN_WIDTH;
+  private static final double VIEW_BOUNDS_Y = Visualizer.TURTLE_SCREEN_HEIGHT;
 
   private double xPosition;
   private double yPosition;
@@ -100,8 +105,8 @@ public class Turtle{
     }
 
     theta = convertToRadians(theta);
-    xPosition += xSign * distance * Math.sin(theta);
-    yPosition += ySign * distance * Math.cos(theta);
+    setX(xPosition + (xSign * distance * Math.sin(theta)));
+    setY(yPosition + (ySign * distance * Math.cos(theta)));
   }
 
   private double convertToRadians(double theta){
@@ -145,7 +150,7 @@ public class Turtle{
     if(xPos > 0 && yPos < 0){ theta += QUAD2_BEGINS; }           //in quadrant ii
     else if (xPos < 0 && yPos < 0){ theta += QUAD3_BEGINS; }     //in quadrant iii
     else if(xPos < 0 && yPos > 0){ theta += QUAD4_BEGINS; }      //in quadrant iv
-
+    System.out.println(theta);
     return makeHeadingValid(theta);
   }
 
@@ -175,9 +180,9 @@ public class Turtle{
     heading = makeHeadingValid(heading);
   }
 
-  private double makeHeadingValid(double headingToChange) {
-    headingToChange %= QUAD4_ENDS;                                      //make it a value between -360 and 360
-    if(headingToChange < QUAD1_BEGINS){ headingToChange += QUAD4_ENDS; }        //make it a value between 0 and 360
+  private double makeHeadingValid(double headingToChange) { //FIXME commented out by Alex Oesterling to handle turtle rotating correctly -- Just so basic looks nice
+//    headingToChange %= QUAD4_ENDS;                                      //make it a value between -360 and 360
+//    if(headingToChange < QUAD1_BEGINS){ headingToChange += QUAD4_ENDS; }        //make it a value between 0 and 360
     return headingToChange;
   }
 
@@ -210,8 +215,8 @@ public class Turtle{
    */
   public double moveToPosition(double xPos, double yPos){
     double distance = distanceToPosition(xPos, yPos);
-    xPosition = xPos;
-    yPosition = yPos;
+    setX(xPos);
+    setY(yPos);
 
     return distance;
   }
@@ -305,6 +310,11 @@ public class Turtle{
    */
   public void setX(double newXPosition){
     xPosition = newXPosition;
+    if(xPosition < -VIEW_BOUNDS_X/2){
+      xPosition = -VIEW_BOUNDS_X/2;
+    } else if (xPosition > VIEW_BOUNDS_X/2){
+      xPosition = VIEW_BOUNDS_X/2;
+    }
   }
   //TODO check that newXPosition is valid
 
@@ -314,6 +324,11 @@ public class Turtle{
    */
   public void setY(double newYPosition){
     yPosition = newYPosition;
+    if(yPosition < -VIEW_BOUNDS_Y/2){
+      yPosition = -VIEW_BOUNDS_Y/2;
+    } else if (yPosition > VIEW_BOUNDS_Y/2){
+      yPosition = VIEW_BOUNDS_Y/2;
+    }
   }
   //TODO check that newYPosition is valid
 }

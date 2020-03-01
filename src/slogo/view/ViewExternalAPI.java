@@ -12,4 +12,6 @@ public interface ViewExternalAPI {
   void playAnimation();
   void addCommand(String commandSyntax);
   void addVariable(String newVariable, double newValue);
+//  void setOpacity();
+
 }
