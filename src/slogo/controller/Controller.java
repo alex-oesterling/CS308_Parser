@@ -32,11 +32,9 @@ public class Controller {
     private Stack<Double> argumentStack, parametersStack;
     private Map<String, List> userCreatedCommands;
     private Turtle turtle = new Turtle();
-    private Errors error = new Errors();
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
-    private ResourceBundle languagesBundle;
 
     private static final boolean RUN_DUVALL = false;
     private static boolean IS_VARIABLE = false;
@@ -387,24 +385,6 @@ public class Controller {
             numberOfParams = TWO_DOUBLE;
         }
         return numberOfParams;
-    }
-
-    /**
-     * Gets parsed command from model
-     * @return command
-     */
-    public double returnCommand(){
-        //FIXME return a list of turtle movements?
-        return 0.0;// myCommand.getResult();
-    }
-
-    /**
-     * Takes an error from the model
-     * @param e
-     */
-    //FIXME commented out by Alex. when creating the error class its constructor creates a new error and there is a stack overflow
-    public void setError(Errors e){
-        this.error = e;
     }
 
     public void reset(){
