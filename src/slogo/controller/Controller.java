@@ -204,14 +204,8 @@ public class Controller {
         commandStack.push(commandName); //add string to stack
         String commandParams = params.getSymbol(commandName); //get Parameters string, such as "OneDouble" or "TurtleOneDouble"
 
-        double paramsNeeded;
-        if(RUN_DUVALL){
-            paramsNeeded = getParamsNeededDUVALL(commandParams);
-        } else {
-            paramsNeeded  = getParamsNeeded(commandParams); //convert that string to a double
-        }
+        double paramsNeeded  = getParamsNeeded(commandParams); //convert that string to a double
 
-        //System.out.println("putting paramsNeeded("+paramsNeeded+") on the paramsStack");
         parametersStack.push(paramsNeeded); //add that value to the params stack
         return tryToMakeCommands(commandList);
     }
