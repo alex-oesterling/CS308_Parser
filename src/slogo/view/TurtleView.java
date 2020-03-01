@@ -51,8 +51,8 @@ public class TurtleView{
         myImage = createTurtle();
         myPenColor = Color.BLACK;
         st = new SequentialTransition();
-        currentX = myImage.getTranslateX()+ myImage.getLayoutBounds().getWidth() / 2;
-        currentY = myImage.getTranslateY() + myImage.getLayoutBounds().getHeight() / 2;
+        currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
+        currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
     }
 
@@ -150,6 +150,8 @@ public class TurtleView{
                 myImage);
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
+            System.out.println(oldX);
+            System.out.println(newX);
         }
     }
 
@@ -165,8 +167,8 @@ public class TurtleView{
         rt.setToAngle(TURTLE_RESET_ANGLE);
         rt.play();
         heading = 0;
-        currentY = 0;
-        currentX = 0;
+        currentY = TURTLE_SCREEN_HEIGHT/2;
+        currentX = TURTLE_SCREEN_WIDTH/2;
     }
 
     public void updatePen(Color color){
