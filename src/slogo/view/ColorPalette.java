@@ -13,8 +13,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.security.Key;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 public class ColorPalette {
 
@@ -51,22 +53,31 @@ public class ColorPalette {
         return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     }
 
-    private void createGrid(){
+    private void createGrid() {
         vbox = new VBox();
         vbox.setSpacing(VBOX_SPACING);
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
         Enumeration e = myResources.getKeys();
-        System.out.println(e);
+        TreeMap<Integer, String> treeMap = new TreeMap<>();
         while (e.hasMoreElements()) {
+//            Integer keyInt = (Integer) e.nextElement();
+            String keyStr = (String) e.nextElement();
+            treeMap.put(Integer.valueOf(keyStr), myResources.getString(keyStr));
+//            HBox hbox = new HBox();
+//            hbox.setSpacing(HBOX_SPACING);
+//            String key = (String) e.nextElement();
+//            Rectangle r = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT, Color.web(myResources.getString(key)));
+//            Label colorVal = new Label(key);
+//            hbox.getChildren().addAll(r, colorVal);
+//            vbox.getChildren().add(hbox);
+        }
+        for (Integer key : treeMap.keySet()) {
             HBox hbox = new HBox();
             hbox.setSpacing(HBOX_SPACING);
-            String key = (String) e.nextElement();
-            Rectangle r = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT, Color.web(myResources.getString(key)));
-            Label colorVal = new Label(key);
+            Rectangle r = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT, Color.web(treeMap.get(key)));
+            Label colorVal = new Label(Integer.toString(key));
             hbox.getChildren().addAll(r, colorVal);
             vbox.getChildren().add(hbox);
         }
     }
-
-
 }
