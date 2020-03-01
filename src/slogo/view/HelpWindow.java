@@ -5,11 +5,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 public class HelpWindow {
 
@@ -44,29 +47,35 @@ public class HelpWindow {
         return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     }
 
-    public GridPane createGrid(String language){
+    public void createGrid(String language){
         grid = new GridPane();
         grid.setVgap(GRID_VGAP);
         grid.setHgap(GRID_HGAP);
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
-        int count = 0;
         Enumeration e = myResources.getKeys();
+        TreeMap<String, String> treeMap = new TreeMap<>();
         while (e.hasMoreElements()) {
-            String key = (String) e.nextElement();
+            String keyStr = (String) e.nextElement();
+            treeMap.put(keyStr, myResources.getString(keyStr));
+        }
+        int count = 0;
+        for (String key : treeMap.keySet()) {
             Label keyLabel = new Label(key);
             String com = myResources.getString(key);
-            for(int i = 0; i < com.length() -1; i++){
-                if((com.charAt(i) == '\\') && (com.charAt(i+1) == '?')){
-                    com = com.substring(0, i) + com.substring(i+2);
-                }
-            }
-            Label command = new Label(com);
+            Label command = new Label(removeSlash(com));
             GridPane.setConstraints(keyLabel, 0, count);
             GridPane.setConstraints(command, 1, count);
-            grid.getChildren().add(keyLabel);
-            grid.getChildren().add(command);
+            grid.getChildren().addAll(keyLabel, command);
             count++;
         }
-        return grid;
+    }
+
+    private String removeSlash(String string){
+        for(int i = 0; i < string.length() -1; i++){
+            if((string.charAt(i) == '\\') && (string.charAt(i+1) == '?')){
+                string = string.substring(0, i) + string.substring(i+2);
+            }
+        }
+        return string;
     }
 }
