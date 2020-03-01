@@ -73,7 +73,9 @@ public class HelpWindow {
     private String removeSlash(String string){
         for(int i = 0; i < string.length() -1; i++){
             if((string.charAt(i) == '\\') && (string.charAt(i+1) == '?')){
-                string = string.substring(0, i) + string.substring(i+2);
+                StringBuilder sb = new StringBuilder(string);
+                sb.delete(i, i+1);
+                string = sb.toString();
             }
         }
         return string;
