@@ -314,7 +314,7 @@ public class Controller {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
            }
         }
-        myView.playAnimation();//FIXME added by alex, makes the commands play in order (series) rather than on top of each other (parallel)
+        myView.playAnimation();
     }
 
     private void printCommandList(List<Command> l){  //wont need this in final submission
