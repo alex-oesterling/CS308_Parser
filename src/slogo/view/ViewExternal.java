@@ -42,4 +42,15 @@ public class ViewExternal implements ViewExternalAPI {
   public void playAnimation(){
     myVisualizer.getTurtleList().get(0).playAnimation();
   }
+
+  @Override
+  public void addCommand(String commandSyntax) {
+    myVisualizer.addCommand(commandSyntax);
+  }
+
+  @Override
+  public void addVariable(String newVariable, double newValue) {
+    myVisualizer.addVariable(newVariable, newValue);
+  }
+
 }

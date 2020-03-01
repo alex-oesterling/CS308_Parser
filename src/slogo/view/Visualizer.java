@@ -2,7 +2,10 @@ package slogo.view;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -14,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -49,11 +53,6 @@ public class Visualizer{
   private Controller myController;
   private HelpWindow helpWindow;
   private BorderPane root;
-//  private Group view;
-  private VBox variables;
-  private VBox commands;
-//  private VBox group;
-//  private BorderPane viewPane;
   private Rectangle turtleArea;
   private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
@@ -62,11 +61,15 @@ public class Visualizer{
   private Group turtles;
   private ViewExternal viewExternal;
   private CommandLine commandLine;
+  private VBox commandHistory;
+  private VBox varHistory;
+  private Map<String, Double> varMap;
 
   public Visualizer (){
     turtlePaths = new Group();
     turtleList = new ArrayList<>();
     turtles = new Group();
+    varMap = new HashMap<>();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController);
@@ -118,8 +121,20 @@ public class Visualizer{
 
     BorderPane userDefined = new BorderPane();
 
-    variables = makeHistory("Variables");
-    commands = makeHistory("Commands");
+    commandHistory = new VBox();
+    varHistory = new VBox();
+    Node varScroll = makeHistory(varHistory);
+    Node commandScroll = makeHistory(commandHistory);
+
+    Label varLabel = new Label(myResources.getString("Variables"));
+    VBox variables = new VBox();
+    variables.getChildren().addAll(varLabel, varScroll);
+    variables.setVgrow(commandScroll, Priority.ALWAYS);
+
+    Label cmdLabel = new Label(myResources.getString("Commands"));
+    VBox commands = new VBox();
+    commands.getChildren().addAll(cmdLabel, commandScroll);
+    commands.setVgrow(commandScroll, Priority.ALWAYS);
 
     userDefined.setLeft(commands);
     userDefined.setRight(variables);
@@ -129,17 +144,12 @@ public class Visualizer{
     return group;
   }
 
-  private VBox makeHistory(String labelname) {
-    VBox total = new VBox();
-    VBox history = new VBox();
+  private Node makeHistory(VBox history) {
     ScrollPane userCommands = new ScrollPane();
     userCommands.setContent(history);
-    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4); //fixme
+    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4);
     history.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
-    Label label = new Label(myResources.getString(labelname));
-    total.getChildren().addAll(label, userCommands);
-    total.setVgrow(userCommands, Priority.ALWAYS);
-    return total;
+    return userCommands;
   }
 
   private Node createUI() {
@@ -205,8 +215,34 @@ public class Visualizer{
     });
     return comboBox;
   }
+
   public void clear(){
     turtlePaths.getChildren().clear();
   }
+
   public List<TurtleView> getTurtleList(){return turtleList;}
+
+  public void addCommand(String command){
+    Label recentCommand = new Label(command);
+    commandLine.setOnClick(recentCommand, recentCommand.getText()); //modify based on what model wants it to do
+    commandHistory.getChildren().add(recentCommand);
+  }
+
+  public void addVariable(String variable, double value){
+    Label recentCommand = new Label(variable);
+    varMap.put(variable, value);
+    recentCommand.setOnMouseClicked(e->updateVariable(variable));
+    commandHistory.getChildren().add(recentCommand);
+  }
+  //FIXME variable types :right now all it handles is doubles and poorly at that
+  private void updateVariable(String variableName){
+    TextInputDialog updateVariable = new TextInputDialog();
+    updateVariable.setTitle("Update Variable");
+    updateVariable.setHeaderText("Update variable value by entering in a valid number:");
+    updateVariable.setContentText("Enter variable here:");
+    Optional<String> result = updateVariable.showAndWait();
+    if(result.isPresent()){
+      varMap.put(variableName, Double.parseDouble(result.get()));
+    }
+  }
 }

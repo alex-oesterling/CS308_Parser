@@ -103,7 +103,7 @@ public class CommandLine {
     }
   }
 
-  private void setOnClick(Label label, String fill){
+  public void setOnClick(Label label, String fill){
     label.setOnMouseClicked(e->textBox.setText(fill));
   }
 
@@ -116,5 +116,9 @@ public class CommandLine {
       historyIndex--;
       textBox.setText(history.get(history.size()-historyIndex-1).getText());
     }
+  }
+
+  public void setTerminalEntry(String newEntry){
+    textBox.setText(newEntry);
   }
 }

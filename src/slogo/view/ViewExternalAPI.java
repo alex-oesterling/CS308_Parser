@@ -10,4 +10,6 @@ public interface ViewExternalAPI {
   void updateTurtleView(double value);
   void updatePenStatus(double value);
   void playAnimation();
+  void addCommand(String commandSyntax);
+  void addVariable(String newVariable, double newValue);
 }
