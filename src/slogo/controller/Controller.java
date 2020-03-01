@@ -108,20 +108,29 @@ public class Controller {
                     doConstantWork(line, commandList);
                     //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
+                    //System.out.println("made it here");
                     if(userCreatedCommands.containsKey(line)){
-                        List variableDoesWhat = (List) userCreatedCommands.get(line);
-                        /*for (Object s : variableDoesWhat){
-                            if (s == "Command"){
-                                doCommandWork(params, lang, commandList, (String) s, commandSyntax, variableDoesWhat);
+                        List<String> variableDoesWhat = userCreatedCommands.get(line);
+                        for (String s : variableDoesWhat){
+                            //System.out.println("here too");
+                            //System.out.println(s);
+                            //System.out.println(s.getClass().getName());
+                            String comSyntax = syntax.getSymbol(s);
+                            //System.out.println("MADE IT!!");
+                            //System.out.println(comSyntax);
+                            if (comSyntax.equals("Command")){
+                                doCommandWork(params, lang, commandList, s, comSyntax, variableDoesWhat);
                             }
-                            else if (s == "Constant"){
-                                doConstantWork((String) s, commandList);
+                            else if (comSyntax.equals("Constant")){
+                                //System.out.println("made it here2");
+                                doConstantWork(s, commandList);
                             }
-                        }*/
+                        }
                     }
                     else{
                         System.out.println("This variable does not exist yet");
                         throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+                        //FIXME Need to add an exception (better one) here
                     }
                 }
             }
@@ -134,26 +143,22 @@ public class Controller {
         return commandList;
     }
 
-    private void doConstantWork(String line, List commandList){
+    private void doConstantWork(String line, List<Command> commandList){
         Double argumentValue = Double.parseDouble(line);
         argumentStack.push(argumentValue);
         tryToMakeCommands(commandList);
     }
 
-    private void doCommandWork(Parser params, Parser lang, List commandList, String line, String commandSyntax, List lines){
+    private void doCommandWork(Parser params, Parser lang, List<Command> commandList, String line, String commandSyntax, List<String> lines){
         String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
-        if (commandName.equals("NO MATCH")){
-            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-        }
-        else if (commandName.equals("MakeVariable")){
-            dealWithMakingVariables(lines, line, commandSyntax);
-        }
-        validCommand(params, commandName, commandList);
+        if (commandName.equals("NO MATCH")){ throw new InvalidCommandException(new Throwable(), commandSyntax, line); }
+        else if (commandName.equals("MakeVariable")){ dealWithMakingVariables(lines, line, commandSyntax); }
+        else { validCommand(params, commandName, commandList); }
     }
 
-    private void dealWithMakingVariables(List lines, String line, String commandSyntax){
+    private void dealWithMakingVariables(List<String> lines, String line, String commandSyntax){
         lines.remove(line);
-        String variable = (String) lines.get(0);
+        String variable = lines.get(0);
         if (!userCreatedCommands.containsKey(variable)){
             lines.remove(variable);
             userCreatedCommands.put(variable, lines);
@@ -164,7 +169,6 @@ public class Controller {
             throw new InvalidCommandException(new Throwable(), commandSyntax, line);
         }
     }
-
 
     private void printCommandList(List<Command> l){
         Collections.reverse(l);
