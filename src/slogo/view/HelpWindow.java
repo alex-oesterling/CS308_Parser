@@ -54,7 +54,13 @@ public class HelpWindow {
         while (e.hasMoreElements()) {
             String key = (String) e.nextElement();
             Label keyLabel = new Label(key);
-            Label command = new Label(myResources.getString(key));
+            String com = myResources.getString(key);
+            for(int i = 0; i < com.length() -1; i++){
+                if((com.charAt(i) == '\\') && (com.charAt(i+1) == '?')){
+                    com = com.substring(0, i) + com.substring(i+2);
+                }
+            }
+            Label command = new Label(com);
             GridPane.setConstraints(keyLabel, 0, count);
             GridPane.setConstraints(command, 1, count);
             grid.getChildren().add(keyLabel);
