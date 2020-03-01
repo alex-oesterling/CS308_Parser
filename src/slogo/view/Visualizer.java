@@ -62,6 +62,7 @@ public class Visualizer{
   private Group turtles;
   private ViewExternal viewExternal;
   private CommandLine commandLine;
+  private ColorPalette colorPalette;
 
   public Visualizer (){
     turtlePaths = new Group();
@@ -69,6 +70,7 @@ public class Visualizer{
     turtles = new Group();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
+    colorPalette = new ColorPalette();
     commandLine = new CommandLine(myController);
   }
 
