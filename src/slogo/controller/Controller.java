@@ -32,11 +32,9 @@ public class Controller {
     private Stack<Double> argumentStack, parametersStack;
     private Map<String, List> userCreatedCommands;
     private Turtle turtle = new Turtle();
-    private Errors error = new Errors();
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
-    private ResourceBundle languagesBundle;
 
     private static boolean IS_VARIABLE = false;
 
@@ -135,12 +133,8 @@ public class Controller {
         List<String> variableDoesWhat = userCreatedCommands.get(line);
         for (String s : variableDoesWhat){
             String comSyntax = syntax.getSymbol(s);
-            if (comSyntax.equals("Command")){
-                doCommandWork(params, lang, commandList, s, comSyntax, variableDoesWhat);
-            }
-            else if (comSyntax.equals("Constant")){
-                doConstantWork(s, commandList);
-            }
+            if (comSyntax.equals("Command")){ doCommandWork(params, lang, commandList, s, comSyntax, variableDoesWhat); }
+            else if (comSyntax.equals("Constant")){ doConstantWork(s, commandList); }
         }
     }
 
@@ -166,13 +160,6 @@ public class Controller {
         copyLines.remove(variable);
         userCreatedCommands.put(variable, copyLines);
         System.out.println(userCreatedCommands);
-
-        //if (!userCreatedCommands.containsKey(variable)){
-        //}
-//        else{
-//            System.out.println("This variable already exists");
-//            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-//        }
     }
 
     private void printCommandList(List<Command> l){
@@ -282,22 +269,16 @@ public class Controller {
     private Constructor getCommandConstructor(Class command, double numberOfParams) throws NoSuchMethodException {
         //System.out.println("reached getCommandConstructor()");
         if(numberOfParams == ONE_DOUBLE){
-            //System.out.println("double");
             return command.getConstructor(new Class[]{Double.class});
         } else if (numberOfParams == ONE_DOUBLE+TURTLE){
-            //System.out.println("turtle, double");
             return command.getConstructor(new Class[]{Turtle.class, Double.class});
         } else if (numberOfParams == TWO_DOUBLE){
-            //System.out.println("double, double");
             return command.getConstructor(new Class[]{Double.class, Double.class});
         } else if (numberOfParams == TWO_DOUBLE+TURTLE){
-            //System.out.println("turtle, double, double");
             return command.getConstructor(new Class[]{Turtle.class, Double.class, Double.class});
         } else if (numberOfParams == ZERO_DOUBLE){
-            //System.out.println("you take nothing");
             return command.getConstructor(new Class[]{});
         } else { //if (numberOfParams == TURTLE)
-            //System.out.println("you need a turtle");
             return command.getConstructor(new Class[]{Turtle.class});
         }
     }
@@ -307,7 +288,6 @@ public class Controller {
     }
 
     private double getParamsNeeded(String commandParams){
-        //System.out.println("line 204: "+commandParams);
         double numberOfParams = ZERO_DOUBLE;
         if (commandParams.contains("OneDouble")){
             numberOfParams = ONE_DOUBLE;
@@ -319,35 +299,6 @@ public class Controller {
             numberOfParams += TURTLE;
         }
         return numberOfParams;
-    }
-
-    private double getParamsNeededDUVALL(String commandParams){
-        double numberOfParams = ZERO_DOUBLE;
-        if (commandParams.contains("OneDouble")){
-            numberOfParams = ONE_DOUBLE;
-        }
-        else if (commandParams.contains("TwoDouble")){
-            numberOfParams = TWO_DOUBLE;
-        }
-        return numberOfParams;
-    }
-
-    /**
-     * Gets parsed command from model
-     * @return command
-     */
-    public double returnCommand(){
-        //FIXME return a list of turtle movements?
-        return 0.0;// myCommand.getResult();
-    }
-
-    /**
-     * Takes an error from the model
-     * @param e
-     */
-    //FIXME commented out by Alex. when creating the error class its constructor creates a new error and there is a stack overflow
-    public void setError(Errors e){
-        this.error = e;
     }
 
     public void reset(){
