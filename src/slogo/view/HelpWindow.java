@@ -44,7 +44,7 @@ public class HelpWindow {
         return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     }
 
-    public GridPane createGrid(String language){
+    public void createGrid(String language){
         grid = new GridPane();
         grid.setVgap(GRID_VGAP);
         grid.setHgap(GRID_HGAP);
@@ -63,10 +63,8 @@ public class HelpWindow {
             Label command = new Label(com);
             GridPane.setConstraints(keyLabel, 0, count);
             GridPane.setConstraints(command, 1, count);
-            grid.getChildren().add(keyLabel);
-            grid.getChildren().add(command);
+            grid.getChildren().addAll(keyLabel, command);
             count++;
         }
-        return grid;
     }
 }
