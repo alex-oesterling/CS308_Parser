@@ -54,7 +54,6 @@ public class Controller {
 
         parametersParser = new Parser(INFORMATION_PACKAGE);
         parametersParser.addPatterns("Parameters");
-
     }
 
     /**
@@ -96,7 +95,6 @@ public class Controller {
     }
 
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
-        boolean startingToRead = true;
         List<Command> commandList = new ArrayList<>();
         ListIterator<String> iterator = lines.listIterator();
         while(iterator.hasNext() && !IS_VARIABLE) {
@@ -107,7 +105,6 @@ public class Controller {
                     doCommandWork(params, lang, commandList, line, commandSyntax, lines);
                 } else if (commandSyntax.equals("Constant")){
                     doConstantWork(line, commandList);
-                    //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
                     if(userCreatedCommands.containsKey(line)){
                         doVariable(line, syntax, lang, params, commandList);
