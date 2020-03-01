@@ -70,7 +70,6 @@ public class Visualizer{
     turtles = new Group();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
-    colorPalette = new ColorPalette();
     commandLine = new CommandLine(myController);
   }
 
@@ -144,6 +143,7 @@ public class Visualizer{
     return total;
   }
 
+  //TODO: refactor this method with a styler class
   private Node createUI() {
     VBox ui = new VBox();
     Label background = new Label(myResources.getString("BackgroundColor"));
@@ -153,15 +153,19 @@ public class Visualizer{
     chooseTurtle.setOnAction(e-> {
       turtleList.get(0).chooseTurtle();
             });
+    Button help = new Button(myResources.getString("HelpCommand"));
+    help.setOnAction(e-> helpWindow = new HelpWindow(language));
     Button reset = new Button(myResources.getString("ResetCommand"));
     reset.setOnAction(e->{
       clear();
       myController.reset();
       turtleList.get(0).resetTurtle();
     });
+    Button color = new Button(myResources.getString("ColorPalette"));
+    color.setOnAction(e-> colorPalette = new ColorPalette());
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
-            reset, help());
+            color, reset, help);
     return ui;
   }
 
@@ -178,13 +182,6 @@ public class Visualizer{
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
     return colorPicker;
-  }
-
-
-  private Button help(){
-    Button help = new Button(myResources.getString("HelpCommand"));
-    help.setOnAction(e-> helpWindow = new HelpWindow(language));
-    return help;
   }
 
   private ComboBox languageSelect(){
