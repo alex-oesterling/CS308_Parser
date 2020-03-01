@@ -32,7 +32,8 @@ public class Controller {
     private Stack<String> commandStack;
     private Stack<Double> argumentStack, parametersStack;
     private Map<String, List> userCreatedCommands;
-    private Turtle turtle = new Turtle();
+    private Turtle turtle;// = new Turtle();
+    private Map<String, Turtle> turtleMap;
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
@@ -60,6 +61,27 @@ public class Controller {
 
         parametersParser = new Parser(INFORMATION_PACKAGE);
         parametersParser.addPatterns("Parameters");
+
+        turtleMap = new HashMap<>();
+        addTurtle();
+    }
+
+    /**
+     * add a new turtle to the map of turtles, change the current turtle to
+     * this newly created turtle
+     */
+    public void addTurtle(){
+        Turtle t = new Turtle();
+        turtleMap.putIfAbsent(t.getName(), t);
+        turtle = t;
+    }
+
+    /**
+     * allows the user to pick a turtle to do work on
+     * @param name turtle to become the current turtle
+     */
+    public void chooseTurtle(String name){
+        turtle = turtleMap.get(name);
     }
 
     /**
