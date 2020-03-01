@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import slogo.exceptions.InvalidCommandException;
 import slogo.model.Parser;
@@ -39,6 +40,7 @@ public class Controller {
     private ResourceBundle languagesBundle;
 
     private static final boolean RUN_DUVALL = false;
+    private static boolean IS_VARIABLE = false;
 
     public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
@@ -110,7 +112,9 @@ public class Controller {
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
         boolean startingToRead = true;
         List<Command> commandList = new ArrayList<>();
-        for (String line : lines) {
+        ListIterator<String> iterator = lines.listIterator();
+        while(iterator.hasNext() && !IS_VARIABLE) {
+            String line =  iterator.next();
             if (line.trim().length() > 0) {
                 String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
                 if(commandSyntax.equals("Command")){
@@ -119,24 +123,8 @@ public class Controller {
                     doConstantWork(line, commandList);
                     //commandList.addAll(tryToMakeCommands(commandList));
                 } else if (commandSyntax.equals("Variable")){
-                    //System.out.println("made it here");
                     if(userCreatedCommands.containsKey(line)){
-                        List<String> variableDoesWhat = userCreatedCommands.get(line);
-                        for (String s : variableDoesWhat){
-                            //System.out.println("here too");
-                            //System.out.println(s);
-                            //System.out.println(s.getClass().getName());
-                            String comSyntax = syntax.getSymbol(s);
-                            //System.out.println("MADE IT!!");
-                            //System.out.println(comSyntax);
-                            if (comSyntax.equals("Command")){
-                                doCommandWork(params, lang, commandList, s, comSyntax, variableDoesWhat);
-                            }
-                            else if (comSyntax.equals("Constant")){
-                                //System.out.println("made it here2");
-                                doConstantWork(s, commandList);
-                            }
-                        }
+                        doVariable(line, syntax, lang, params, commandList);
                     }
                     else{
                         System.out.println("This variable does not exist yet");
@@ -146,12 +134,26 @@ public class Controller {
                 }
             }
         }
+        IS_VARIABLE = false;
         while(commandStack.size()>0 ){
             tryToMakeCommands(commandList);
             //commandList.addAll(tryToMakeCommands(commandList));
         }
         printCommandList(commandList);
         return commandList;
+    }
+
+    private void doVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
+        List<String> variableDoesWhat = userCreatedCommands.get(line);
+        for (String s : variableDoesWhat){
+            String comSyntax = syntax.getSymbol(s);
+            if (comSyntax.equals("Command")){
+                doCommandWork(params, lang, commandList, s, comSyntax, variableDoesWhat);
+            }
+            else if (comSyntax.equals("Constant")){
+                doConstantWork(s, commandList);
+            }
+        }
     }
 
     private void doConstantWork(String line, List<Command> commandList){
@@ -168,17 +170,21 @@ public class Controller {
     }
 
     private void dealWithMakingVariables(List<String> lines, String line, String commandSyntax){
-        lines.remove(line);
-        String variable = lines.get(0);
-        if (!userCreatedCommands.containsKey(variable)){
-            lines.remove(variable);
-            userCreatedCommands.put(variable, lines);
-            System.out.println(userCreatedCommands);
-        }
-        else{
-            System.out.println("This variable already exists");
-            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-        }
+        IS_VARIABLE = true;
+        List<String> copyLines = new CopyOnWriteArrayList(lines);
+        copyLines.remove(line);
+        String variable = copyLines.get(0);
+
+        copyLines.remove(variable);
+        userCreatedCommands.put(variable, copyLines);
+        System.out.println(userCreatedCommands);
+
+        //if (!userCreatedCommands.containsKey(variable)){
+        //}
+//        else{
+//            System.out.println("This variable already exists");
+//            throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+//        }
     }
 
     private void printCommandList(List<Command> l){
