@@ -15,7 +15,7 @@ public class SetTowards extends Command {
      * @param x the x position of where the turtle will turn to
      * @param y the y position of where the turtle will turn to
      */
-    public SetTowards(Turtle body, Double x, Double y){
+    public SetTowards(Turtle body, Double y, Double x){
         super();
         t = body;
         xPos = x;

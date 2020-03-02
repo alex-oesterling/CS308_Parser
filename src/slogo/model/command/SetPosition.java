@@ -15,7 +15,7 @@ public class SetPosition extends Command {
      * @param x the new x position that the turtle will be at
      * @param y the new  y position that the turtle will be at
      */
-    public SetPosition(Turtle body, Double x, Double y){
+    public SetPosition(Turtle body, Double y, Double x){
         super();
         t = body;
         xPos = x;
