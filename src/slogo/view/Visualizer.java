@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -17,7 +19,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,6 +27,7 @@ import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
 import slogo.model.Parser;
 import java.util.ResourceBundle;
+import slogo.model.Turtle;
 
 public class Visualizer{
 
@@ -47,11 +49,7 @@ public class Visualizer{
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String DEFAULT_LANGUAGE = "English";
 
-  private Scene myScene;
-  private File turtleFile;
-  private Parser myParser;
   private Controller myController;
-  private HelpWindow helpWindow;
   private BorderPane root;
   private Rectangle turtleArea;
   private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
@@ -64,6 +62,9 @@ public class Visualizer{
   private VBox commandHistory;
   private VBox varHistory;
   private Map<String, Double> varMap;
+  private SimpleObjectProperty<ObservableList<Integer>> myTurtlesProperty;
+  private TurtleView currentTurtle;
+  private ColorPicker colorPicker;
 
   public Visualizer (){
     turtlePaths = new Group();
@@ -73,6 +74,8 @@ public class Visualizer{
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController);
+    myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+    colorPicker = new ColorPicker();
   }
 
   public Scene setupScene() {
@@ -108,7 +111,8 @@ public class Visualizer{
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    turtleList.add(new TurtleView(turtles, turtlePaths));
+    addTurtle();
+    setTurtle(0);
     Group view = new Group();
     view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
@@ -159,16 +163,20 @@ public class Visualizer{
     Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
     Button chooseTurtle = new Button(myResources.getString("ChooseTurtle"));
     chooseTurtle.setOnAction(e-> {
-      turtleList.get(0).chooseTurtle();
+      currentTurtle.chooseTurtle();
             });
+    Button addTurtle = new Button(myResources.getString("AddTurtle"));
+    addTurtle.setOnAction(e-> {
+      addTurtle();
+    });
     Button reset = new Button(myResources.getString("ResetCommand"));
     reset.setOnAction(e->{
       clear();
       myController.reset();
-      turtleList.get(0).resetTurtle();
+      currentTurtle.resetTurtle();
     });
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
+    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle, makeTurtleSelector(), addTurtle,
             reset, help());
     return ui;
   }
@@ -181,17 +189,23 @@ public class Visualizer{
   }
 
   private ColorPicker penColor(){
-    ColorPicker colorPicker = new ColorPicker();
     colorPicker.setValue(Color.BLACK);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
     return colorPicker;
   }
 
+  private ComboBox<Integer> makeTurtleSelector(){
+    ComboBox<Integer> turtleBox = new ComboBox();
+    turtleBox.setPromptText("Pick Turtle");
+    turtleBox.valueProperty().addListener((o, old, neww) -> setTurtle(neww));
+    turtleBox.itemsProperty().bind(myTurtlesProperty);
+    return turtleBox;
+  }
 
   private Button help(){
     Button help = new Button(myResources.getString("HelpCommand"));
-    help.setOnAction(e-> helpWindow = new HelpWindow(language));
+    help.setOnAction(e-> new HelpWindow(language));
     return help;
   }
 
@@ -220,7 +234,7 @@ public class Visualizer{
     turtlePaths.getChildren().clear();
   }
 
-  public List<TurtleView> getTurtleList(){return turtleList;}
+  public TurtleView getCurrentTurtle(){return currentTurtle;}
 
   public void addCommand(String command){
     Label recentCommand = new Label(command);
@@ -234,6 +248,7 @@ public class Visualizer{
     recentCommand.setOnMouseClicked(e->updateVariable(variable));
     commandHistory.getChildren().add(recentCommand);
   }
+
   //FIXME variable types :right now all it handles is doubles and poorly at that
   private void updateVariable(String variableName){
     TextInputDialog updateVariable = new TextInputDialog();
@@ -244,5 +259,15 @@ public class Visualizer{
     if(result.isPresent()){
       varMap.put(variableName, Double.parseDouble(result.get()));
     }
+  }
+
+  private void addTurtle(){
+    turtleList.add(new TurtleView(turtles, turtlePaths));
+    myTurtlesProperty.getValue().add(turtleList.size()-1);
+  }
+
+  private void setTurtle(Integer index){
+    currentTurtle = turtleList.get(index);
+    colorPicker.setValue(currentTurtle.getColor());
   }
 }
