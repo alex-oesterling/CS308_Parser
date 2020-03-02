@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import slogo.exceptions.InvalidCommandException;
+import slogo.exceptions.InvalidTurtleException;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
@@ -67,11 +68,25 @@ public class Controller {
      * Add a new turtle to the map of turtles, change the current turtle to
      * this newly created turtle
      */
-    public void addTurtle(){
-        Turtle t = new Turtle();
+    public void addTurtle(String name){ //FIXME edited by alex to handle taking in a string name
+        Turtle t = new Turtle(name);
+        if(turtleMap.containsKey(name)){
+            throw new InvalidTurtleException("Turtle already exists", new Throwable());
+        }
         turtleMap.putIfAbsent(t.getName(), t);
         turtle = t;
     }
+
+    public void addTurtle(){ //FIXME edited by alex to handle taking in a string name
+        Turtle t = new Turtle();
+        if(turtleMap.containsKey(t.getName())){
+            throw new InvalidTurtleException("Turtle already exists", new Throwable());
+        }
+        turtleMap.putIfAbsent(t.getName(), t);
+        turtle = t;
+    }
+
+    public String getTurtleName(){return turtle.getName();}
 
     /**
      * Allows the user to pick a turtle to do work on
