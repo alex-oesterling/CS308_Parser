@@ -31,6 +31,7 @@ public class Turtle{
   private double turtleIsDrawing;
   private double turtleIsVisible;
   private String penColorName;
+  private String name;
 
   /**
    * Turtle constructor to create turtle at a specific point and specific pen color
@@ -49,6 +50,7 @@ public class Turtle{
     penColorName = penColor;
     turtleIsDrawing = 1;
     turtleIsVisible = 1;
+    name = this.hashCode()+"";
   }
 
   /**
@@ -62,14 +64,15 @@ public class Turtle{
     this(startingXPosition,startingYPosition, startingHeading, DEFAULT_PEN_COLOR);
   }
 
+
   /**
    * Turtle constructor to create a turtle at the default origin
-   * but with a specific pen color
-   * @param penColor string to set penColorName to
+   * but with a specific name
+   * @param turtleName string to set name to
    */
-  public Turtle(String penColor){
-    //penColor will be checked for validness in this() constructor
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, penColor);
+  public Turtle(String turtleName){
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, DEFAULT_PEN_COLOR);
+    name = turtleName;
   }
 
   /**
@@ -262,6 +265,13 @@ public class Turtle{
   }
 
   /**
+   * get the turtle's name
+   * @return
+   */
+  public String getName(){
+    return name;
+  }
+  /**
    * Get the x position
    * @return xPosition
    */
@@ -302,6 +312,14 @@ public class Turtle{
   public void setVisibility(double visibility){
     if(visibility!=0.0){ turtleIsVisible = VISIBLE; }
     else { turtleIsVisible = INVISIBLE; }
+  }
+
+  /**
+   * set the turtle's name to something new
+   * @param newName name to be changed to
+   */
+  public void setName(String newName){
+    name = newName;
   }
 
   /**

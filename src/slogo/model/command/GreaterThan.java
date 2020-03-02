@@ -8,7 +8,7 @@ public class GreaterThan extends Command {
    * @param value1 a
    * @param value2 b
    */
-  public GreaterThan(Double value1, Double value2){
+  public GreaterThan(Double value2, Double value1){
     super(value1>value2);
   }
 

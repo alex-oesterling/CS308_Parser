@@ -8,7 +8,7 @@ public class Power extends Command {
    * @param base a
    * @param exponent b
    */
-  public Power(Double base, Double exponent){
+  public Power(Double exponent, Double base){
     super(Math.pow(base, exponent));
   }
 }

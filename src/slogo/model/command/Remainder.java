@@ -8,7 +8,7 @@ public class Remainder extends Command {
    * @param dividend
    * @param divisor
    */
-  public Remainder(Double dividend, Double divisor){
+  public Remainder(Double divisor, Double dividend){
     super(dividend%divisor);
   }
 }

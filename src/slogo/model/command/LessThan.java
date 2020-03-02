@@ -8,7 +8,7 @@ public class LessThan extends Command {
    * @param value1 a
    * @param value2 b
    */
-  public LessThan(Double value1, Double value2){
+  public LessThan(Double value2, Double value1){
     super(value1<value2);
   }
 

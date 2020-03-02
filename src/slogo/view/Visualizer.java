@@ -1,6 +1,5 @@
 package slogo.view;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -25,7 +23,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
-import slogo.model.Parser;
 import java.util.ResourceBundle;
 import slogo.model.Turtle;
 
@@ -38,33 +35,38 @@ public class Visualizer{
   public static final int COLORPICKER_HEIGHT = 30;
   private static final String STYLESHEET = "styling.css";
   private static final String RESOURCES = "resources";
-  private static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES + ".";
   public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
 
 
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
   public static final int VBOX_SPACING = 10;
-  public static final String LANGUAGE_PACKAGE = RESOURCES + ".languages.";
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String DEFAULT_LANGUAGE = "English";
 
   private Controller myController;
   private BorderPane root;
+  private HelpWindow helpWindow;
+  private ViewExternal viewExternal;
+  private CommandLine commandLine;
+  private Styler styler;
+  private ColorPalette colorPalette;
+  private VBox variables;
+  private VBox commands;
   private Rectangle turtleArea;
   private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
   private String language;
   private Group turtlePaths;
   private Group turtles;
-  private ViewExternal viewExternal;
-  private CommandLine commandLine;
+
   private VBox commandHistory;
   private VBox varHistory;
   private Map<String, Double> varMap;
   private SimpleObjectProperty<ObservableList<Integer>> myTurtlesProperty;
   private TurtleView currentTurtle;
   private ColorPicker colorPicker;
+
 
   public Visualizer (){
     turtlePaths = new Group();
@@ -76,6 +78,7 @@ public class Visualizer{
     commandLine = new CommandLine(myController);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
+    styler = new Styler();
   }
 
   public Scene setupScene() {
@@ -130,12 +133,12 @@ public class Visualizer{
     Node varScroll = makeHistory(varHistory);
     Node commandScroll = makeHistory(commandHistory);
 
-    Label varLabel = new Label(myResources.getString("Variables"));
+    Label varLabel = styler.createLabel("Variables");
     VBox variables = new VBox();
     variables.getChildren().addAll(varLabel, varScroll);
     variables.setVgrow(commandScroll, Priority.ALWAYS);
 
-    Label cmdLabel = new Label(myResources.getString("Commands"));
+    Label cmdLabel = styler.createLabel("Commands");
     VBox commands = new VBox();
     commands.getChildren().addAll(cmdLabel, commandScroll);
     commands.setVgrow(commandScroll, Priority.ALWAYS);
@@ -158,26 +161,21 @@ public class Visualizer{
 
   private Node createUI() {
     VBox ui = new VBox();
-    Label background = new Label(myResources.getString("BackgroundColor"));
-    Label pen = new Label(myResources.getString("PenColor"));
-    Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
-    Button chooseTurtle = new Button(myResources.getString("ChooseTurtle"));
-    chooseTurtle.setOnAction(e-> {
-      currentTurtle.chooseTurtle();
-            });
-    Button addTurtle = new Button(myResources.getString("AddTurtle"));
-    addTurtle.setOnAction(e-> {
-      addTurtle();
-    });
-    Button reset = new Button(myResources.getString("ResetCommand"));
-    reset.setOnAction(e->{
-      clear();
-      myController.reset();
-      currentTurtle.resetTurtle();
-    });
+
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle, makeTurtleSelector(), addTurtle,
-            reset, help());
+    ui.getChildren().addAll(styler.createLabel(myResources.getString("BackgroundColor")),
+            backgroundColor(),
+            styler.createLabel(myResources.getString("PenColor")),
+            penColor(),
+            styler.createLabel(myResources.getString("ChooseLanguage")),
+            languageSelect(),
+            styler.createButton(myResources.getString("ChooseTurtle"), e->turtleList.get(0).chooseTurtle()),
+            styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
+            styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
+            styler.createButton(myResources.getString("HelpCommand"), e-> helpWindow = new HelpWindow(language)),
+            styler.createButton(myResources.getString("ResetCommand"),
+                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
+            makeTurtleSelector());
     return ui;
   }
 
