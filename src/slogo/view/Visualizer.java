@@ -8,6 +8,7 @@ import java.util.Optional;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -24,6 +25,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
 import java.util.ResourceBundle;
+import slogo.exceptions.InvalidTurtleException;
 import slogo.model.Turtle;
 
 public class Visualizer{
@@ -54,7 +56,7 @@ public class Visualizer{
   private VBox variables;
   private VBox commands;
   private Rectangle turtleArea;
-  private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
+  private Map<String, TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
   private String language;
   private Group turtlePaths;
@@ -63,14 +65,14 @@ public class Visualizer{
   private VBox commandHistory;
   private VBox varHistory;
   private Map<String, Double> varMap;
-  private SimpleObjectProperty<ObservableList<Integer>> myTurtlesProperty;
+  private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
   private ColorPicker colorPicker;
 
 
   public Visualizer (){
     turtlePaths = new Group();
-    turtleList = new ArrayList<>();
+    turtleList = new HashMap<>();
     turtles = new Group();
     varMap = new HashMap<>();
     viewExternal = new ViewExternal(this);
@@ -115,7 +117,6 @@ public class Visualizer{
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
     addTurtle();
-    setTurtle(0);
     Group view = new Group();
     view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
@@ -193,8 +194,8 @@ public class Visualizer{
     return colorPicker;
   }
 
-  private ComboBox<Integer> makeTurtleSelector(){
-    ComboBox<Integer> turtleBox = new ComboBox();
+  private ComboBox<String> makeTurtleSelector(){
+    ComboBox<String> turtleBox = new ComboBox();
     turtleBox.setPromptText("Pick Turtle");
     turtleBox.valueProperty().addListener((o, old, neww) -> setTurtle(neww));
     turtleBox.itemsProperty().bind(myTurtlesProperty);
@@ -260,12 +261,20 @@ public class Visualizer{
   }
 
   private void addTurtle(){
-    turtleList.add(new TurtleView(turtles, turtlePaths));
-    myTurtlesProperty.getValue().add(turtleList.size()-1);
+    try {
+      myController.addTurtle();
+    } catch (InvalidTurtleException e){
+      //ERROR DIALOG: Turtle Already Exists!
+    }
+    currentTurtle = new TurtleView(turtles, turtlePaths);
+    colorPicker.setValue(currentTurtle.getColor());
+    turtleList.putIfAbsent(myController.getTurtleName(), currentTurtle);
+    myTurtlesProperty.getValue().add(myController.getTurtleName());
   }
 
-  private void setTurtle(Integer index){
-    currentTurtle = turtleList.get(index);
+  private void setTurtle(String name){
+    currentTurtle = turtleList.get(name);
     colorPicker.setValue(currentTurtle.getColor());
+    myController.chooseTurtle(name);
   }
 }
