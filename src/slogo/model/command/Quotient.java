@@ -9,7 +9,7 @@ public class Quotient extends Command {
    * @param dividend number to be divided; a
    * @param divisor number to divide by; b
    */
-  public Quotient(Double dividend, Double divisor){
+  public Quotient(Double divisor, Double dividend){
     super(dividend/divisor);
   }
 }
