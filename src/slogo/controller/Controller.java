@@ -320,6 +320,7 @@ public class Controller {
     private void printCommandList(List<Command> l){  //wont need this in final submission
         Collections.reverse(l);
         for(Command c : l) {
+            System.out.println(c);
             System.out.println(c.getResult());
             System.out.println(
                     "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
