@@ -7,7 +7,7 @@ public class SlogoApp {
   /**
    * Start of the program.
    */
-  public static final String TITLE = "Parser";
+  public static final String TITLE = "i like turtles <3";
 
   public SlogoApp(Stage stage){
     Visualizer myVisualizer = new Visualizer();

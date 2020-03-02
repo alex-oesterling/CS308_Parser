@@ -1,12 +1,7 @@
 package slogo.controller;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -31,9 +26,10 @@ public class Controller {
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
     private Stack<Double> argumentStack, parametersStack;
-    private Map<String, List> userCreatedCommands;
-    private Turtle turtle;// = new Turtle();
+    private Map<String, List> userCreatedCommandVariables;
+    private Map<String, String> userCreatedConstantVariables;
     private Map<String, Turtle> turtleMap;
+    private Turtle turtle;// = new Turtle();
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
@@ -48,7 +44,8 @@ public class Controller {
     public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
-        userCreatedCommands = new HashMap<>();
+        userCreatedCommandVariables = new HashMap<>();
+        userCreatedConstantVariables = new HashMap<>();
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
         parametersStack = new Stack<>();
@@ -67,7 +64,7 @@ public class Controller {
     }
 
     /**
-     * add a new turtle to the map of turtles, change the current turtle to
+     * Add a new turtle to the map of turtles, change the current turtle to
      * this newly created turtle
      */
     public void addTurtle(){
@@ -77,7 +74,7 @@ public class Controller {
     }
 
     /**
-     * allows the user to pick a turtle to do work on
+     * Allows the user to pick a turtle to do work on
      * @param name turtle to become the current turtle
      */
     public void chooseTurtle(String name){
@@ -126,12 +123,15 @@ public class Controller {
             if (line.trim().length() > 0) {
                 String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
                 if(commandSyntax.equals("Command")){
-                    doCommandWork(params, lang, commandList, line, commandSyntax, lines);
+                    doCommandWork(params, lang, syntax, commandList, line, commandSyntax, lines);
                 } else if (commandSyntax.equals("Constant")){
                     doConstantWork(line, commandList);
                 } else if (commandSyntax.equals("Variable")){
-                    if(userCreatedCommands.containsKey(line)){
-                        doVariable(line, syntax, lang, params, commandList);
+                    if(userCreatedCommandVariables.containsKey(line)){
+                        doCommandVariable(line, syntax, lang, params, commandList);
+                    }
+                    else if (userCreatedConstantVariables.containsKey(line)){
+                        doConstantVariable(line, commandList);
                     }
                     else{
                         System.out.println("This variable does not exist yet");
@@ -150,13 +150,18 @@ public class Controller {
         return commandList;
     }
 
-    private void doVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
-        List<String> variableDoesWhat = userCreatedCommands.get(line);
+    private void doCommandVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
+        List<String> variableDoesWhat = userCreatedCommandVariables.get(line);
         for (String s : variableDoesWhat){
             String comSyntax = syntax.getSymbol(s);
-            if (comSyntax.equals("Command")){ doCommandWork(params, lang, commandList, s, comSyntax, variableDoesWhat); }
+            if (comSyntax.equals("Command")){ doCommandWork(params, lang, syntax, commandList, s, comSyntax, variableDoesWhat); }
             else if (comSyntax.equals("Constant")){ doConstantWork(s, commandList); }
         }
+    }
+
+    private void doConstantVariable(String line, List commandList){
+        String constant = userCreatedConstantVariables.get(line);
+        doConstantWork(constant, commandList);
     }
 
     private void doConstantWork(String line, List<Command> commandList){
@@ -165,28 +170,37 @@ public class Controller {
         tryToMakeCommands(commandList);
     }
 
-    private void doCommandWork(Parser params, Parser lang, List<Command> commandList, String line, String commandSyntax, List<String> lines){
+    private void doCommandWork(Parser params, Parser lang, Parser syntax, List<Command> commandList, String line, String commandSyntax, List<String> lines){
         String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
         if (commandName.equals("NO MATCH")){
             throw new InvalidCommandException(new Throwable(), commandSyntax, line);
         }
         else if (commandName.equals("MakeVariable")){
-            dealWithMakingVariables(lines, line, commandSyntax);
+            dealWithMakingVariables(lines, line, syntax);
         }
         else {
             validCommand(params, commandName, commandList);
         }
     }
 
-    private void dealWithMakingVariables(List<String> lines, String line, String commandSyntax){
+    private void dealWithMakingVariables(List<String> lines, String line, Parser syntax){
         IS_VARIABLE = true;
         List<String> copyLines = new CopyOnWriteArrayList(lines);
         copyLines.remove(line);
         String variable = copyLines.get(0);
-
+        String firstCommand = copyLines.get(1);
+        String type = syntax.getSymbol(firstCommand);
         copyLines.remove(variable);
-        userCreatedCommands.put(variable, copyLines);
-        System.out.println(userCreatedCommands);
+        if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals("Command"))){
+            if (!userCreatedConstantVariables.containsKey(variable)){ userCreatedCommandVariables.put(variable, copyLines); }
+            else { System.out.println("Variable already defined as a constant variable"); } //FIXME make an exception thrown
+        }
+        else if (copyLines.size() == 1 && type.equals("Constant")){
+            if (!userCreatedCommandVariables.containsKey(variable)){ userCreatedConstantVariables.put(variable, firstCommand); }
+            else { System.out.println("Variable already defined as a command variable"); } //FIXME make an exception thrown
+        }
+        System.out.println(userCreatedConstantVariables);
+        System.out.println(userCreatedCommandVariables);
     }
 
     private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
