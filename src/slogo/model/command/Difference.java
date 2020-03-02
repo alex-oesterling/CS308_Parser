@@ -9,7 +9,7 @@ public class Difference extends Command {
    * @param minuend a
    * @param subtrahend b
    */
-  public Difference(Double minuend, Double subtrahend){
+  public Difference(Double subtrahend, Double minuend){
     super(minuend-subtrahend);
   }
 }
