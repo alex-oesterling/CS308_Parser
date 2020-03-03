@@ -240,8 +240,15 @@ public class Visualizer{
   }
 
   public void colorPalettePenColor(double value){
+    colorPalette = new ColorPalette();
     TreeMap<Double, String> treeMap = colorPalette.getColorMap();
     currentTurtle.updatePen(Color.web(treeMap.get(value)));
+  }
+
+  public void setBackgroundColor(double value){
+    colorPalette = new ColorPalette();
+    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
+    turtleArea.setFill(Color.web(treeMap.get(value)));
   }
 
   public TurtleView getCurrentTurtle(){return currentTurtle;}

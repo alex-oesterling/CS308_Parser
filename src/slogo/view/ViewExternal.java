@@ -20,14 +20,15 @@ public class ViewExternal implements ViewExternalAPI {
 
   @Override
   public void updateCommandPenColor(double value){
-    //go into color palette and get map
     myVisualizer.colorPalettePenColor(value);
   }
 
   @Override
   public void updateBackgroundColor(double value){
-    
+    myVisualizer.setBackgroundColor(value);
   }
+
+  @
 
   @Override
   public void updateSceneColor() {
