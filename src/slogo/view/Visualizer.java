@@ -16,7 +16,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
@@ -61,7 +67,7 @@ public class Visualizer{
 
   private VBox commandHistory;
   private VBox varHistory;
-  private Map<String, Double> varMap;
+  private Map<String, String> varMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
   private ColorPicker colorPicker;
@@ -130,6 +136,9 @@ public class Visualizer{
     varHistory = new VBox();
     Node varScroll = makeHistory(varHistory);
     Node commandScroll = makeHistory(commandHistory);
+
+    commandHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING);
+    varHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING);
 
     Label varLabel = styler.createLabel("Variables");
     VBox variables = new VBox();
@@ -237,15 +246,48 @@ public class Visualizer{
     return comboBox;
   }
 
+  public void clear(){
+    turtlePaths.getChildren().clear();
+  }
+
+  public TurtleView getCurrentTurtle(){return currentTurtle;}
+
+  public void addCommand(String command, String syntax){
+    Label recentCommand = new Label(command);
+    Label syntaxLabel = new Label(syntax); //modify based on what model wants it to do
+    HBox commandAndSyntax = new HBox();
+    commandAndSyntax.setOnMouseClicked(commandLine.setOnClick(command));
+    commandAndSyntax.setMinWidth(commandHistory.getWidth());
+    final Pane spacer = new Pane();
+    commandAndSyntax.setHgrow(spacer, Priority.ALWAYS);
+    commandAndSyntax.getChildren().addAll(recentCommand, spacer, syntaxLabel);
+    commandHistory.getChildren().add(commandAndSyntax);
+  }
+
+  public void addVariable(String variable, String value){
+    Label recentCommand = new Label(variable);
+    Label valueLabel = new Label(value);
+    HBox variableAndValue = new HBox();
+    variableAndValue.setMinWidth(varHistory.getWidth());
+    final Pane spacer = new Pane();
+    variableAndValue.setHgrow(spacer, Priority.ALWAYS);
+    variableAndValue.getChildren().addAll(recentCommand, spacer, valueLabel);
+    varMap.put(variable, value);
+    variableAndValue.setOnMouseClicked(e->updateVariable(variable, valueLabel));
+    varHistory.getChildren().add(variableAndValue);
+  }
+
   //FIXME variable types :right now all it handles is doubles and poorly at that
-  private void updateVariable(String variableName){
+  private void updateVariable(String variableName, Label value){
     TextInputDialog updateVariable = new TextInputDialog();
     updateVariable.setTitle("Update Variable");
-    updateVariable.setHeaderText("Update variable value by entering in a valid number:");
-    updateVariable.setContentText("Enter variable here:");
+    updateVariable.setHeaderText("Update " + variableName + " value by entering in a valid number:");
+    updateVariable.setContentText("Enter new number here:");
     Optional<String> result = updateVariable.showAndWait();
     if(result.isPresent()){
-      varMap.put(variableName, Double.parseDouble(result.get()));
+      varMap.put(variableName, result.get());
+      value.setText(result.get());
+      myController.updateCommandVariable(variableName, result.get());
     }
   }
 
