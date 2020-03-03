@@ -20,6 +20,7 @@ public class Controller {
     private static final String WHITESPACE = "\\s+";
     private static final int ONE_DOUBLE = 1;
     private static final int TWO_DOUBLE = 2;
+    private static final Integer SECOND_GEN = 2;
     private static final double ZERO_DOUBLE = 0;
     private static final double TURTLE = -0.5;
     private static boolean IS_FIRST_CONSTANT = false;
@@ -31,7 +32,8 @@ public class Controller {
     private Map<String, List> userCreatedCommandVariables;
     private Map<String, String> userCreatedConstantVariables;
     private Map<String, Turtle> turtleMap;
-    private Turtle turtle;// = new Turtle();
+    private Map<String, Integer> nameCount;
+    private Turtle turtle;
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
@@ -62,31 +64,52 @@ public class Controller {
         parametersParser.addPatterns("Parameters");
 
         turtleMap = new HashMap<>();
-        addTurtle();
+        nameCount = new HashMap<>();
     }
 
     /**
      * Add a new turtle to the map of turtles, change the current turtle to
-     * this newly created turtle
+     * this newly created turtle; turtle with a chosen name
      */
     public void addTurtle(String name){ //FIXME edited by alex to handle taking in a string name
+        if(nameCount.containsKey(name)){
+            Integer generation = nameCount.get(name);
+            nameCount.put(name, nameCount.get(name)+1);
+            name = name + " " + generation;
+        }
+        nameCount.putIfAbsent(name, SECOND_GEN);
         Turtle t = new Turtle(name);
         if(turtleMap.containsKey(name)){
             throw new InvalidTurtleException("Turtle already exists", new Throwable());
         }
-        turtleMap.putIfAbsent(t.getName(), t);
+        turtleMap.putIfAbsent(name, t);
         turtle = t;
     }
 
+    /**
+     * Add a new turtle to the map of turtles, change the current turtle to
+     * this newly created turtle; turtle with a default "name" that is its hashcode
+     */
     public void addTurtle(){ //FIXME edited by alex to handle taking in a string name
         Turtle t = new Turtle();
+        if(nameCount.containsKey(t.getName())){
+            Integer generation = nameCount.get(t.getName());
+            nameCount.put(t.getName(), nameCount.get(t.getName())+1);
+            t.setName(t.getName() + " " + generation);
+        }
+        nameCount.putIfAbsent(t.getName(), SECOND_GEN);
         if(turtleMap.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable());
         }
         turtleMap.putIfAbsent(t.getName(), t);
         turtle = t;
+
     }
 
+    /**
+     * get the name of the current turtle
+     * @return turtle's name
+     */
     public String getTurtleName(){return turtle.getName();}
 
     /**
@@ -110,7 +133,9 @@ public class Controller {
      * Resets the turtle and clears all of the stacks
      */
     public void reset(){
-        turtle = new Turtle();
+        turtleMap = new HashMap<>();
+        nameCount = new HashMap<>();
+        addTurtle();
         resetStacks();
     }
 
@@ -255,7 +280,7 @@ public class Controller {
 
     private List<Command> tryToMakeCommands(List<Command> commandList){
         if(checkArgumentStack()){
-            commandList.add(weHaveEnoughArgumentsToMakeACommand());
+            commandList.add(weHaveEnoughArgumentsToMakeACommand(commandList));
         }
         return commandList;
     }
@@ -264,12 +289,14 @@ public class Controller {
         return !parametersStack.isEmpty() && argumentStack.size() >= parametersStack.peek();
     }
 
-    private Command weHaveEnoughArgumentsToMakeACommand(){
+    private Command weHaveEnoughArgumentsToMakeACommand(
+        List<Command> commands){
         double numberOfParams = parametersStack.pop(); //to be used in creating the command
         String name = commandStack.pop();
         Command newCommand = getCommand(name, numberOfParams);
         if(commandStack.size()!=0){
             argumentStack.push(newCommand.getResult());
+            tryToMakeCommands(commands); //slightly recursive :D
         }
         return newCommand;
     }
@@ -338,8 +365,16 @@ public class Controller {
     }
 
     private void executeCommandList(List<Command> l){
+<<<<<<< HEAD
+=======
+        //Collections.reverse(l);
+>>>>>>> b0e49e13ed5c09c934830aa3b5ece2521a1686c6
         for(Command c : l){
+            System.out.println(c);
             System.out.println(c.execute());
+            System.out.println(
+                "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
+                    .getHeading());
             if(c instanceof ClearScreen){
                 myView.updatePenStatus(0);
                 myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
@@ -358,7 +393,12 @@ public class Controller {
     }
 
     private void printCommandList(List<Command> l){  //wont need this in final submission
+<<<<<<< HEAD
+=======
+        //Collections.reverse(l);
+>>>>>>> b0e49e13ed5c09c934830aa3b5ece2521a1686c6
         for(Command c : l) {
+            System.out.println(c);
             System.out.println(c.getResult());
             System.out.println(
                     "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
