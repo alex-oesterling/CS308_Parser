@@ -251,6 +251,10 @@ public class Visualizer{
     turtleArea.setFill(Color.web(treeMap.get(value)));
   }
 
+  public void setPenSize(double value){
+    currentTurtle.setPenSize(value);
+  }
+
   public TurtleView getCurrentTurtle(){return currentTurtle;}
 
   public void addCommand(String command){

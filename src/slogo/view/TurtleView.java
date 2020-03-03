@@ -51,6 +51,7 @@ public class TurtleView{
     private double currentY;
     private SequentialTransition st;
     private double heading;
+    private double pathStrokeWidth;
 
     public TurtleView(Group turtles, Group paths){
         penStatus = true;
@@ -58,6 +59,7 @@ public class TurtleView{
         myTurtles = turtles;
         myImage = createTurtle();
         myPenColor = Color.BLACK;
+        pathStrokeWidth = PATH_STROKE_WIDTH;
         st = new SequentialTransition();
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
@@ -141,7 +143,7 @@ public class TurtleView{
             Path path = new Path();
             if(penStatus){
                 path.setOpacity(PATH_OPACITY);
-                path.setStrokeWidth(PATH_STROKE_WIDTH);
+                path.setStrokeWidth(pathStrokeWidth);
             } else {
                 path.setOpacity(PATH_NO_OPACITY);
             }
@@ -197,6 +199,10 @@ public class TurtleView{
 
     public void updateTurtleView(double value){
         myImage.setVisible(value != 0.0);
+    }
+
+    public void setPenSize(double value){
+        pathStrokeWidth = value;
     }
 
     public void updatePenStatus(double value){

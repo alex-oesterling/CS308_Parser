@@ -432,7 +432,7 @@ public class Controller {
             } else if(c instanceof SetShape){
                 //myView.updateShape(c.getResult());
             } else if(c instanceof SetPenSize){
-                //myView.updatePenSize(c.getResult());
+                myView.updatePenSize(c.getResult());
             }
             else {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
