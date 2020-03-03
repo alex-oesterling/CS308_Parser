@@ -19,6 +19,26 @@ public class ViewExternal implements ViewExternalAPI {
   }
 
   @Override
+  public void updateCommandPenColor(double value){
+    myVisualizer.setPenColor(value);
+  }
+
+  @Override
+  public void updateBackgroundColor(double value){
+    myVisualizer.setBackgroundColor(value);
+  }
+
+  @Override
+  public void updatePenSize(double value){
+    myVisualizer.setPenSize(value);
+  }
+
+  @Override
+  public void updateShape(double value){
+    myVisualizer.setShape(value);
+  }
+
+  @Override
   public void updateSceneColor() {
 
   }

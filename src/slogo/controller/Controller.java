@@ -221,6 +221,7 @@ public class Controller {
         while(commandStack.size()>0 ){
             tryToMakeCommands(commandList);
         }
+        commandList = fillCommands(commandList);
         executeCommandList(commandList);
         printCommandList(commandList); //we can get rid of this after submission
         return commandList;
@@ -254,8 +255,6 @@ public class Controller {
             if (!userCreatedCommandVariables.containsKey(variable)){ userCreatedConstantVariables.put(variable, firstCommand); }
             else { System.out.println("Variable already defined as a command variable"); } //FIXME make an exception thrown
         }
-        System.out.println(userCreatedConstantVariables);
-        System.out.println(userCreatedCommandVariables);
     }
 
     private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
@@ -364,9 +363,6 @@ public class Controller {
     }
 
     private Constructor getCommandConstructor(Class command, double numberOfParams) throws NoSuchMethodException {
-        System.out.println("command: "+command);
-        System.out.println("numberOfParams: " + numberOfParams);
-        System.out.println("listParametersStack.peek(): "+listParametersStack.peek());
         if(numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 0){
             return command.getConstructor(new Class[]{Double.class});
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == ZERO_DOUBLE_PARAM_VALUE)){
@@ -409,6 +405,18 @@ public class Controller {
         return myCommand;
     }
 
+    private List<Command> fillCommands(List<Command> l){
+        List<Command> extendedList = new ArrayList<>();
+        for(Command c : l){
+            if(c instanceof CommandWithReturningList){
+                extendedList.addAll(((CommandWithReturningList) c).getCommandList());
+            } else {
+                extendedList.add(c);
+            }
+        }
+        return extendedList;
+    }
+
     private void executeCommandList(List<Command> l){
         for(Command c : l){
             System.out.println(c);
@@ -426,13 +434,13 @@ public class Controller {
             } else if(c instanceof PenDown || c instanceof PenUp){
                 myView.updatePenStatus(c.getResult());
             } else if(c instanceof SetBackground){
-                //myView.updateBackgroundColor(c.getResult());
+                myView.updateBackgroundColor(c.getResult());
             } else if(c instanceof SetPenColor){
-                //myView.updateCommandPenColor(c.getResult());
+                myView.updateCommandPenColor(c.getResult());
             } else if(c instanceof SetShape){
-                //myView.updateShape(c.getResult());
+                myView.updateShape(c.getResult());
             } else if(c instanceof SetPenSize){
-                //myView.updatePenSize(c.getResult());
+                myView.updatePenSize(c.getResult());
             }
             else {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
