@@ -277,6 +277,22 @@ public class Turtle{
   }
 
   /**
+   * Gets the current pen color
+   * @return the index of the color
+   */
+  public double getPenColor(){
+    return penIndex;
+  }
+
+  /**
+   * Gets the current shape of the turtle
+   * @return the index of the shape
+   */
+  public double getShape(){
+    return shapeIndex;
+  }
+
+  /**
    * Set the pen as up or down
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
@@ -328,22 +344,36 @@ public class Turtle{
     }
   }
 
+  /**
+   * Set the color of the pen
+   * @param index the index to change to
+   */
   public void setPenColor(Double index){
     penIndex = index;
   }
+
+  /**
+   * Set the shape (image) of the turtle
+   * @param index the index to change to
+   */
   public void setShape(Double index){
     shapeIndex = index;
   }
+
+  /**
+   * Set the background color of the window
+   * @param index the index of the color to change to
+   */
   public void setBackground(Double index){
     bgIndex = index;
   }
+
+  /**
+   * Set the pen size in pixels
+   * @param pixels the size to set the pen to
+   */
   public void setPenSize(Double pixels){
     sizePixels = pixels;
   }
-  public double getPenColor(){
-    return penIndex;
-  }
-  public double getShape(){
-    return shapeIndex;
-  }
+
 }
