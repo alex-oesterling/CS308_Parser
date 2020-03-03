@@ -1,12 +1,14 @@
 package slogo.model.command;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Repeat extends Command{
+public class Repeat extends CommandWithReturningList{
 
   private static final Double DEFAULT = 0.0;
   private Double times;
   private List<Command> commands;
+  private List<Command> returningList;
 
   /**
    *
@@ -24,20 +26,24 @@ public class Repeat extends Command{
    * @return
    */
   public Double getResult(){
-    return commands.get(commands.size()-1).getResult();
-  }
-
-  @Override
-  /**
-   * executes the list of commands the specified number of times
-   */
-  public Double execute(){
+    returningList = new ArrayList<>();
     Double temp = DEFAULT;
     for(int k=0; k<times; k++) {
       for (Command c : commands) {
-        temp = c.execute();
+        temp = c.getResult();
+        returningList.add(c);
       }
     }
     return temp;
+  }
+
+  /**
+   * return the commands the number of times asked for
+   * @return commands * times in one list
+   */
+  @Override
+  public List<Command> getCommandList() {
+    this.execute();
+    return returningList;
   }
 }
