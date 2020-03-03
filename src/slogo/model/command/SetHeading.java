@@ -19,6 +19,10 @@ public class SetHeading extends Command {
         heading = value;
     }
 
+    /**
+     * Gets the result of setting the heading
+     * @return number of degrees moved
+     */
     @Override
     public Double getResult(){
         return t.getDeltaTheta(heading, t.getHeading());
@@ -31,14 +35,5 @@ public class SetHeading extends Command {
     public Double execute() {
         t.setHeading(heading);
         return this.getResult();
-    }
-
-    public static void main(String[] args) {
-        Turtle t = new Turtle();
-        SetHeading sh = new SetHeading(t, 45.0);
-        System.out.println(sh.getResult());
-        System.out.println(t.getHeading());
-        sh.execute();
-        System.out.println(t.getHeading());
     }
 }
