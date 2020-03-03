@@ -36,10 +36,4 @@ public class SetTowards extends Command {
         return this.getResult();
     }
 
-    public static void main(String[] args) {
-        Turtle t = new Turtle();
-        SetTowards st = new SetTowards(t, 10.0, 10.0);
-        System.out.println(st.getResult());
-        System.out.println(st.execute());
-    }
 }
