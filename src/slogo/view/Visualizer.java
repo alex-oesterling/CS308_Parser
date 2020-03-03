@@ -1,10 +1,6 @@
 package slogo.view;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ListBinding;
@@ -24,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
-import java.util.ResourceBundle;
 import slogo.exceptions.InvalidTurtleException;
 import slogo.model.Turtle;
 
@@ -176,8 +171,7 @@ public class Visualizer{
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("HelpCommand"), e-> helpWindow = new HelpWindow(language)),
             styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
-            addTurtleInfo());
+                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }));
     return ui;
   }
 
@@ -243,6 +237,11 @@ public class Visualizer{
 
   public void clear(){
     turtlePaths.getChildren().clear();
+  }
+
+  public void colorPalettePenColor(double value){
+    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
+    currentTurtle.updatePen(Color.web(treeMap.get(value)));
   }
 
   public TurtleView getCurrentTurtle(){return currentTurtle;}

@@ -161,7 +161,7 @@ public class TurtleView{
             System.out.println(oldX);
             System.out.println(newX);
         }
-        System.out.println(turtleStats());
+//        System.out.println(turtleStats());
     }
 
     public void playAnimation(){
