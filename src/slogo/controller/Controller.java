@@ -12,6 +12,7 @@ import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
 import slogo.view.ViewExternal;
+import slogo.fun.RomanNumerals;
 
 public class Controller {
     private static final String LANGUAGES_PACKAGE = "resources.languages.";
@@ -95,7 +96,8 @@ public class Controller {
         if(nameCount.containsKey(t.getName())){
             Integer generation = nameCount.get(t.getName());
             nameCount.put(t.getName(), nameCount.get(t.getName())+1);
-            t.setName(t.getName() + " " + generation);
+            RomanNumerals rn = new RomanNumerals();
+            t.setName(t.getName() + " " + rn.intToNumeral(generation));
         }
         nameCount.putIfAbsent(t.getName(), SECOND_GEN);
         if(turtleMap.containsKey(t.getName())){
