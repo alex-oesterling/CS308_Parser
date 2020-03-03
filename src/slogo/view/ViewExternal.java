@@ -20,7 +20,7 @@ public class ViewExternal implements ViewExternalAPI {
 
   @Override
   public void updateCommandPenColor(double value){
-    myVisualizer.colorPalettePenColor(value);
+    myVisualizer.setPenColor(value);
   }
 
   @Override

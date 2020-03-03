@@ -213,7 +213,6 @@ public class Visualizer{
     return turtleBox;
   }
 
-
   private ComboBox languageSelect(){
     String languages[] = { myResources.getString("English"),
             myResources.getString("Chinese"),
@@ -233,41 +232,6 @@ public class Visualizer{
       myController.addLanguage(language);
     });
     return comboBox;
-  }
-
-  public void clear(){
-    turtlePaths.getChildren().clear();
-  }
-
-  public void colorPalettePenColor(double value){
-    colorPalette = new ColorPalette();
-    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
-    currentTurtle.updatePen(Color.web(treeMap.get(value)));
-  }
-
-  public void setBackgroundColor(double value){
-    colorPalette = new ColorPalette();
-    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
-    turtleArea.setFill(Color.web(treeMap.get(value)));
-  }
-
-  public void setPenSize(double value){
-    currentTurtle.setPenSize(value);
-  }
-
-  public TurtleView getCurrentTurtle(){return currentTurtle;}
-
-  public void addCommand(String command){
-    Label recentCommand = new Label(command);
-    commandLine.setOnClick(recentCommand, recentCommand.getText()); //modify based on what model wants it to do
-    commandHistory.getChildren().add(recentCommand);
-  }
-
-  public void addVariable(String variable, double value){
-    Label recentCommand = new Label(variable);
-    varMap.put(variable, value);
-    recentCommand.setOnMouseClicked(e->updateVariable(variable));
-    commandHistory.getChildren().add(recentCommand);
   }
 
   //FIXME variable types :right now all it handles is doubles and poorly at that
@@ -298,5 +262,36 @@ public class Visualizer{
     currentTurtle = turtleList.get(name);
     colorPicker.setValue(currentTurtle.getColor());
     myController.chooseTurtle(name);
+  }
+
+  public TurtleView getCurrentTurtle(){return currentTurtle;}
+
+  public void addCommand(String command){
+    Label recentCommand = new Label(command);
+    commandLine.setOnClick(recentCommand, recentCommand.getText()); //modify based on what model wants it to do
+    commandHistory.getChildren().add(recentCommand);
+  }
+
+  public void clear(){turtlePaths.getChildren().clear();}
+
+  public void setPenColor(double value){
+    colorPalette = new ColorPalette();
+    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
+    currentTurtle.updatePen(Color.web(treeMap.get(value)));
+  }
+
+  public void setBackgroundColor(double value){
+    colorPalette = new ColorPalette();
+    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
+    turtleArea.setFill(Color.web(treeMap.get(value)));
+  }
+
+  public void setPenSize(double value){currentTurtle.setPenSize(value);}
+
+  public void addVariable(String variable, double value){
+    Label recentCommand = new Label(variable);
+    varMap.put(variable, value);
+    recentCommand.setOnMouseClicked(e->updateVariable(variable));
+    commandHistory.getChildren().add(recentCommand);
   }
 }
