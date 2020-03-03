@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ListBinding;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,11 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
@@ -172,11 +172,12 @@ public class Visualizer{
             languageSelect(),
             styler.createButton(myResources.getString("ChooseTurtle"), e->turtleList.get(0).chooseTurtle()),
             styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
+            makeTurtleSelector(),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("HelpCommand"), e-> helpWindow = new HelpWindow(language)),
             styler.createButton(myResources.getString("ResetCommand"),
                     e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
-            makeTurtleSelector());
+            addTurtleInfo());
     return ui;
   }
 
@@ -194,6 +195,22 @@ public class Visualizer{
     return colorPicker;
   }
 
+//  private HBox addTurtleInfo(){
+//    HBox hbox = new HBox();
+//    ListBinding list1 = new ListBinding() {
+//      @Override
+//      protected ObservableList computeValue() {
+//        return currentTurtle.turtleStats();
+//      }
+//    };
+//    System.out.println(list1);
+////    ListBinding list1 = Bindings.add(currentTurtle.turtleStats());
+////    for(String key: stats.keySet()){
+////      hbox.getChildren().addAll(styler.createLabel(key), styler.createLabel(stats.get(key)));
+////    }
+//    return hbox;
+//  }
+
   private ComboBox<String> makeTurtleSelector(){
     ComboBox<String> turtleBox = new ComboBox();
     turtleBox.setPromptText("Pick Turtle");
@@ -202,11 +219,6 @@ public class Visualizer{
     return turtleBox;
   }
 
-  private Button help(){
-    Button help = new Button(myResources.getString("HelpCommand"));
-    help.setOnAction(e-> new HelpWindow(language));
-    return help;
-  }
 
   private ComboBox languageSelect(){
     String languages[] = { myResources.getString("English"),

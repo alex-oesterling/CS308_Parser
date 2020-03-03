@@ -3,7 +3,10 @@ package slogo.view;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
@@ -20,6 +23,10 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TurtleView{
     public static final String XML_FILEPATH = "user.dir";
@@ -154,6 +161,7 @@ public class TurtleView{
             System.out.println(oldX);
             System.out.println(newX);
         }
+        System.out.println(turtleStats());
     }
 
     public void playAnimation(){
@@ -172,6 +180,17 @@ public class TurtleView{
         currentX = TURTLE_SCREEN_WIDTH/2;
     }
 
+//    public ListProperty turtleStats(){
+//        ArrayList<String> list = new ArrayList<>();
+//        list.add(Double.toString(currentX));
+//        list.add(Double.toString(currentY));
+//        ObservableList<String> observableList = FXCollections.observableArrayList(list);
+//        ListProperty<String> myTurtle = new SimpleListProperty<String>();
+//        myTurtle.add(Double.toString(currentX));
+//        myTurtle.add(Double.toString(currentY));
+//        return myTurtle;
+//    }
+
     public void updatePen(Color color){
         myPenColor = color;
     }
@@ -185,4 +204,6 @@ public class TurtleView{
     }
 
     public Color getColor(){return myPenColor;}
+
+
 }
