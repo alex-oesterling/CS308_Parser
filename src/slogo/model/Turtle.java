@@ -1,5 +1,6 @@
 package slogo.model;
 
+import java.util.List;
 import slogo.view.Visualizer;
 
 public class Turtle{
@@ -7,6 +8,10 @@ public class Turtle{
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 0;
+  private static final int DEFAULT_PEN_INDEX = 0;
+  private static final int DEFAULT_BG_INDEX = 7;
+  private static final int DEFAULT_SHAPE_INDEX = 0;
+  private static final int DEFAULT_SIZE_PIXELS = 3;
   private static final int POSITIVE = 1;
   private static final int NEGATIVE = -1;
   private static final int QUAD1_BEGINS = 0;
@@ -18,19 +23,22 @@ public class Turtle{
   private static final double INVISIBLE = 0;
   private static final double DRAWING = 1.0;
   private static final double NOT_DRAWING = 0.0;
-  private static final String DEFAULT_PEN_COLOR = "BLACK";
   //Fixme take out importing of the visualizer class
   private static final double VIEW_BOUNDS_X = Visualizer.TURTLE_SCREEN_WIDTH;
   private static final double VIEW_BOUNDS_Y = Visualizer.TURTLE_SCREEN_HEIGHT;
+  private static final List<String> DEFAULT_TURTLE_NAMES = List.of("Alex", "Dana", "Hannah", "Robert", "Tyler"); //in alphabetical order; NOT DISCRIMINATING AGAINST ANY ONE PERSON!!!
 
   private double xPosition;
   private double yPosition;
   private double homeX;
   private double homeY;
-  private double heading;           //define heading as the degrees clockwise from North
+  private double heading; //define heading as the degrees clockwise from North
   private double turtleIsDrawing;
   private double turtleIsVisible;
-  private String penColorName;
+  private double penIndex;
+  private double bgIndex;
+  private double shapeIndex;
+  private double sizePixels;
   private String name;
 
   /**
@@ -38,32 +46,21 @@ public class Turtle{
    * @param startingXPosition value to set xPosition to
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
-   * @param penColor string to set penColorName to
-   */
-  public Turtle(double startingXPosition, double startingYPosition, int startingHeading, String penColor){
-    //TODO check that parameters are valid
-    xPosition = startingXPosition;
-    homeX = xPosition;
-    yPosition = startingYPosition;
-    homeY = yPosition;
-    heading = startingHeading;
-    penColorName = penColor;
-    turtleIsDrawing = 1;
-    turtleIsVisible = 1;
-    name = this.hashCode()+"";
-  }
-
-  /**
-   * Turtle constructor to create turtle at a specific point with no specific pen color
-   * @param startingXPosition value to set xPosition to
-   * @param startingYPosition value to set yPosition to
-   * @param startingHeading value to set heading to; degrees clockwise from east
    */
   public Turtle(double startingXPosition, double startingYPosition, int startingHeading){
-    //values will be checked for validness in this() constructor
-    this(startingXPosition,startingYPosition, startingHeading, DEFAULT_PEN_COLOR);
+    setX(startingXPosition);
+    homeX = xPosition;
+    setY(startingYPosition);
+    homeY = yPosition;
+    heading = startingHeading;
+    turtleIsDrawing = DRAWING;
+    turtleIsVisible = VISIBLE;
+    penIndex = DEFAULT_PEN_INDEX;
+    bgIndex = DEFAULT_BG_INDEX;
+    shapeIndex = DEFAULT_SHAPE_INDEX;
+    sizePixels = DEFAULT_SIZE_PIXELS;
+    name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
   }
-
 
   /**
    * Turtle constructor to create a turtle at the default origin
@@ -71,7 +68,7 @@ public class Turtle{
    * @param turtleName string to set name to
    */
   public Turtle(String turtleName){
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, DEFAULT_PEN_COLOR);
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING);
     name = turtleName;
   }
 
@@ -79,7 +76,7 @@ public class Turtle{
    * Default Turtle constructor
    */
   public Turtle(){
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, DEFAULT_PEN_COLOR);
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING);
   }
 
   /**
@@ -257,14 +254,6 @@ public class Turtle{
   }
 
   /**
-   * Getter for String of the pen color name
-   * @return
-   */
-  public String getPenColor(){
-    return penColorName;
-  }
-
-  /**
    * get the turtle's name
    * @return
    */
@@ -297,15 +286,6 @@ public class Turtle{
   }
 
   /**
-   * Set a new Pen color
-   * @param newColor
-   */
-  public void setPenColor(String newColor){
-    penColorName = newColor.toUpperCase();
-  }
-  //TODO check that newColor is valid
-
-  /**
    * Set the visibility of the turtle
    * @param visibility true if the turtle can be seen, false otherwise
    */
@@ -334,7 +314,6 @@ public class Turtle{
       xPosition = VIEW_BOUNDS_X/2;
     }
   }
-  //TODO check that newXPosition is valid
 
   /**
    * Set the y position
@@ -348,5 +327,23 @@ public class Turtle{
       yPosition = VIEW_BOUNDS_Y/2;
     }
   }
-  //TODO check that newYPosition is valid
+
+  public void setPenColor(Double index){
+    penIndex = index;
+  }
+  public void setShape(Double index){
+    shapeIndex = index;
+  }
+  public void setBackground(Double index){
+    bgIndex = index;
+  }
+  public void setPenSize(Double pixels){
+    sizePixels = pixels;
+  }
+  public double getPenColor(){
+    return penIndex;
+  }
+  public double getShape(){
+    return shapeIndex;
+  }
 }
