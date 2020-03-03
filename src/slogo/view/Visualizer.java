@@ -239,12 +239,6 @@ public class Visualizer{
     return comboBox;
   }
 
-  public void clear(){
-    turtlePaths.getChildren().clear();
-  }
-
-  public TurtleView getCurrentTurtle(){return currentTurtle;}
-
   public void addCommand(String command, String syntax){
     Label recentCommand = new Label(command);
     Label syntaxLabel = new Label(syntax); //modify based on what model wants it to do
@@ -306,7 +300,7 @@ public class Visualizer{
 
   public void addCommand(String command){
     Label recentCommand = new Label(command);
-    commandLine.setOnClick(recentCommand, recentCommand.getText()); //modify based on what model wants it to do
+    commandLine.setOnClick(recentCommand.getText()); //modify based on what model wants it to do
     commandHistory.getChildren().add(recentCommand);
   }
 
@@ -325,11 +319,5 @@ public class Visualizer{
   public void setShape(double value){
     currentTurtle.setShape(shapePalette.getShapeMapValue(value));
   }
-
-  public void addVariable(String variable, double value){
-    Label recentCommand = new Label(variable);
-    varMap.put(variable, value);
-    recentCommand.setOnMouseClicked(e->updateVariable(variable));
-    commandHistory.getChildren().add(recentCommand);
-  }
+  
 }
