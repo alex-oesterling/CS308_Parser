@@ -27,6 +27,7 @@ public class SetHeading extends Command {
     public Double getResult(){
         return t.getDeltaTheta(heading, t.getHeading());
     }
+
     /**
      * Allows the SetHeading command to be executed
      * @return the value of the heading, where the turtle is facing

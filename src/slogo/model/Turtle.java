@@ -8,6 +8,10 @@ public class Turtle{
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_HEADING = 0;
+  private static final int DEFAULT_PEN_INDEX = 0;
+  private static final int DEFAULT_BG_INDEX = 7;
+  private static final int DEFAULT_SHAPE_INDEX = 0;
+  private static final int DEFAULT_SIZE_PIXELS = 3;
   private static final int POSITIVE = 1;
   private static final int NEGATIVE = -1;
   private static final int QUAD1_BEGINS = 0;
@@ -31,6 +35,10 @@ public class Turtle{
   private double heading; //define heading as the degrees clockwise from North
   private double turtleIsDrawing;
   private double turtleIsVisible;
+  private double penIndex;
+  private double bgIndex;
+  private double shapeIndex;
+  private double sizePixels;
   private String name;
 
   /**
@@ -47,6 +55,10 @@ public class Turtle{
     heading = startingHeading;
     turtleIsDrawing = DRAWING;
     turtleIsVisible = VISIBLE;
+    penIndex = DEFAULT_PEN_INDEX;
+    bgIndex = DEFAULT_BG_INDEX;
+    shapeIndex = DEFAULT_SHAPE_INDEX;
+    sizePixels = DEFAULT_SIZE_PIXELS;
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
   }
 
@@ -314,5 +326,24 @@ public class Turtle{
     } else if (yPosition > VIEW_BOUNDS_Y/2){
       yPosition = VIEW_BOUNDS_Y/2;
     }
+  }
+
+  public void setPenColor(Double index){
+    penIndex = index;
+  }
+  public void setShape(Double index){
+    shapeIndex = index;
+  }
+  public void setBackground(Double index){
+    bgIndex = index;
+  }
+  public void setPenSize(Double pixels){
+    sizePixels = pixels;
+  }
+  public double getPenColor(){
+    return penIndex;
+  }
+  public double getShape(){
+    return shapeIndex;
   }
 }

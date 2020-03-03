@@ -1,17 +1,22 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
 public class SetShape extends Command {
 
     private Double shape;
+    private Turtle t;
 
     /**
      * Set shape constructor, takes in the index for the shape
      * of which the current turtle should be changed to
      * @param index the shape to be set to
+     * @param body the turtle being used
      */
-    public SetShape(Double index){
+    public SetShape(Turtle body, Double index){
         super();
         shape = index;
+        t = body;
     }
 
     /**
@@ -20,6 +25,16 @@ public class SetShape extends Command {
      */
     @Override
     public Double getResult() {
-        return shape;
+        return t.getShape();
+    }
+
+    /**
+     * Allows the set shape command to be executed
+     * @return calls the get result to return index of specific shape
+     */
+    @Override
+    public Double execute() {
+        t.setShape(shape);
+        return this.getResult();
     }
 }
