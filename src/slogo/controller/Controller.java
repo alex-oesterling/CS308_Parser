@@ -244,7 +244,7 @@ public class Controller {
 
     private List<Command> tryToMakeCommands(List<Command> commandList){
         if(checkArgumentStack()){
-            commandList.add(weHaveEnoughArgumentsToMakeACommand());
+            commandList.add(weHaveEnoughArgumentsToMakeACommand(commandList));
         }
         return commandList;
     }
@@ -253,12 +253,14 @@ public class Controller {
         return !parametersStack.isEmpty() && argumentStack.size() >= parametersStack.peek();
     }
 
-    private Command weHaveEnoughArgumentsToMakeACommand(){
+    private Command weHaveEnoughArgumentsToMakeACommand(
+        List<Command> commands){
         double numberOfParams = parametersStack.pop(); //to be used in creating the command
         String name = commandStack.pop();
         Command newCommand = getCommand(name, numberOfParams);
         if(commandStack.size()!=0){
             argumentStack.push(newCommand.getResult());
+            tryToMakeCommands(commands); //slightly recursive :D
         }
         return newCommand;
     }
@@ -327,9 +329,13 @@ public class Controller {
     }
 
     private void executeCommandList(List<Command> l){
-        Collections.reverse(l);
+        //Collections.reverse(l);
         for(Command c : l){
+            System.out.println(c);
             System.out.println(c.execute());
+            System.out.println(
+                "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
+                    .getHeading());
             if(c instanceof ClearScreen){
                 myView.updatePenStatus(0);
                 myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
@@ -347,7 +353,7 @@ public class Controller {
     }
 
     private void printCommandList(List<Command> l){  //wont need this in final submission
-        Collections.reverse(l);
+        //Collections.reverse(l);
         for(Command c : l) {
             System.out.println(c.getResult());
             System.out.println(
