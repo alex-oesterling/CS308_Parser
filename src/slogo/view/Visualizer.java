@@ -194,17 +194,10 @@ public class Visualizer{
 
 //  private HBox addTurtleInfo(){
 //    HBox hbox = new HBox();
-//    ListBinding list1 = new ListBinding() {
-//      @Override
-//      protected ObservableList computeValue() {
-//        return currentTurtle.turtleStats();
-//      }
-//    };
-//    System.out.println(list1);
-////    ListBinding list1 = Bindings.add(currentTurtle.turtleStats());
-////    for(String key: stats.keySet()){
-////      hbox.getChildren().addAll(styler.createLabel(key), styler.createLabel(stats.get(key)));
-////    }
+//    ListView<String> list = new ListView<>();
+////    list.set
+//    list.itemsProperty().bind(currentTurtle.turtleStats());
+//    hbox.getChildren().add(list);
 //    return hbox;
 //  }
 

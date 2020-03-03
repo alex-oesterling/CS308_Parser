@@ -6,6 +6,7 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
@@ -182,15 +183,12 @@ public class TurtleView{
         currentY = TURTLE_SCREEN_HEIGHT/2;
         currentX = TURTLE_SCREEN_WIDTH/2;
     }
-
+//
 //    public ListProperty turtleStats(){
-//        ArrayList<String> list = new ArrayList<>();
-//        list.add(Double.toString(currentX));
-//        list.add(Double.toString(currentY));
-//        ObservableList<String> observableList = FXCollections.observableArrayList(list);
-//        ListProperty<String> myTurtle = new SimpleListProperty<String>();
-//        myTurtle.add(Double.toString(currentX));
-//        myTurtle.add(Double.toString(currentY));
+//        ObservableList<String> observableList = FXCollections.observableArrayList();
+//        observableList.add(Double.toString(currentX));
+//        observableList.add(Double.toString(currentY));
+//        ListProperty<String> myTurtle = new SimpleListProperty<>(observableList);
 //        return myTurtle;
 //    }
 

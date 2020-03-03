@@ -8,6 +8,7 @@ public class ViewExternal implements ViewExternalAPI {
   public ViewExternal(Visualizer view){
     myVisualizer = view;
   }
+
   @Override
   public void update(double newX, double newY, double orientation){
     myVisualizer.getCurrentTurtle().update(newX, newY, orientation);
