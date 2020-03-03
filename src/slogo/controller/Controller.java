@@ -365,10 +365,6 @@ public class Controller {
     }
 
     private void executeCommandList(List<Command> l){
-<<<<<<< HEAD
-=======
-        //Collections.reverse(l);
->>>>>>> b0e49e13ed5c09c934830aa3b5ece2521a1686c6
         for(Command c : l){
             System.out.println(c);
             System.out.println(c.execute());
@@ -393,10 +389,6 @@ public class Controller {
     }
 
     private void printCommandList(List<Command> l){  //wont need this in final submission
-<<<<<<< HEAD
-=======
-        //Collections.reverse(l);
->>>>>>> b0e49e13ed5c09c934830aa3b5ece2521a1686c6
         for(Command c : l) {
             System.out.println(c);
             System.out.println(c.getResult());
