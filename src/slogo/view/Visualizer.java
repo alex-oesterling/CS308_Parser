@@ -72,6 +72,7 @@ public class Visualizer{
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
   private ColorPicker colorPicker;
+  private ComboBox<String> turtleBox;
 
 
   public Visualizer (){
@@ -177,14 +178,14 @@ public class Visualizer{
             penColor(),
             styler.createLabel(myResources.getString("ChooseLanguage")),
             languageSelect(),
-            styler.createButton(myResources.getString("ChooseTurtle"), e->turtleList.get(0).chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
+            styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
             makeTurtleSelector(),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
             styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)),
             styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }));
+                    e->{ clear(); myController.reset();currentTurtle.resetTurtle(); }));
     return ui;
   }
 
@@ -219,10 +220,11 @@ public class Visualizer{
 //  }
 
   private ComboBox<String> makeTurtleSelector(){
-    ComboBox<String> turtleBox = new ComboBox();
+    turtleBox = new ComboBox();
     turtleBox.setPromptText("Pick Turtle");
     turtleBox.valueProperty().addListener((o, old, neww) -> setTurtle(neww));
     turtleBox.itemsProperty().bind(myTurtlesProperty);
+    turtleBox.getSelectionModel().selectFirst();
     return turtleBox;
   }
 
@@ -305,28 +307,23 @@ public class Visualizer{
     } catch (InvalidTurtleException e){
       //ERROR DIALOG: Turtle Already Exists!
     }
-    currentTurtle = new TurtleView(turtles, turtlePaths);
-    colorPicker.setValue(currentTurtle.getColor());
-    turtleList.putIfAbsent(myController.getTurtleName(), currentTurtle);
+    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths);
+    turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
+    setTurtle(myController.getTurtleName());
   }
 
   private void setTurtle(String name){
-    currentTurtle.set
+    if(currentTurtle != null) {
+      currentTurtle.setOpacity(.5);
+      turtleBox.getSelectionModel().select(name);
+    }
     currentTurtle = turtleList.get(name);
     colorPicker.setValue(currentTurtle.getColor());
+    currentTurtle.setOpacity(1);
     myController.chooseTurtle(name);
   }
 
-  public TurtleView getCurrentTurtle(){return currentTurtle;}
-
-  public void addCommand(String command){
-    Label recentCommand = new Label(command);
-    commandLine.setOnClick(recentCommand, recentCommand.getText()); //modify based on what model wants it to do
-    commandHistory.getChildren().add(recentCommand);
-  }
-
-  public void clear(){turtlePaths.getChildren().clear();}
 
   public void setPenColor(double value){
     currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
@@ -340,12 +337,5 @@ public class Visualizer{
 
   public void setShape(double value){
     currentTurtle.setShape(shapePalette.getShapeMapValue(value));
-  }
-
-  public void addVariable(String variable, double value){
-    Label recentCommand = new Label(variable);
-    varMap.put(variable, value);
-    recentCommand.setOnMouseClicked(e->updateVariable(variable));
-    commandHistory.getChildren().add(recentCommand);
   }
 }

@@ -220,5 +220,7 @@ public class TurtleView{
 
     public Color getColor(){return myPenColor;}
 
-
+    public void setOpacity(double newValue){
+        myImage.setOpacity(newValue);
+    }
 }
