@@ -430,7 +430,7 @@ public class Controller {
             } else if(c instanceof SetPenColor){
                 myView.updateCommandPenColor(c.getResult());
             } else if(c instanceof SetShape){
-                //myView.updateShape(c.getResult());
+                myView.updateShape(c.getResult());
             } else if(c instanceof SetPenSize){
                 myView.updatePenSize(c.getResult());
             }

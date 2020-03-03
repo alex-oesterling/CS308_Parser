@@ -34,6 +34,11 @@ public class ViewExternal implements ViewExternalAPI {
   }
 
   @Override
+  public void updateShape(double value){
+    myVisualizer.setShape(value);
+  }
+
+  @Override
   public void updateSceneColor() {
 
   }

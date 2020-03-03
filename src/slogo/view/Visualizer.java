@@ -14,6 +14,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -48,6 +49,7 @@ public class Visualizer{
   private CommandLine commandLine;
   private Styler styler;
   private ColorPalette colorPalette;
+  private ShapePalette shapePalette;
   private VBox variables;
   private VBox commands;
   private Rectangle turtleArea;
@@ -169,7 +171,8 @@ public class Visualizer{
             styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
             makeTurtleSelector(),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
-            styler.createButton(myResources.getString("HelpCommand"), e-> helpWindow = new HelpWindow(language)),
+            styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
+            styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)),
             styler.createButton(myResources.getString("ResetCommand"),
                     e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }));
     return ui;
@@ -275,18 +278,18 @@ public class Visualizer{
   public void clear(){turtlePaths.getChildren().clear();}
 
   public void setPenColor(double value){
-    colorPalette = new ColorPalette();
-    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
-    currentTurtle.updatePen(Color.web(treeMap.get(value)));
+    currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
   }
 
   public void setBackgroundColor(double value){
-    colorPalette = new ColorPalette();
-    TreeMap<Double, String> treeMap = colorPalette.getColorMap();
-    turtleArea.setFill(Color.web(treeMap.get(value)));
+    turtleArea.setFill(Color.web(colorPalette.getColorMapValue(value)));
   }
 
   public void setPenSize(double value){currentTurtle.setPenSize(value);}
+
+  public void setShape(double value){
+    currentTurtle.setShape(shapePalette.getShapeMapValue(value));
+  }
 
   public void addVariable(String variable, double value){
     Label recentCommand = new Label(variable);

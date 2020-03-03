@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.security.Key;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
@@ -35,7 +36,7 @@ public class ColorPalette {
     private Scene myScene;
     private VBox vbox;
     private ResourceBundle myResources;
-    private TreeMap<Double, String> treeMap;
+    private Map<Double, String> treeMap;
 
     public ColorPalette(){
         Stage stage = new Stage();
@@ -74,5 +75,5 @@ public class ColorPalette {
         }
     }
 
-    public TreeMap<Double, String> getColorMap(){return treeMap;}
+    public String getColorMapValue(double value){return treeMap.get(value);}
 }

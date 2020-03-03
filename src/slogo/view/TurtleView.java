@@ -67,7 +67,8 @@ public class TurtleView{
     }
 
     private ImageView createTurtle(){
-        ImageView turtleImage = new ImageView("resources/turtles/turtle1.png");
+        String string = "resources/turtles/turtle1.png";
+        ImageView turtleImage = new ImageView(string);
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
         st = new SequentialTransition();
@@ -203,6 +204,14 @@ public class TurtleView{
 
     public void setPenSize(double value){
         pathStrokeWidth = value;
+    }
+
+    public void setShape(ImageView turtle){
+        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
+        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
+        myTurtles.getChildren().remove(myImage);
+        myImage = turtle;
+        myTurtles.getChildren().add(myImage);
     }
 
     public void updatePenStatus(double value){
