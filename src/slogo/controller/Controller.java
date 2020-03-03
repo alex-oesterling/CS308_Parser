@@ -22,6 +22,7 @@ public class Controller {
     private static final int TWO_DOUBLE = 2;
     private static final double ZERO_DOUBLE = 0;
     private static final double TURTLE = -0.5;
+    private static boolean IS_FIRST_CONSTANT = false;
     private static boolean IS_VARIABLE = false;
 
     private List<Entry<String, Pattern>> mySymbols;
@@ -110,6 +111,10 @@ public class Controller {
      */
     public void reset(){
         turtle = new Turtle();
+        resetStacks();
+    }
+
+    private void resetStacks(){
         argumentStack.clear();
         commandStack.clear();
         parametersStack.clear();
@@ -133,6 +138,12 @@ public class Controller {
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
         List<Command> commandList = new ArrayList<>();
         ListIterator<String> iterator = lines.listIterator();
+        String isFirstConstant = lines.get(0);
+        if (syntax.getSymbol(isFirstConstant).equals("Constant")){
+            System.out.println("Sorry but you can't start your command with a constant");
+            throw new InvalidCommandException(new Throwable(), syntax.getSymbol(isFirstConstant), isFirstConstant);
+            //FIXME Need to add an exception (better one) here
+        }
         while(iterator.hasNext() && !IS_VARIABLE) {
             String line =  iterator.next();
             if (line.trim().length() > 0) {
@@ -327,7 +338,6 @@ public class Controller {
     }
 
     private void executeCommandList(List<Command> l){
-        Collections.reverse(l);
         for(Command c : l){
             System.out.println(c.execute());
             if(c instanceof ClearScreen){
@@ -343,11 +353,11 @@ public class Controller {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
            }
         }
+        resetStacks();
         myView.playAnimation();
     }
 
     private void printCommandList(List<Command> l){  //wont need this in final submission
-        Collections.reverse(l);
         for(Command c : l) {
             System.out.println(c.getResult());
             System.out.println(
