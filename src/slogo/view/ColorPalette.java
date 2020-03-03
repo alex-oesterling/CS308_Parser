@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.security.Key;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
@@ -35,6 +36,7 @@ public class ColorPalette {
     private Scene myScene;
     private VBox vbox;
     private ResourceBundle myResources;
+    private Map<Double, String> treeMap;
 
     public ColorPalette(){
         Stage stage = new Stage();
@@ -58,18 +60,20 @@ public class ColorPalette {
         vbox.setSpacing(VBOX_SPACING);
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
         Enumeration e = myResources.getKeys();
-        TreeMap<Integer, String> treeMap = new TreeMap<>();
+        treeMap = new TreeMap<>();
         while (e.hasMoreElements()) {
             String keyStr = (String) e.nextElement();
-            treeMap.put(Integer.valueOf(keyStr), myResources.getString(keyStr));
+            treeMap.put(Double.valueOf(keyStr), myResources.getString(keyStr));
         }
-        for (Integer key : treeMap.keySet()) {
+        for (Double key : treeMap.keySet()) {
             HBox hbox = new HBox();
             hbox.setSpacing(HBOX_SPACING);
             Rectangle r = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT, Color.web(treeMap.get(key)));
-            Label colorVal = new Label(Integer.toString(key));
+            Label colorVal = new Label(Double.toString(key));
             hbox.getChildren().addAll(r, colorVal);
             vbox.getChildren().add(hbox);
         }
     }
+
+    public String getColorMapValue(double value){return treeMap.get(value);}
 }

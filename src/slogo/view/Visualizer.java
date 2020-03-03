@@ -1,10 +1,10 @@
 package slogo.view;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ListBinding;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +14,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -27,7 +28,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
-import java.util.ResourceBundle;
 import slogo.exceptions.InvalidTurtleException;
 import slogo.model.Turtle;
 
@@ -56,6 +56,7 @@ public class Visualizer{
   private CommandLine commandLine;
   private Styler styler;
   private ColorPalette colorPalette;
+  private ShapePalette shapePalette;
   private VBox variables;
   private VBox commands;
   private Rectangle turtleArea;
@@ -178,11 +179,12 @@ public class Visualizer{
             languageSelect(),
             styler.createButton(myResources.getString("ChooseTurtle"), e->turtleList.get(0).chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
+            makeTurtleSelector(),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
-            styler.createButton(myResources.getString("HelpCommand"), e-> helpWindow = new HelpWindow(language)),
+            styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
+            styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)),
             styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
-            makeTurtleSelector());
+                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }));
     return ui;
   }
 
@@ -200,18 +202,28 @@ public class Visualizer{
     return colorPicker;
   }
 
+//  private HBox addTurtleInfo(){
+//    HBox hbox = new HBox();
+//    ListBinding list1 = new ListBinding() {
+//      @Override
+//      protected ObservableList computeValue() {
+//        return currentTurtle.turtleStats();
+//      }
+//    };
+//    System.out.println(list1);
+////    ListBinding list1 = Bindings.add(currentTurtle.turtleStats());
+////    for(String key: stats.keySet()){
+////      hbox.getChildren().addAll(styler.createLabel(key), styler.createLabel(stats.get(key)));
+////    }
+//    return hbox;
+//  }
+
   private ComboBox<String> makeTurtleSelector(){
     ComboBox<String> turtleBox = new ComboBox();
     turtleBox.setPromptText("Pick Turtle");
     turtleBox.valueProperty().addListener((o, old, neww) -> setTurtle(neww));
     turtleBox.itemsProperty().bind(myTurtlesProperty);
     return turtleBox;
-  }
-
-  private Button help(){
-    Button help = new Button(myResources.getString("HelpCommand"));
-    help.setOnAction(e-> new HelpWindow(language));
-    return help;
   }
 
   private ComboBox languageSelect(){
@@ -304,5 +316,36 @@ public class Visualizer{
     currentTurtle = turtleList.get(name);
     colorPicker.setValue(currentTurtle.getColor());
     myController.chooseTurtle(name);
+  }
+
+  public TurtleView getCurrentTurtle(){return currentTurtle;}
+
+  public void addCommand(String command){
+    Label recentCommand = new Label(command);
+    commandLine.setOnClick(recentCommand, recentCommand.getText()); //modify based on what model wants it to do
+    commandHistory.getChildren().add(recentCommand);
+  }
+
+  public void clear(){turtlePaths.getChildren().clear();}
+
+  public void setPenColor(double value){
+    currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
+  }
+
+  public void setBackgroundColor(double value){
+    turtleArea.setFill(Color.web(colorPalette.getColorMapValue(value)));
+  }
+
+  public void setPenSize(double value){currentTurtle.setPenSize(value);}
+
+  public void setShape(double value){
+    currentTurtle.setShape(shapePalette.getShapeMapValue(value));
+  }
+
+  public void addVariable(String variable, double value){
+    Label recentCommand = new Label(variable);
+    varMap.put(variable, value);
+    recentCommand.setOnMouseClicked(e->updateVariable(variable));
+    commandHistory.getChildren().add(recentCommand);
   }
 }

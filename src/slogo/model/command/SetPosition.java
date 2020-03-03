@@ -34,8 +34,4 @@ public class SetPosition extends Command {
         return t.distanceToPosition(xPos, yPos);
     }
 
-    public static void main(String[] args) {
-        Turtle t = new Turtle();
-        //SetPosition sp = new SetPosition(t,);
-    }
 }

@@ -2,13 +2,9 @@ package slogo.view;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 
-
 public class Styler {
-
-    public static final int COLORPICKER_HEIGHT = 30;
 
     public Label createLabel(String string){
         Label label = new Label(string);
@@ -20,5 +16,4 @@ public class Styler {
         button.setOnAction(e);
         return button;
     }
-
 }

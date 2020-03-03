@@ -27,12 +27,4 @@ public class Right extends Command {
         return t.turn(degrees);
     }
 
-    /**
-     * Get the degrees to be turned right
-     * @return degrees
-     */
-    /*@Override
-    public Double getResult() {
-        return degrees;
-    }*/
 }
