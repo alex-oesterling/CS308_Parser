@@ -1,5 +1,8 @@
 package slogo.model.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 abstract public class Command {
   //TODO make error catching in each of the command classes, so that if the wrong parameters are passed in the code doesn't break
 
@@ -31,6 +34,14 @@ abstract public class Command {
   public Double getResult(){
     return result;
   }
+
+  public List<Command> getCommandList(){
+    //make a list that has just this command in it
+    List<Command> ret = new ArrayList<>();
+    ret.add(this);
+    return ret;
+  }
+
   public Double execute(){
     return getResult();
   }

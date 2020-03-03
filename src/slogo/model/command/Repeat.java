@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Repeat extends CommandWithReturningList{
 
-  private static final Double DEFAULT = 0.0;
   private Double times;
   private List<Command> commands;
   private List<Command> returningList;
@@ -16,6 +15,7 @@ public class Repeat extends CommandWithReturningList{
    * @param commandList
    */
   public Repeat(Double reps, List<Command> commandList){
+    super();
     times = reps;
     commands = commandList;
   }
