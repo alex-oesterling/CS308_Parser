@@ -190,6 +190,7 @@ public class Turtle{
    * Put the turtle back where it started
    */
   public double goHome(){
+    setHeading(DEFAULT_HEADING);
     return moveToPosition(homeX, homeY);
   }
 
