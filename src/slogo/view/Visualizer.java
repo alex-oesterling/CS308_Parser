@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 import slogo.controller.Controller;
 import java.util.ResourceBundle;
 import slogo.exceptions.InvalidTurtleException;
@@ -175,7 +176,7 @@ public class Visualizer{
             penColor(),
             styler.createLabel(myResources.getString("ChooseLanguage")),
             languageSelect(),
-            styler.createButton(myResources.getString("ChooseTurtle"), e->turtleList.get(0).chooseTurtle()),
+            styler.createButton(myResources.getString("ChooseTurtle"), e->turtleList.get(0).chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("HelpCommand"), e-> helpWindow = new HelpWindow(language)),
@@ -273,9 +274,16 @@ public class Visualizer{
     updateVariable.setContentText("Enter new number here:");
     Optional<String> result = updateVariable.showAndWait();
     if(result.isPresent()){
-      varMap.put(variableName, result.get());
+      Double number = null;
+      try{
+        number = Double.valueOf(result.get());
+      } catch (NullPointerException e){
+        //ERROR DIALOG: Please enter a valid constant
+        number = Double.parseDouble(value.getText());
+      }
+      varMap.put(variableName, number.toString());
       value.setText(result.get());
-      myController.updateCommandVariable(variableName, result.get());
+      myController.updateCommandVariable(variableName, number.toString());
     }
   }
 
@@ -292,6 +300,7 @@ public class Visualizer{
   }
 
   private void setTurtle(String name){
+    currentTurtle.set
     currentTurtle = turtleList.get(name);
     colorPicker.setValue(currentTurtle.getColor());
     myController.chooseTurtle(name);

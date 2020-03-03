@@ -68,10 +68,10 @@ public class TurtleView{
         return turtleImage;
     }
 
-    public void chooseTurtle() {
+    public void chooseTurtle(File imageFile) {
         ImageView turtleImage = new ImageView();
         try {
-            BufferedImage bufferedImage = ImageIO.read(getTurtleImage(new Stage()));
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
@@ -94,7 +94,7 @@ public class TurtleView{
         do {
             badFile = false;
             try {
-                chooseTurtle();
+                chooseTurtle(getTurtleImage(new Stage()));
             } catch (NullPointerException e){
                 return;
             } catch (Exception e){
@@ -111,7 +111,7 @@ public class TurtleView{
         errorAlert.showAndWait();
     }
 
-    private File getTurtleImage(Stage stage) {
+    public File getTurtleImage(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Turtle Image");
         fileChooser.getExtensionFilters().addAll(
