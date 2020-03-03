@@ -291,8 +291,7 @@ public class Controller {
         return !parametersStack.isEmpty() && argumentStack.size() >= parametersStack.peek();
     }
 
-    private Command weHaveEnoughArgumentsToMakeACommand(
-        List<Command> commands){
+    private Command weHaveEnoughArgumentsToMakeACommand(List<Command> commands){
         double numberOfParams = parametersStack.pop(); //to be used in creating the command
         String name = commandStack.pop();
         Command newCommand = getCommand(name, numberOfParams);
@@ -382,7 +381,16 @@ public class Controller {
                 myView.updateTurtleView(c.getResult());
             } else if(c instanceof PenDown || c instanceof PenUp){
                 myView.updatePenStatus(c.getResult());
-            } else {
+            } else if(c instanceof SetBackground){
+                //myView.updateBackgroundColor(c.getResult());
+            } else if(c instanceof SetPenColor){
+                //myView.updateCommandPenColor(c.getResult());
+            } else if(c instanceof SetShape){
+                //myView.updateShape(c.getResult());
+            } else if(c instanceof SetPenSize){
+                //myView.updatePenSize(c.getResult());
+            }
+            else {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
            }
         }
