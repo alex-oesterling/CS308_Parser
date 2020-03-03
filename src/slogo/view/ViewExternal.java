@@ -10,12 +10,12 @@ public class ViewExternal implements ViewExternalAPI {
   }
   @Override
   public void update(double newX, double newY, double orientation){
-    myVisualizer.getTurtleList().get(0).update(newX, newY, orientation);
+    myVisualizer.getCurrentTurtle().update(newX, newY, orientation);
   }
 
   @Override
   public void updatePenColor(Color color) {
-    myVisualizer.getTurtleList().get(0).updatePen(color);
+    myVisualizer.getCurrentTurtle().updatePen(color);
   }
 
   @Override
@@ -30,16 +30,27 @@ public class ViewExternal implements ViewExternalAPI {
 
   @Override
   public void updateTurtleView(double value) {
-    myVisualizer.getTurtleList().get(0).updateTurtleView(value);
+    myVisualizer.getCurrentTurtle().updateTurtleView(value);
   }
 
   @Override
   public void updatePenStatus(double value) {
-    myVisualizer.getTurtleList().get(0).updatePenStatus(value);
+    myVisualizer.getCurrentTurtle().updatePenStatus(value);
   }
 
   @Override
   public void playAnimation(){
-    myVisualizer.getTurtleList().get(0).playAnimation();
+    myVisualizer.getCurrentTurtle().playAnimation();
   }
+
+  @Override
+  public void addCommand(String commandSyntax) {
+    myVisualizer.addCommand(commandSyntax);
+  }
+
+  @Override
+  public void addVariable(String newVariable, double newValue) {
+    myVisualizer.addVariable(newVariable, newValue);
+  }
+
 }

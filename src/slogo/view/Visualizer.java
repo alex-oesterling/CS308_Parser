@@ -1,15 +1,19 @@
 package slogo.view;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -20,8 +24,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
 import slogo.controller.Controller;
-import slogo.model.Parser;
 import java.util.ResourceBundle;
+import slogo.exceptions.InvalidTurtleException;
+import slogo.model.Turtle;
 
 public class Visualizer{
 
@@ -32,45 +37,50 @@ public class Visualizer{
   public static final int COLORPICKER_HEIGHT = 30;
   private static final String STYLESHEET = "styling.css";
   private static final String RESOURCES = "resources";
-  private static final String DEFAULT_RESOURCE_PACKAGE = RESOURCES + ".";
   public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
 
 
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
   public static final int VBOX_SPACING = 10;
-  public static final String LANGUAGE_PACKAGE = RESOURCES + ".languages.";
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String DEFAULT_LANGUAGE = "English";
 
-  private Scene myScene;
-  private File turtleFile;
-  private Parser myParser;
   private Controller myController;
-  private HelpWindow helpWindow;
   private BorderPane root;
-//  private Group view;
+  private HelpWindow helpWindow;
+  private ViewExternal viewExternal;
+  private CommandLine commandLine;
+  private Styler styler;
+  private ColorPalette colorPalette;
   private VBox variables;
   private VBox commands;
-//  private VBox group;
-//  private BorderPane viewPane;
   private Rectangle turtleArea;
-  private List<TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
+  private Map<String, TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
   private String language;
   private Group turtlePaths;
   private Group turtles;
-  private ViewExternal viewExternal;
-  private CommandLine commandLine;
-  private ColorPalette colorPalette;
+
+  private VBox commandHistory;
+  private VBox varHistory;
+  private Map<String, Double> varMap;
+  private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
+  private TurtleView currentTurtle;
+  private ColorPicker colorPicker;
+
 
   public Visualizer (){
     turtlePaths = new Group();
-    turtleList = new ArrayList<>();
+    turtleList = new HashMap<>();
     turtles = new Group();
+    varMap = new HashMap<>();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController);
+    myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+    colorPicker = new ColorPicker();
+    styler = new Styler();
   }
 
   public Scene setupScene() {
@@ -106,7 +116,7 @@ public class Visualizer{
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    turtleList.add(new TurtleView(turtles, turtlePaths));
+    addTurtle();
     Group view = new Group();
     view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
@@ -119,8 +129,20 @@ public class Visualizer{
 
     BorderPane userDefined = new BorderPane();
 
-    variables = makeHistory("Variables");
-    commands = makeHistory("Commands");
+    commandHistory = new VBox();
+    varHistory = new VBox();
+    Node varScroll = makeHistory(varHistory);
+    Node commandScroll = makeHistory(commandHistory);
+
+    Label varLabel = styler.createLabel("Variables");
+    VBox variables = new VBox();
+    variables.getChildren().addAll(varLabel, varScroll);
+    variables.setVgrow(commandScroll, Priority.ALWAYS);
+
+    Label cmdLabel = styler.createLabel("Commands");
+    VBox commands = new VBox();
+    commands.getChildren().addAll(cmdLabel, commandScroll);
+    commands.setVgrow(commandScroll, Priority.ALWAYS);
 
     userDefined.setLeft(commands);
     userDefined.setRight(variables);
@@ -130,42 +152,31 @@ public class Visualizer{
     return group;
   }
 
-  private VBox makeHistory(String labelname) {
-    VBox total = new VBox();
-    VBox history = new VBox();
+  private Node makeHistory(VBox history) {
     ScrollPane userCommands = new ScrollPane();
     userCommands.setContent(history);
-    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4); //fixme
+    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4);
     history.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
-    Label label = new Label(myResources.getString(labelname));
-    total.getChildren().addAll(label, userCommands);
-    total.setVgrow(userCommands, Priority.ALWAYS);
-    return total;
+    return userCommands;
   }
 
-  //TODO: refactor this method with a styler class
   private Node createUI() {
     VBox ui = new VBox();
-    Label background = new Label(myResources.getString("BackgroundColor"));
-    Label pen = new Label(myResources.getString("PenColor"));
-    Label chooseLanguage = new Label(myResources.getString("ChooseLanguage"));
-    Button chooseTurtle = new Button(myResources.getString("ChooseTurtle"));
-    chooseTurtle.setOnAction(e-> {
-      turtleList.get(0).chooseTurtle();
-            });
-    Button help = new Button(myResources.getString("HelpCommand"));
-    help.setOnAction(e-> helpWindow = new HelpWindow(language));
-    Button reset = new Button(myResources.getString("ResetCommand"));
-    reset.setOnAction(e->{
-      clear();
-      myController.reset();
-      turtleList.get(0).resetTurtle();
-    });
-    Button color = new Button(myResources.getString("ColorPalette"));
-    color.setOnAction(e-> colorPalette = new ColorPalette());
+
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(background, backgroundColor(), pen, penColor(), chooseLanguage, languageSelect(), chooseTurtle,
-            color, reset, help);
+    ui.getChildren().addAll(styler.createLabel(myResources.getString("BackgroundColor")),
+            backgroundColor(),
+            styler.createLabel(myResources.getString("PenColor")),
+            penColor(),
+            styler.createLabel(myResources.getString("ChooseLanguage")),
+            languageSelect(),
+            styler.createButton(myResources.getString("ChooseTurtle"), e->turtleList.get(0).chooseTurtle()),
+            styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
+            styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
+            styler.createButton(myResources.getString("HelpCommand"), e-> helpWindow = new HelpWindow(language)),
+            styler.createButton(myResources.getString("ResetCommand"),
+                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
+            makeTurtleSelector());
     return ui;
   }
 
@@ -177,11 +188,24 @@ public class Visualizer{
   }
 
   private ColorPicker penColor(){
-    ColorPicker colorPicker = new ColorPicker();
     colorPicker.setValue(Color.BLACK);
     colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
     return colorPicker;
+  }
+
+  private ComboBox<String> makeTurtleSelector(){
+    ComboBox<String> turtleBox = new ComboBox();
+    turtleBox.setPromptText("Pick Turtle");
+    turtleBox.valueProperty().addListener((o, old, neww) -> setTurtle(neww));
+    turtleBox.itemsProperty().bind(myTurtlesProperty);
+    return turtleBox;
+  }
+
+  private Button help(){
+    Button help = new Button(myResources.getString("HelpCommand"));
+    help.setOnAction(e-> new HelpWindow(language));
+    return help;
   }
 
   private ComboBox languageSelect(){
@@ -204,8 +228,53 @@ public class Visualizer{
     });
     return comboBox;
   }
+
   public void clear(){
     turtlePaths.getChildren().clear();
   }
-  public List<TurtleView> getTurtleList(){return turtleList;}
+
+  public TurtleView getCurrentTurtle(){return currentTurtle;}
+
+  public void addCommand(String command){
+    Label recentCommand = new Label(command);
+    commandLine.setOnClick(recentCommand, recentCommand.getText()); //modify based on what model wants it to do
+    commandHistory.getChildren().add(recentCommand);
+  }
+
+  public void addVariable(String variable, double value){
+    Label recentCommand = new Label(variable);
+    varMap.put(variable, value);
+    recentCommand.setOnMouseClicked(e->updateVariable(variable));
+    commandHistory.getChildren().add(recentCommand);
+  }
+
+  //FIXME variable types :right now all it handles is doubles and poorly at that
+  private void updateVariable(String variableName){
+    TextInputDialog updateVariable = new TextInputDialog();
+    updateVariable.setTitle("Update Variable");
+    updateVariable.setHeaderText("Update variable value by entering in a valid number:");
+    updateVariable.setContentText("Enter variable here:");
+    Optional<String> result = updateVariable.showAndWait();
+    if(result.isPresent()){
+      varMap.put(variableName, Double.parseDouble(result.get()));
+    }
+  }
+
+  private void addTurtle(){
+    try {
+      myController.addTurtle();
+    } catch (InvalidTurtleException e){
+      //ERROR DIALOG: Turtle Already Exists!
+    }
+    currentTurtle = new TurtleView(turtles, turtlePaths);
+    colorPicker.setValue(currentTurtle.getColor());
+    turtleList.putIfAbsent(myController.getTurtleName(), currentTurtle);
+    myTurtlesProperty.getValue().add(myController.getTurtleName());
+  }
+
+  private void setTurtle(String name){
+    currentTurtle = turtleList.get(name);
+    colorPicker.setValue(currentTurtle.getColor());
+    myController.chooseTurtle(name);
+  }
 }

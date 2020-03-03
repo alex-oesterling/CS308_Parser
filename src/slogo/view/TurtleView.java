@@ -3,6 +3,7 @@ package slogo.view;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
@@ -182,4 +183,6 @@ public class TurtleView{
     public void updatePenStatus(double value){
         penStatus = (value != 0.0);
     }
+
+    public Color getColor(){return myPenColor;}
 }

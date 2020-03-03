@@ -88,6 +88,7 @@ public class CommandLine {
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED);
+        setOnClick(recentCommand, textBox.getText());
         historyBox.getChildren().add(recentCommand);
         history.add(new Label(textBox.getText()));
         textBox.clear();
@@ -95,10 +96,15 @@ public class CommandLine {
       }
       Label recentCommand = new Label(textBox.getText());
       history.add(recentCommand);
+      setOnClick(recentCommand, textBox.getText());
       historyBox.getChildren().add(recentCommand);
       textBox.clear();
       historyIndex = -1;
     }
+  }
+
+  public void setOnClick(Label label, String fill){
+    label.setOnMouseClicked(e->textBox.setText(fill));
   }
 
   public void scrollHistory(KeyCode input){
@@ -110,5 +116,9 @@ public class CommandLine {
       historyIndex--;
       textBox.setText(history.get(history.size()-historyIndex-1).getText());
     }
+  }
+
+  public void setTerminalEntry(String newEntry){
+    textBox.setText(newEntry);
   }
 }
