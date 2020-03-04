@@ -40,6 +40,7 @@ public class Visualizer{
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
   public static final int VBOX_SPACING = 10;
+  public static final int HBOX_SPACING = 10;
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String DEFAULT_LANGUAGE = "English";
 
@@ -104,13 +105,17 @@ public class Visualizer{
     Node toolBar = myToolBar.setupToolBar();
     Node turtleView = showUserDefined();
     Node cLine = commandLine.setupCommandLine();
-    Node userInterface = createUI();
+    Node userInterface = createSettingsUI();
+    Node userTurtleInterface = createTurtleUI();
+    HBox hbox = new HBox();
+    hbox.setSpacing(HBOX_SPACING);
+    hbox.getChildren().addAll(userTurtleInterface, userInterface);
 
     viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setTop(toolBar);
     viewPane.setLeft(turtleView);
     viewPane.setCenter(cLine);
-    viewPane.setRight(userInterface);
+    viewPane.setRight(hbox);
     return viewPane;
   }
 
@@ -166,9 +171,20 @@ public class Visualizer{
     return userCommands;
   }
 
-  private Node createUI() {
+  private Node createTurtleUI() {
     VBox ui = new VBox();
+    ui.setSpacing(VBOX_SPACING);
+    ui.getChildren().addAll( styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
+            makeTurtleSelector(),
+            styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
+            styler.createButton(myResources.getString("ResetCommand"),
+                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
+            addTurtleInfo());
+    return ui;
+  }
 
+  private Node createSettingsUI() {
+    VBox ui = new VBox();
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(styler.createLabel(myResources.getString("BackgroundColor")),
             backgroundColor(),
@@ -176,15 +192,9 @@ public class Visualizer{
             penColor(),
             styler.createLabel(myResources.getString("ChooseLanguage")),
             languageSelect(),
-            styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
-            styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
-            makeTurtleSelector(),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
-            styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)),
-            styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
-            addTurtleInfo());
+            styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)));
     return ui;
   }
 
