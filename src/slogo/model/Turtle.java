@@ -41,6 +41,11 @@ public class Turtle{
   private double sizePixels;
   private String name;
 
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, int startingHeading){
+    initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
+    name = turtleName;
+  }
+
   /**
    * Turtle constructor to create turtle at a specific point and specific pen color
    * @param startingXPosition value to set xPosition to
@@ -48,17 +53,7 @@ public class Turtle{
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
   public Turtle(double startingXPosition, double startingYPosition, int startingHeading){
-    setX(startingXPosition);
-    homeX = xPosition;
-    setY(startingYPosition);
-    homeY = yPosition;
-    heading = startingHeading;
-    turtleIsDrawing = DRAWING;
-    turtleIsVisible = VISIBLE;
-    penIndex = DEFAULT_PEN_INDEX;
-    bgIndex = DEFAULT_BG_INDEX;
-    shapeIndex = DEFAULT_SHAPE_INDEX;
-    sizePixels = DEFAULT_SIZE_PIXELS;
+    initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
   }
 
@@ -77,6 +72,26 @@ public class Turtle{
    */
   public Turtle(){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING);
+  }
+
+  /**
+   * Initializes all of the basic things needed for the turtle and its view
+   * @param startingXPosition the x pos of where the turtle starts
+   * @param startingYPosition the y pos of where the turtle starts
+   * @param startingHeading the direction/degrees the turtle starts out facing
+   */
+  public void initializeBasicThings(double startingXPosition, double startingYPosition, int startingHeading){
+    setX(startingXPosition);
+    homeX = xPosition;
+    setY(startingYPosition);
+    homeY = yPosition;
+    heading = startingHeading;
+    turtleIsDrawing = DRAWING;
+    turtleIsVisible = VISIBLE;
+    penIndex = DEFAULT_PEN_INDEX;
+    bgIndex = DEFAULT_BG_INDEX;
+    shapeIndex = DEFAULT_SHAPE_INDEX;
+    sizePixels = DEFAULT_SIZE_PIXELS;
   }
 
   /**
@@ -190,6 +205,7 @@ public class Turtle{
    * Put the turtle back where it started
    */
   public double goHome(){
+    setHeading(DEFAULT_HEADING);
     return moveToPosition(homeX, homeY);
   }
 
@@ -202,7 +218,6 @@ public class Turtle{
   public double distanceToPosition(double xPos, double yPos){
     double deltaX = xPosition - xPos;
     double deltaY = yPosition - yPos;
-
     return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
   }
 
@@ -217,7 +232,6 @@ public class Turtle{
     double distance = distanceToPosition(xPos, yPos);
     setX(xPos);
     setY(yPos);
-
     return distance;
   }
 
@@ -277,6 +291,22 @@ public class Turtle{
   }
 
   /**
+   * Gets the current pen color
+   * @return the index of the color
+   */
+  public double getPenColor(){
+    return penIndex;
+  }
+
+  /**
+   * Gets the current shape of the turtle
+   * @return the index of the shape
+   */
+  public double getShape(){
+    return shapeIndex;
+  }
+
+  /**
    * Set the pen as up or down
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
@@ -328,22 +358,36 @@ public class Turtle{
     }
   }
 
+  /**
+   * Set the color of the pen
+   * @param index the index to change to
+   */
   public void setPenColor(Double index){
     penIndex = index;
   }
+
+  /**
+   * Set the shape (image) of the turtle
+   * @param index the index to change to
+   */
   public void setShape(Double index){
     shapeIndex = index;
   }
+
+  /**
+   * Set the background color of the window
+   * @param index the index of the color to change to
+   */
   public void setBackground(Double index){
     bgIndex = index;
   }
+
+  /**
+   * Set the pen size in pixels
+   * @param pixels the size to set the pen to
+   */
   public void setPenSize(Double pixels){
     sizePixels = pixels;
   }
-  public double getPenColor(){
-    return penIndex;
-  }
-  public double getShape(){
-    return shapeIndex;
-  }
+
 }

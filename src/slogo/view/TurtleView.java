@@ -3,7 +3,10 @@ package slogo.view;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
@@ -20,6 +23,10 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TurtleView{
     public static final String XML_FILEPATH = "user.dir";
@@ -44,6 +51,7 @@ public class TurtleView{
     private double currentY;
     private SequentialTransition st;
     private double heading;
+    private double pathStrokeWidth;
 
     public TurtleView(Group turtles, Group paths){
         penStatus = true;
@@ -51,6 +59,7 @@ public class TurtleView{
         myTurtles = turtles;
         myImage = createTurtle();
         myPenColor = Color.BLACK;
+        pathStrokeWidth = PATH_STROKE_WIDTH;
         st = new SequentialTransition();
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
@@ -58,7 +67,8 @@ public class TurtleView{
     }
 
     private ImageView createTurtle(){
-        ImageView turtleImage = new ImageView("resources/turtles/turtle1.png");
+        String string = "resources/turtles/turtle1.png";
+        ImageView turtleImage = new ImageView(string);
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
         st = new SequentialTransition();
@@ -68,10 +78,10 @@ public class TurtleView{
         return turtleImage;
     }
 
-    public void chooseTurtle() {
+    public void chooseTurtle(File imageFile) {
         ImageView turtleImage = new ImageView();
         try {
-            BufferedImage bufferedImage = ImageIO.read(getTurtleImage(new Stage()));
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
@@ -94,7 +104,7 @@ public class TurtleView{
         do {
             badFile = false;
             try {
-                chooseTurtle();
+                chooseTurtle(getTurtleImage(new Stage()));
             } catch (NullPointerException e){
                 return;
             } catch (Exception e){
@@ -111,7 +121,7 @@ public class TurtleView{
         errorAlert.showAndWait();
     }
 
-    private File getTurtleImage(Stage stage) {
+    public File getTurtleImage(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Turtle Image");
         fileChooser.getExtensionFilters().addAll(
@@ -134,7 +144,7 @@ public class TurtleView{
             Path path = new Path();
             if(penStatus){
                 path.setOpacity(PATH_OPACITY);
-                path.setStrokeWidth(PATH_STROKE_WIDTH);
+                path.setStrokeWidth(pathStrokeWidth);
             } else {
                 path.setOpacity(PATH_NO_OPACITY);
             }
@@ -151,9 +161,8 @@ public class TurtleView{
                 myImage);
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
-            System.out.println(oldX);
-            System.out.println(newX);
         }
+//        System.out.println(turtleStats());
     }
 
     public void playAnimation(){
@@ -172,6 +181,17 @@ public class TurtleView{
         currentX = TURTLE_SCREEN_WIDTH/2;
     }
 
+//    public ListProperty turtleStats(){
+//        ArrayList<String> list = new ArrayList<>();
+//        list.add(Double.toString(currentX));
+//        list.add(Double.toString(currentY));
+//        ObservableList<String> observableList = FXCollections.observableArrayList(list);
+//        ListProperty<String> myTurtle = new SimpleListProperty<String>();
+//        myTurtle.add(Double.toString(currentX));
+//        myTurtle.add(Double.toString(currentY));
+//        return myTurtle;
+//    }
+
     public void updatePen(Color color){
         myPenColor = color;
     }
@@ -180,9 +200,39 @@ public class TurtleView{
         myImage.setVisible(value != 0.0);
     }
 
+    public void setPenSize(double value){
+        pathStrokeWidth = value;
+    }
+
+    public void setShape(ImageView turtle){
+        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
+        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
+        myTurtles.getChildren().remove(myImage);
+        myImage = turtle;
+        myTurtles.getChildren().add(myImage);
+    }
+
     public void updatePenStatus(double value){
         penStatus = (value != 0.0);
     }
 
     public Color getColor(){return myPenColor;}
+
+    public void setOpacity(double newValue){
+        myImage.setOpacity(newValue);
+    }
+
+    public void set(double newX, double newY, double newHeading){
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
+        currentX = newX;
+        currentY = newY;
+        heading = newHeading;
+        myImage.setTranslateX(newX);
+        myImage.setTranslateY(newY);
+        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
+        rt.setToAngle(newHeading);
+        rt.play();
+    }
 }
