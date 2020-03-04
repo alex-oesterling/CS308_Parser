@@ -32,6 +32,8 @@ public class Visualizer{
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
   public static final int COLORPICKER_HEIGHT = 30;
+  public static final int LISTVIEW_WIDTH = 100;
+  public static final int LISTVIEW_HEIGHT  = 250;
   private static final String STYLESHEET = "styling.css";
   private static final String RESOURCES = "resources";
   public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
@@ -212,10 +214,22 @@ public class Visualizer{
     return colorPicker;
   }
 
-  private ListView<String> addTurtleInfo(){
+  private HBox addTurtleInfo(){
+    HBox hbox = new HBox();
+    VBox vbox = new VBox();
+    vbox.setSpacing(VBOX_SPACING);
+    vbox.getChildren().addAll(styler.createLabel(myResources.getString("ID")),
+            styler.createLabel(myResources.getString("XCord")),
+            styler.createLabel(myResources.getString("YCord")),
+            styler.createLabel(myResources.getString("Angle")),
+            styler.createLabel(myResources.getString("PenColor")),
+            styler.createLabel(myResources.getString("PenWidth")),
+            styler.createLabel(myResources.getString("PenDownLabel")));
     ListView<String> list = new ListView<>();
     list.itemsProperty().bind(currentTurtle.turtleStats());
-    return list;
+    list.setPrefSize(LISTVIEW_WIDTH, LISTVIEW_HEIGHT);
+    hbox.getChildren().addAll(vbox, list);
+    return hbox;
   }
 
   private ComboBox<String> makeTurtleSelector(){
@@ -299,7 +313,7 @@ public class Visualizer{
     } catch (InvalidTurtleException e){
       //ERROR DIALOG: Turtle Already Exists!
     }
-    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths);
+    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
@@ -311,7 +325,7 @@ public class Visualizer{
     } catch (InvalidTurtleException e){
       //ERROR DIALOG: Turtle Already Exists!
     }
-    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths);
+    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     tempTurtle.set(startingX, startingY, heading);
     turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());

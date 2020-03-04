@@ -51,15 +51,18 @@ public class TurtleView{
     private Color myPenColor;
     private double currentX;
     private double currentY;
+    private double currentOrienation;
     private SequentialTransition st;
     private double heading;
     private double pathStrokeWidth;
+    private String turtleName;
     private ObservableList<String> observableList;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
 
-    public TurtleView(Group turtles, Group paths){
+    public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
         myPaths = paths;
+        turtleName = name;
         myTurtles = turtles;
         myImage = createTurtle();
         myPenColor = Color.BLACK;
@@ -144,6 +147,7 @@ public class TurtleView{
         double oldHeading = heading;
         currentX = newX;
         currentY = newY;
+        currentOrienation = orientation;
         heading = orientation;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
@@ -187,11 +191,14 @@ public class TurtleView{
     }
 
     public SimpleObjectProperty<ObservableList<String>> turtleStats(){
-//        myTurtle.getValue().add(Double.toString(currentX));
-//        myTurtle.getValue().add(Double.toString(currentY));
         observableList = FXCollections.observableArrayList();
-        observableList.add(Double.toString(currentX));
-        observableList.add(Double.toString(currentY));
+        observableList.addAll(turtleName,
+                Double.toString(currentX),
+                Double.toString(currentY),
+                Double.toString(currentOrienation),
+                String.valueOf(myPenColor),
+                Double.toString(pathStrokeWidth),
+                Boolean.toString(penStatus));
         myTurtle = new SimpleObjectProperty<>(observableList);
         return myTurtle;
     }
