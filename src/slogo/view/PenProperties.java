@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import slogo.model.Turtle;
 
 import java.util.ResourceBundle;
 
@@ -28,10 +29,12 @@ public class PenProperties {
     private ResourceBundle myResources;
     private ColorPicker colorPicker;
     private ViewExternal viewExternal;
+    private TurtleView turtleView;
 
-    public PenProperties(ViewExternal myView){
+    public PenProperties(ViewExternal myView, TurtleView currentTurtle){
         styler = new Styler();
         this.viewExternal = myView;
+        this.turtleView = currentTurtle;
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);
@@ -50,9 +53,12 @@ public class PenProperties {
     }
 
     private VBox createGrid(){
-        VBox vbox = new VBox();
+        VBox vbox = new VBox(styler.createLabel(myResources.getString("PenColor")),
+                penColor(),
+                styler.createButton(myResources.getString("ChangePenCommand"), e->turtleView.changePenStatus()),
+                styler.createButton(myResources.getString("ChangePenWidthCommand"), e->turtleView.changePenWidth())
+                );
 
-        vbox.getChildren().addAll( styler.createLabel(myResources.getString("PenColor")), penColor());
         return vbox;
     }
 
