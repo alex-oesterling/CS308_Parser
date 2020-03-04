@@ -207,6 +207,10 @@ public class TurtleView{
         myPenColor = color;
     }
 
+    public void changePenStatus(){penStatus = !penStatus;}
+
+    public void changePenWidth() {pathStrokeWidth++;}
+
     public void updateTurtleView(double value){
         myImage.setVisible(value != 0.0);
     }

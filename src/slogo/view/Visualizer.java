@@ -181,6 +181,10 @@ public class Visualizer{
             styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("ResetCommand"),
                     e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
+            styler.createButton(myResources.getString("ForwardCommand"), e-> myController.sendCommands("fd 1")),
+            styler.createButton(myResources.getString("BackwardCommand"), e-> myController.sendCommands("bk 1")),
+            styler.createButton(myResources.getString("RRotateCommand"), e-> myController.sendCommands("rt 1")),
+            styler.createButton(myResources.getString("LRotateCommand"), e-> myController.sendCommands("lt 1")),
             addTurtleInfo());
     return ui;
   }
@@ -196,6 +200,8 @@ public class Visualizer{
             languageSelect(),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
+            styler.createButton(myResources.getString("ChangePenCommand"), e->currentTurtle.changePenStatus()),
+            styler.createButton(myResources.getString("ChangePenWidthCommand"), e->currentTurtle.changePenWidth()),
             styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)));
     return ui;
   }
@@ -352,7 +358,7 @@ public class Visualizer{
     currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
   }
 
-  public void setBackgroundColorFromPallete(double value){
+  public void setBackgroundColorFromPalette(double value){
     setBackgroundColor(colorPalette.getColorMapValue(value));
   }
 
