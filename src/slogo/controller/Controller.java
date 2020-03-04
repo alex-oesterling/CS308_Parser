@@ -31,7 +31,6 @@ public class Controller {
     private static final Integer SECOND_GEN = 2;
     private static final double ZERO_DOUBLE_PARAM_VALUE = 0;
     private static final double TURTLE_PARAM_VALUE = -0.5;
-    private static boolean IS_FIRST_CONSTANT = false;
     private static boolean IS_VARIABLE = false;
 
     private List<Entry<String, Pattern>> mySymbols;
@@ -78,10 +77,24 @@ public class Controller {
     }
 
     private void makeStacks() { //TODO remove duplicate with resetStacks()
+        makeNewStacks();
+        listParametersStack = new Stack<>();
+    }
+
+    /**
+     * Resets the turtle and clears all of the stacks
+     */
+    public void resetAll(){
+        turtleMap = new HashMap<>();
+        nameCount = new HashMap<>();
+        addTurtle();
+        makeNewStacks();
+    }
+
+    private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
         doubleAndTurtleParametersStack = new Stack<>();
-        listParametersStack = new Stack<>();
         listStack = new Stack<>();
     }
 
@@ -105,6 +118,13 @@ public class Controller {
         turtle = t;
     }
 
+    /**
+     * Adds a new turtle to the screen with the given parameters
+     * @param name new name of the turtle
+     * @param startingX the x position of where the turtle will start
+     * @param startingY the y position of where the turtle will start
+     * @param startingHeading where the turtle will be facing
+     */
     public void addTurtle(String name, double startingX, double startingY, int startingHeading){
         Turtle t = new Turtle(name, startingX, startingY, startingHeading);
         if(turtleMap.containsKey(t.getName())){
@@ -122,6 +142,11 @@ public class Controller {
         return turtle.getName();
     }
 
+    /**
+     * Allows a command variable to be updated in the UI
+     * @param key the old command value
+     * @param newValue what it will be changed to
+     */
     public void updateCommandVariable(String key, String newValue){
         if(userCreatedConstantVariables.containsKey(key)){
             userCreatedConstantVariables.put(key, newValue);
@@ -152,23 +177,6 @@ public class Controller {
     public void addLanguage(String language){
         commandParser = new Parser(LANGUAGES_PACKAGE);
         commandParser.addPatterns(language);
-    }
-
-    /**
-     * Resets the turtle and clears all of the stacks
-     */
-    public void resetAll(){
-        turtleMap = new HashMap<>();
-        nameCount = new HashMap<>();
-        addTurtle();
-        resetStacks();
-    }
-
-    private void resetStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
-        argumentStack = new Stack<>();
-        commandStack = new Stack<>();
-        doubleAndTurtleParametersStack = new Stack<>();
-        listStack = new Stack<>();
     }
 
     /**
@@ -229,7 +237,7 @@ public class Controller {
                     parametersStackHolder = doubleAndTurtleParametersStack;
                     listStackHolder = listStack;
                     listParametersStackHolder = listParametersStack;
-                    resetStacks();
+                    makeNewStacks();
                     listStack = listStackHolder;
                     currentList = tempList;
                 } else if (commandSyntax.equals("ListEnd")){
@@ -256,7 +264,7 @@ public class Controller {
         if (commandName.equals(NO_MATCH)){
             throw new InvalidCommandException(new Throwable(), commandSyntax, line);
         }
-        else if (commandName.equals("MakeVariable")){
+        else if (commandName.equals(MAKE_VARIABLE)){
             dealWithMakingVariables(lines, line, syntax);
         } else {
             validCommand(params, commandName, commandList);
@@ -476,7 +484,8 @@ public class Controller {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
            }
         }
-        resetStacks();
+        makeNewStacks();
         myView.playAnimation();
     }
+    
 }

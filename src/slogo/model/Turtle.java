@@ -42,17 +42,7 @@ public class Turtle{
   private String name;
 
   public Turtle(String turtleName, double startingXPosition, double startingYPosition, int startingHeading){
-    setX(startingXPosition);
-    homeX = xPosition;
-    setY(startingYPosition);
-    homeY = yPosition;
-    heading = startingHeading;
-    turtleIsDrawing = DRAWING;
-    turtleIsVisible = VISIBLE;
-    penIndex = DEFAULT_PEN_INDEX;
-    bgIndex = DEFAULT_BG_INDEX;
-    shapeIndex = DEFAULT_SHAPE_INDEX;
-    sizePixels = DEFAULT_SIZE_PIXELS;
+    initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
   }
 
@@ -63,17 +53,7 @@ public class Turtle{
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
   public Turtle(double startingXPosition, double startingYPosition, int startingHeading){
-    setX(startingXPosition);
-    homeX = xPosition;
-    setY(startingYPosition);
-    homeY = yPosition;
-    heading = startingHeading;
-    turtleIsDrawing = DRAWING;
-    turtleIsVisible = VISIBLE;
-    penIndex = DEFAULT_PEN_INDEX;
-    bgIndex = DEFAULT_BG_INDEX;
-    shapeIndex = DEFAULT_SHAPE_INDEX;
-    sizePixels = DEFAULT_SIZE_PIXELS;
+    initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
   }
 
@@ -92,6 +72,26 @@ public class Turtle{
    */
   public Turtle(){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING);
+  }
+
+  /**
+   * Initializes all of the basic things needed for the turtle and its view
+   * @param startingXPosition the x pos of where the turtle starts
+   * @param startingYPosition the y pos of where the turtle starts
+   * @param startingHeading the direction/degrees the turtle starts out facing
+   */
+  public void initializeBasicThings(double startingXPosition, double startingYPosition, int startingHeading){
+    setX(startingXPosition);
+    homeX = xPosition;
+    setY(startingYPosition);
+    homeY = yPosition;
+    heading = startingHeading;
+    turtleIsDrawing = DRAWING;
+    turtleIsVisible = VISIBLE;
+    penIndex = DEFAULT_PEN_INDEX;
+    bgIndex = DEFAULT_BG_INDEX;
+    shapeIndex = DEFAULT_SHAPE_INDEX;
+    sizePixels = DEFAULT_SIZE_PIXELS;
   }
 
   /**
@@ -218,7 +218,6 @@ public class Turtle{
   public double distanceToPosition(double xPos, double yPos){
     double deltaX = xPosition - xPos;
     double deltaY = yPosition - yPos;
-
     return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
   }
 
@@ -233,7 +232,6 @@ public class Turtle{
     double distance = distanceToPosition(xPos, yPos);
     setX(xPos);
     setY(yPos);
-
     return distance;
   }
 
