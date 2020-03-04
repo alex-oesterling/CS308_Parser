@@ -6,6 +6,8 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableListValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
@@ -49,16 +51,22 @@ public class TurtleView{
     private Color myPenColor;
     private double currentX;
     private double currentY;
+    private double currentOrienation;
     private SequentialTransition st;
     private double heading;
     private double pathStrokeWidth;
+    private String turtleName;
+    private ObservableList<String> observableList;
+    private SimpleObjectProperty<ObservableList<String>> myTurtle;
 
-    public TurtleView(Group turtles, Group paths){
+    public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
         myPaths = paths;
+        turtleName = name;
         myTurtles = turtles;
         myImage = createTurtle();
         myPenColor = Color.BLACK;
+        myTurtle = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         pathStrokeWidth = PATH_STROKE_WIDTH;
         st = new SequentialTransition();
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
@@ -139,6 +147,7 @@ public class TurtleView{
         double oldHeading = heading;
         currentX = newX;
         currentY = newY;
+        currentOrienation = orientation;
         heading = orientation;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
@@ -162,7 +171,7 @@ public class TurtleView{
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
         }
-//        System.out.println(turtleStats());
+        System.out.println(turtleStats());
     }
 
     public void playAnimation(){
@@ -182,20 +191,34 @@ public class TurtleView{
         currentX = TURTLE_SCREEN_WIDTH/2;
     }
 
-//    public ListProperty turtleStats(){
-//        ArrayList<String> list = new ArrayList<>();
-//        list.add(Double.toString(currentX));
-//        list.add(Double.toString(currentY));
-//        ObservableList<String> observableList = FXCollections.observableArrayList(list);
-//        ListProperty<String> myTurtle = new SimpleListProperty<String>();
-//        myTurtle.add(Double.toString(currentX));
-//        myTurtle.add(Double.toString(currentY));
-//        return myTurtle;
-//    }
+    public SimpleObjectProperty<ObservableList<String>> turtleStats(){
+//        myTurtle.setValue().addAll(turtleName,
+//                Double.toString(currentX),
+//                Double.toString(currentY),
+//                Double.toString(currentOrienation),
+//                String.valueOf(myPenColor),
+//                Double.toString(pathStrokeWidth),
+//                Boolean.toString(penStatus));
+        observableList = FXCollections.observableArrayList();
+        observableList.addAll(turtleName,
+                Double.toString(currentX),
+                Double.toString(currentY),
+                Double.toString(currentOrienation),
+                String.valueOf(myPenColor),
+                Double.toString(pathStrokeWidth),
+                Boolean.toString(penStatus));
+        myTurtle.setValue(observableList);
+
+        return myTurtle;
+    }
 
     public void updatePen(Color color){
         myPenColor = color;
     }
+
+    public void changePenStatus(){penStatus = !penStatus;}
+
+    public void changePenWidth() {pathStrokeWidth++;}
 
     public void updateTurtleView(double value){
         myImage.setVisible(value != 0.0);
