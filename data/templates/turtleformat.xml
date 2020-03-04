@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SLogo>
+  <Preferences>
+    <Language>English</Language>
+    <Background>White</Background>
+  </Preferences>
+  <Turtles>
+    <Turtle name="Alex" xpos="200" ypos="200" heading="90"/>
+  </Turtles>
+  <CommandHistory>
+    <Command syntax="fd 50"/>
+    <Command syntax="rt 90"/>
+  </CommandHistory>
+  <UserVariables>
+    <Variable name=":variable" value="50"/>
+  </UserVariables>
+  <UserCommands>
+    <Command name=":command" syntax="fd fd 50"/>
+  </UserCommands>
+  <ColorPallete>
+    <Color index="1" color="black"/>
+  </ColorPallete>
+  <TurtlePallete>
+  </TurtlePallete>
+</SLogo>

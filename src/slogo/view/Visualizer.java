@@ -2,19 +2,14 @@ package slogo.view;
 
 import java.util.*;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ListBinding;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -29,7 +24,6 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import slogo.exceptions.InvalidTurtleException;
-import slogo.model.Turtle;
 
 public class Visualizer{
 
@@ -73,9 +67,10 @@ public class Visualizer{
   private TurtleView currentTurtle;
   private ColorPicker colorPicker;
   private ComboBox<String> turtleBox;
+  private ToolBar myToolBar;
 
 
-  public Visualizer (){
+  public Visualizer (Stage stage){
     turtlePaths = new Group();
     turtleList = new HashMap<>();
     turtles = new Group();
@@ -83,6 +78,7 @@ public class Visualizer{
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController);
+    myToolBar = new ToolBar(stage);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
     styler = new Styler();
@@ -102,17 +98,18 @@ public class Visualizer{
   private BorderPane createView(){
     BorderPane viewPane = new BorderPane();
     viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
-    viewPane.setPadding(new Insets(VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
+    viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
+    Node toolBar = myToolBar.setupToolBar();
     Node turtleView = showUserDefined();
     Node cLine = commandLine.setupCommandLine();
     Node userInterface = createUI();
 
     viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
+    viewPane.setTop(toolBar);
     viewPane.setLeft(turtleView);
     viewPane.setCenter(cLine);
     viewPane.setRight(userInterface);
-
     return viewPane;
   }
 
