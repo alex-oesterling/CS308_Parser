@@ -25,7 +25,7 @@ public class ViewExternal implements ViewExternalAPI {
 
   @Override
   public void updateBackgroundColor(double value){
-    myVisualizer.setBackgroundColor(value);
+    myVisualizer.setBackgroundColorFromPallete(value);
   }
 
   @Override
@@ -64,12 +64,12 @@ public class ViewExternal implements ViewExternalAPI {
   }
 
   @Override
-  public void addCommand(String commandSyntax) {
-    myVisualizer.addCommand(commandSyntax);
+  public void addCommand(String commandSyntax, String syntax) {
+    myVisualizer.addCommand(commandSyntax, syntax);
   }
 
   @Override
-  public void addVariable(String newVariable, double newValue) {
+  public void addVariable(String newVariable, String newValue) {
     myVisualizer.addVariable(newVariable, newValue);
   }
 

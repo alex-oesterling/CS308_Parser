@@ -14,8 +14,7 @@ public interface ViewExternalAPI {
   void updateTurtleView(double value);
   void updatePenStatus(double value);
   void playAnimation();
-  void addCommand(String commandSyntax);
-  void addVariable(String newVariable, double newValue);
+  void addCommand(String commandSyntax, String syntax);
+  void addVariable(String newVariable, String newValue);
 //  void setOpacity();
-
 }

@@ -78,10 +78,10 @@ public class TurtleView{
         return turtleImage;
     }
 
-    public void chooseTurtle() {
+    public void chooseTurtle(File imageFile) {
         ImageView turtleImage = new ImageView();
         try {
-            BufferedImage bufferedImage = ImageIO.read(getTurtleImage(new Stage()));
+            BufferedImage bufferedImage = ImageIO.read(imageFile);
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
@@ -104,7 +104,7 @@ public class TurtleView{
         do {
             badFile = false;
             try {
-                chooseTurtle();
+                chooseTurtle(getTurtleImage(new Stage()));
             } catch (NullPointerException e){
                 return;
             } catch (Exception e){
@@ -121,7 +121,7 @@ public class TurtleView{
         errorAlert.showAndWait();
     }
 
-    private File getTurtleImage(Stage stage) {
+    public File getTurtleImage(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Turtle Image");
         fileChooser.getExtensionFilters().addAll(
@@ -161,8 +161,6 @@ public class TurtleView{
                 myImage);
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
-            System.out.println(oldX);
-            System.out.println(newX);
         }
 //        System.out.println(turtleStats());
     }
@@ -220,5 +218,21 @@ public class TurtleView{
 
     public Color getColor(){return myPenColor;}
 
+    public void setOpacity(double newValue){
+        myImage.setOpacity(newValue);
+    }
 
+    public void set(double newX, double newY, double newHeading){
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
+        currentX = newX;
+        currentY = newY;
+        heading = newHeading;
+        myImage.setTranslateX(newX);
+        myImage.setTranslateY(newY);
+        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
+        rt.setToAngle(newHeading);
+        rt.play();
+    }
 }

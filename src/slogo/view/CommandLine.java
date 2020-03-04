@@ -3,12 +3,14 @@ package slogo.view;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -88,23 +90,18 @@ public class CommandLine {
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED);
-        setOnClick(recentCommand, textBox.getText());
+        recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
         historyBox.getChildren().add(recentCommand);
         history.add(new Label(textBox.getText()));
         textBox.clear();
         return;
       }
-      Label recentCommand = new Label(textBox.getText());
-      history.add(recentCommand);
-      setOnClick(recentCommand, textBox.getText());
-      historyBox.getChildren().add(recentCommand);
-      textBox.clear();
-      historyIndex = -1;
+      addHistory(textBox.getText());
     }
   }
 
-  public void setOnClick(Label label, String fill){
-    label.setOnMouseClicked(e->textBox.setText(fill));
+  public EventHandler<? super MouseEvent> setOnClick(String fill){
+    return e->textBox.setText(fill);
   }
 
   public void scrollHistory(KeyCode input){
@@ -118,7 +115,12 @@ public class CommandLine {
     }
   }
 
-  public void setTerminalEntry(String newEntry){
-    textBox.setText(newEntry);
+  public void addHistory(String syntax){
+    Label recentCommand = new Label(syntax);
+    history.add(recentCommand);
+    recentCommand.setOnMouseClicked(setOnClick(syntax));
+    historyBox.getChildren().add(recentCommand);
+    textBox.clear();
+    historyIndex = -1;
   }
 }

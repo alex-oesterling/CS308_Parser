@@ -104,12 +104,36 @@ public class Controller {
         turtle = t;
     }
 
+    public void addTurtle(String name, double startingX, double startingY, int startingHeading){
+        Turtle t = new Turtle(name, startingX, startingY, startingHeading);
+        if(turtleMap.containsKey(t.getName())){
+            throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
+        }
+        turtleMap.putIfAbsent(t.getName(), t);
+        turtle = t;
+    }
+
     /**
      * get the name of the current turtle
      * @return turtle's name
      */
     public String getTurtleName(){
         return turtle.getName();
+    }
+
+    public void updateCommandVariable(String key, String newValue){
+        if(userCreatedConstantVariables.containsKey(key)){
+            userCreatedConstantVariables.put(key, newValue);
+        }
+    }
+
+    public void addUserVariable(String key, String value){
+        userCreatedConstantVariables.putIfAbsent(key, value);
+    }
+
+    public void addUserCommand(String key, String syntax){
+        List<String> commandList = Arrays.asList(syntax.split(" "));
+        userCreatedCommandVariables.putIfAbsent(key, commandList);
     }
 
     /**
@@ -246,12 +270,19 @@ public class Controller {
         String firstCommand = copyLines.get(1);
         String type = syntax.getSymbol(firstCommand);
         copyLines.remove(variable);
-        if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals(COMMAND))){
-            if (!userCreatedConstantVariables.containsKey(variable)){ userCreatedCommandVariables.put(variable, copyLines); }
+        if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals("Command"))){
+            if (!userCreatedConstantVariables.containsKey(variable)){
+                userCreatedCommandVariables.put(variable, copyLines);                           //Added by Alex to interface with view
+                String commandSyntax = String.join(" ", copyLines.toArray(new String[0]));
+                myView.addCommand(variable, commandSyntax);
+            }
             else { System.out.println("Variable already defined as a constant variable"); } //FIXME make an exception thrown
         }
         else if (copyLines.size() == 1 && type.equals("Constant")){
-            if (!userCreatedCommandVariables.containsKey(variable)){ userCreatedConstantVariables.put(variable, firstCommand); }
+            if (!userCreatedCommandVariables.containsKey(variable)){
+                userCreatedConstantVariables.put(variable, firstCommand);                       //Added by Alex to interface with view
+                myView.addVariable(variable, firstCommand);
+            }
             else { System.out.println("Variable already defined as a command variable"); } //FIXME make an exception thrown
         }
     }
