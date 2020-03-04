@@ -119,7 +119,6 @@ public class Visualizer{
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    addTurtle();
     Group view = new Group();
     view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
@@ -190,7 +189,7 @@ public class Visualizer{
   private ColorPicker backgroundColor(){
     backgroundColorPicker = new ColorPicker();
     backgroundColorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    backgroundColorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
+    backgroundColorPicker.setOnAction(e -> turtleArea.setFill(backgroundColorPicker.getValue()));
     return backgroundColorPicker;
   }
 

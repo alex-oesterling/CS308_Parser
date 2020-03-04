@@ -149,15 +149,15 @@ public class TurtleView{
                 path.setOpacity(PATH_NO_OPACITY);
             }
             path.setStroke(myPenColor);
-            myPaths.getChildren().add(path);
             path.getElements().add(new MoveTo(oldX, oldY));
             path.getElements().add(new LineTo(newX, newY));
-            PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
+            PathTransition pt = new PathTransition(Duration.UNKNOWN, path, myImage);
             pt.setPath(path);
             st.getChildren().add(pt);
+            myPaths.getChildren().add(path);
         }
         if(orientation != oldHeading) {
-            RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION),
+            RotateTransition rt = new RotateTransition(Duration.UNKNOWN,
                 myImage);
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
@@ -166,6 +166,7 @@ public class TurtleView{
     }
 
     public void playAnimation(){
+        st.rateProperty().setValue(50);
         st.play();
         st = new SequentialTransition();
     }
