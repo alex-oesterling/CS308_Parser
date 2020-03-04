@@ -42,6 +42,10 @@ public class XMLReader {
   private void readFile(){
     readPreferences();
     readTurtles();
+    readCommandHistory();
+    readUserVariables();
+    readUserCommands();
+
   }
 
   private String getElementValue(Element element, String node){
@@ -68,7 +72,7 @@ public class XMLReader {
   }
 
   private void readTurtles() {
-    NodeList turtles = myDoc.getElementsByTagName("Preferences");
+    NodeList turtles = myDoc.getElementsByTagName("Turtles");
     Node turtleNode = turtles.item(0);
 
     if(turtleNode.getNodeType() == Node.ELEMENT_NODE){
@@ -78,7 +82,7 @@ public class XMLReader {
   }
 
   private void addTurtles(Element turtlesElement) {
-    NodeList turtleList = turtlesElement.getElementsByTagName("Turtles");
+    NodeList turtleList = turtlesElement.getElementsByTagName("Turtle");
     for(int i = 0; i < turtleList.getLength(); i++){
       Node turtle = turtleList.item(i);
       if(turtle.getNodeType() == Node.ELEMENT_NODE){
@@ -88,6 +92,75 @@ public class XMLReader {
             Double.parseDouble(turtleElement.getAttribute("ypos")),
             Integer.parseInt(turtleElement.getAttribute("heading"))
             );
+      }
+    }
+  }
+
+  private void readCommandHistory(){
+    NodeList commands = myDoc.getElementsByTagName("CommandHistory");
+    Node commandNode = commands.item(0);
+
+    if(commandNode.getNodeType() == Node.ELEMENT_NODE){
+      Element commandElement = (Element) commandNode;
+      populateCommands(commandElement);
+    }
+  }
+
+  private void populateCommands(Element commandElement) {
+    NodeList commandHistory = commandElement.getElementsByTagName("Command");
+
+    for(int i = 0; i<commandHistory.getLength(); i++){
+      Node cmd = commandHistory.item(i);
+
+      if(cmd.getNodeType() == Node.ELEMENT_NODE){
+        Element cmdElement = (Element) cmd;
+        myVisualizer.getTerminal().addHistory(cmdElement.getAttribute("syntax"));
+      }
+    }
+  }
+
+  private void readUserVariables(){
+    NodeList userVars = myDoc.getElementsByTagName("UserVariables");
+    Node varNode = userVars.item(0);
+
+    if(varNode.getNodeType() == Node.ELEMENT_NODE){
+      Element varElement = (Element) varNode;
+      populateUserVariables(varElement);
+    }
+  }
+
+  private void populateUserVariables(Element varElement) {
+    NodeList variableList = varElement.getElementsByTagName("Variable");
+
+    for(int i = 0; i < variableList.getLength(); i++){
+      Node var = variableList.item(i);
+
+      if(var.getNodeType() == Node.ELEMENT_NODE){
+        Element variable = (Element) var;
+        myVisualizer.addVariable(variable.getAttribute("name"), variable.getAttribute("value"));
+      }
+    }
+  }
+
+  private void readUserCommands(){
+    NodeList userCmds = myDoc.getElementsByTagName("UserCommands");
+    Node cmdNode = userCmds.item(0);
+
+    if(cmdNode.getNodeType() == Node.ELEMENT_NODE){
+      Element cmdElement = (Element) cmdNode;
+      populateUserCommands(cmdElement);
+    }
+  }
+
+  private void populateUserCommands(Element cmdElement) {
+    NodeList commandList = cmdElement.getElementsByTagName("Command");
+
+    for(int i = 0; i < commandList.getLength(); i++){
+      Node cmd = commandList.item(i);
+
+      if(cmd.getNodeType() == Node.ELEMENT_NODE){
+        Element variable = (Element) cmd;
+        myVisualizer.addCommand(variable.getAttribute("name"), variable.getAttribute("syntax"));
       }
     }
   }

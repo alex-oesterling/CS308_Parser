@@ -127,6 +127,15 @@ public class Controller {
         }
     }
 
+    public void addUserVariable(String key, String value){
+        userCreatedConstantVariables.putIfAbsent(key, value);
+    }
+
+    public void addUserCommand(String key, String syntax){
+        List<String> commandList = Arrays.asList(syntax.split(" "));
+        userCreatedCommandVariables.putIfAbsent(key, commandList);
+    }
+
     /**
      * Allows the user to pick a turtle to do work on
      * @param name turtle to become the current turtle

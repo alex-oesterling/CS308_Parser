@@ -96,12 +96,7 @@ public class CommandLine {
         textBox.clear();
         return;
       }
-      Label recentCommand = new Label(textBox.getText());
-      history.add(recentCommand);
-      recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
-      historyBox.getChildren().add(recentCommand);
-      textBox.clear();
-      historyIndex = -1;
+      addHistory(textBox.getText());
     }
   }
 
@@ -120,7 +115,12 @@ public class CommandLine {
     }
   }
 
-  public void setTerminalEntry(String newEntry){
-    textBox.setText(newEntry);
+  public void addHistory(String syntax){
+    Label recentCommand = new Label(syntax);
+    history.add(recentCommand);
+    recentCommand.setOnMouseClicked(setOnClick(syntax));
+    historyBox.getChildren().add(recentCommand);
+    textBox.clear();
+    historyIndex = -1;
   }
 }

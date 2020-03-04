@@ -260,6 +260,7 @@ public class Visualizer{
     commandAndSyntax.setHgrow(spacer, Priority.ALWAYS);
     commandAndSyntax.getChildren().addAll(recentCommand, spacer, syntaxLabel);
     commandHistory.getChildren().add(commandAndSyntax);
+    myController.addUserCommand(command, syntax);
   }
 
   public void addVariable(String variable, String value){
@@ -273,6 +274,7 @@ public class Visualizer{
     varMap.put(variable, value);
     variableAndValue.setOnMouseClicked(e->updateVariable(variable, valueLabel));
     varHistory.getChildren().add(variableAndValue);
+    myController.addUserVariable(variable, value);
   }
 
   //FIXME variable types :right now all it handles is doubles and poorly at that
@@ -357,4 +359,6 @@ public class Visualizer{
     turtleArea.setFill(Color.web(hexColor));
     backgroundColorPicker.setValue(Color.web(hexColor));
   }
+
+  public CommandLine getTerminal(){return commandLine;}
 }
