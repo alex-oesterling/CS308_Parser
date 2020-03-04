@@ -183,7 +183,9 @@ public class Visualizer{
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
             styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)),
             styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }));
+                    e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
+            addTurtleInfo()
+            );
     return ui;
   }
 
@@ -201,14 +203,11 @@ public class Visualizer{
     return colorPicker;
   }
 
-//  private HBox addTurtleInfo(){
-//    HBox hbox = new HBox();
-//    ListView<String> list = new ListView<>();
-////    list.set
-//    list.itemsProperty().bind(currentTurtle.turtleStats());
-//    hbox.getChildren().add(list);
-//    return hbox;
-//  }
+  private ListView<String> addTurtleInfo(){
+    ListView<String> list = new ListView<>();
+    list.itemsProperty().bind(currentTurtle.turtleStats());
+    return list;
+  }
 
   private ComboBox<String> makeTurtleSelector(){
     ComboBox<String> turtleBox = new ComboBox();
@@ -319,5 +318,5 @@ public class Visualizer{
   public void setShape(double value){
     currentTurtle.setShape(shapePalette.getShapeMapValue(value));
   }
-  
+
 }
