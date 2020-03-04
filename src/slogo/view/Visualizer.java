@@ -66,6 +66,7 @@ public class Visualizer{
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
   private ColorPicker colorPicker;
+  private ColorPicker backgroundColorPicker;
   private ComboBox<String> turtleBox;
   private ToolBar myToolBar;
 
@@ -187,10 +188,10 @@ public class Visualizer{
   }
 
   private ColorPicker backgroundColor(){
-    ColorPicker colorPicker = new ColorPicker();
-    colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
-    return colorPicker;
+    backgroundColorPicker = new ColorPicker();
+    backgroundColorPicker.setMaxHeight(COLORPICKER_HEIGHT);
+    backgroundColorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
+    return backgroundColorPicker;
   }
 
   private ColorPicker penColor(){
@@ -295,13 +296,26 @@ public class Visualizer{
     }
   }
 
-  private void addTurtle(){
+  public void addTurtle(){
     try {
       myController.addTurtle();
     } catch (InvalidTurtleException e){
       //ERROR DIALOG: Turtle Already Exists!
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths);
+    turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
+    myTurtlesProperty.getValue().add(myController.getTurtleName());
+    setTurtle(myController.getTurtleName());
+  }
+
+  public void addTurtle(String name, double startingX, double startingY, int heading){
+    try {
+      myController.addTurtle(name, startingX, startingY, heading);
+    } catch (InvalidTurtleException e){
+      //ERROR DIALOG: Turtle Already Exists!
+    }
+    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths);
+    tempTurtle.set(startingX, startingY, heading);
     turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
@@ -323,8 +337,9 @@ public class Visualizer{
     currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
   }
 
-  public void setBackgroundColor(double value){
+  public void setBackgroundColorFromPallete(double value){
     turtleArea.setFill(Color.web(colorPalette.getColorMapValue(value)));
+    backgroundColorPicker.setValue(Color.web(colorPalette.getColorMapValue(value)));
   }
 
   public void setPenSize(double value){currentTurtle.setPenSize(value);}
@@ -336,5 +351,10 @@ public class Visualizer{
   public void setLanguage(String newLanguage){
     language = newLanguage;
     myController.addLanguage(language);
+  }
+
+  public void setBackgroundColor(String hexColor){
+    turtleArea.setFill(Color.web(hexColor));
+    backgroundColorPicker.setValue(Color.web(hexColor));
   }
 }

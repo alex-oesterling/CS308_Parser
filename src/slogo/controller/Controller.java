@@ -104,6 +104,15 @@ public class Controller {
         turtle = t;
     }
 
+    public void addTurtle(String name, double startingX, double startingY, int startingHeading){
+        Turtle t = new Turtle(name, startingX, startingY, startingHeading);
+        if(turtleMap.containsKey(t.getName())){
+            throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
+        }
+        turtleMap.putIfAbsent(t.getName(), t);
+        turtle = t;
+    }
+
     /**
      * get the name of the current turtle
      * @return turtle's name

@@ -41,6 +41,21 @@ public class Turtle{
   private double sizePixels;
   private String name;
 
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, int startingHeading){
+    setX(startingXPosition);
+    homeX = xPosition;
+    setY(startingYPosition);
+    homeY = yPosition;
+    heading = startingHeading;
+    turtleIsDrawing = DRAWING;
+    turtleIsVisible = VISIBLE;
+    penIndex = DEFAULT_PEN_INDEX;
+    bgIndex = DEFAULT_BG_INDEX;
+    shapeIndex = DEFAULT_SHAPE_INDEX;
+    sizePixels = DEFAULT_SIZE_PIXELS;
+    name = turtleName;
+  }
+
   /**
    * Turtle constructor to create turtle at a specific point and specific pen color
    * @param startingXPosition value to set xPosition to

@@ -40,7 +40,8 @@ public class XMLReader {
   }
 
   private void readFile(){
-
+    readPreferences();
+    readTurtles();
   }
 
   private String getElementValue(Element element, String node){
@@ -63,6 +64,31 @@ public class XMLReader {
   }
 
   private void getBackground(Element prefElement) {
-    myVisualizer.setBackgroundColor();
+    myVisualizer.setBackgroundColor(getElementValue(prefElement, "Background"));
+  }
+
+  private void readTurtles() {
+    NodeList turtles = myDoc.getElementsByTagName("Preferences");
+    Node turtleNode = turtles.item(0);
+
+    if(turtleNode.getNodeType() == Node.ELEMENT_NODE){
+      Element turtleElement = (Element) turtleNode;
+      addTurtles(turtleElement);
+    }
+  }
+
+  private void addTurtles(Element turtlesElement) {
+    NodeList turtleList = turtlesElement.getElementsByTagName("Turtles");
+    for(int i = 0; i < turtleList.getLength(); i++){
+      Node turtle = turtleList.item(i);
+      if(turtle.getNodeType() == Node.ELEMENT_NODE){
+        Element turtleElement = (Element) turtle;
+        myVisualizer.addTurtle(turtleElement.getAttribute("name"),
+            Double.parseDouble(turtleElement.getAttribute("xpos")),
+            Double.parseDouble(turtleElement.getAttribute("ypos")),
+            Integer.parseInt(turtleElement.getAttribute("heading"))
+            );
+      }
+    }
   }
 }

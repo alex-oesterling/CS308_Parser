@@ -25,7 +25,7 @@ public class ViewExternal implements ViewExternalAPI {
 
   @Override
   public void updateBackgroundColor(double value){
-    myVisualizer.setBackgroundColor(value);
+    myVisualizer.setBackgroundColorFromPallete(value);
   }
 
   @Override

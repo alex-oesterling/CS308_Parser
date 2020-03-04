@@ -161,8 +161,6 @@ public class TurtleView{
                 myImage);
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
-            System.out.println(oldX);
-            System.out.println(newX);
         }
 //        System.out.println(turtleStats());
     }
@@ -222,5 +220,19 @@ public class TurtleView{
 
     public void setOpacity(double newValue){
         myImage.setOpacity(newValue);
+    }
+
+    public void set(double newX, double newY, double newHeading){
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
+        currentX = newX;
+        currentY = newY;
+        heading = newHeading;
+        myImage.setTranslateX(newX);
+        myImage.setTranslateY(newY);
+        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
+        rt.setToAngle(newHeading);
+        rt.play();
     }
 }
