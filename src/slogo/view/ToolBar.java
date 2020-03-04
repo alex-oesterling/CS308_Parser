@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.io.File;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,18 +9,23 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import slogo.SlogoApp;
+import slogo.config.XMLReader;
 
 public class ToolBar {
   private static final String RESOURCES = "resources";
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
+  private static final String XML_FILEPATH = "user.dir";
 
   private MenuBar menuBar;
   private Menu menu;
   private MenuItem newWindow;
   private MenuItem exit;
   private MenuItem restart;
+  private MenuItem load;
   private ResourceBundle myResources;
   private Stage myStage;
 
@@ -38,8 +44,9 @@ public class ToolBar {
       closeWindow();
       makeNewWindow();
     });
+    load = makeMenuItem("Load", e-> new XMLReader(chooseFile(), myStage));
     menuBar.getMenus().add(menu);
-    menu.getItems().addAll(newWindow, restart, exit);
+    menu.getItems().addAll(newWindow, load, restart, exit);
     tools.getChildren().add(menuBar);
     return tools;
   }
@@ -85,5 +92,24 @@ public class ToolBar {
   private void createLabel(String property, MenuItem result) {
     String label = myResources.getString(property);
     result.setText(label);
+  }
+
+  /**
+   * Opens a file navigator dialogue and allows the user to select an .xml file for importing into
+   * the simulation
+   *
+   * @return the File object representing the .xml file to be used by the simulation
+   */
+  private File chooseFile() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Choose Simulation File");
+    fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    File file = fileChooser.showOpenDialog(myStage);
+    if (file != null) {
+      return file;
+    } else {
+      return null;
+    }
   }
 }

@@ -20,9 +20,10 @@ public class XMLReader {
 
   public XMLReader(File file, Stage stage){
     myFile = file;
+    myVisualizer = new Visualizer(stage);
+    stage.setScene(myVisualizer.setupScene());
     setupDocument();
     readFile();
-    myVisualizer = new Visualizer(stage);
   }
 
   private void setupDocument() {
@@ -45,7 +46,6 @@ public class XMLReader {
     readCommandHistory();
     readUserVariables();
     readUserCommands();
-
   }
 
   private String getElementValue(Element element, String node){
