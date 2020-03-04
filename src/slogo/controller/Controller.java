@@ -30,7 +30,6 @@ public class Controller {
     private static final Integer SECOND_GEN = 2;
     private static final double ZERO_DOUBLE_PARAM_VALUE = 0;
     private static final double TURTLE_PARAM_VALUE = -0.5;
-    private static final double LIST_PARAM_VALUE = 100;//-Math.PI/5; //not a number that will ever sum to 0.5 or 1
     private static boolean IS_FIRST_CONSTANT = false;
     private static boolean IS_VARIABLE = false;
 
@@ -77,7 +76,7 @@ public class Controller {
         nameCount = new HashMap<>();
     }
 
-    private void makeStacks() {
+    private void makeStacks() { //TODO remove duplicate with resetStacks()
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
         doubleAndTurtleParametersStack = new Stack<>();
@@ -89,7 +88,7 @@ public class Controller {
      * Add a new turtle to the map of turtles, change the current turtle to
      * this newly created turtle; turtle with a default "name" that is its hashcode
      */
-    public void addTurtle(){ //FIXME edited by alex to handle taking in a string name
+    public void addTurtle(){
         Turtle t = new Turtle();
         if(nameCount.containsKey(t.getName())){
             Integer generation = nameCount.get(t.getName());
@@ -99,23 +98,42 @@ public class Controller {
         }
         nameCount.putIfAbsent(t.getName(), SECOND_GEN);
         if(turtleMap.containsKey(t.getName())){
-            throw new InvalidTurtleException("Turtle already exists", new Throwable());
+            throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
         }
         turtleMap.putIfAbsent(t.getName(), t);
         turtle = t;
+    }
 
+    public void addTurtle(String name, double startingX, double startingY, int startingHeading){
+        Turtle t = new Turtle(name, startingX, startingY, startingHeading);
+        if(turtleMap.containsKey(t.getName())){
+            throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
+        }
+        turtleMap.putIfAbsent(t.getName(), t);
+        turtle = t;
     }
 
     /**
      * get the name of the current turtle
      * @return turtle's name
      */
-    public String getTurtleName(){return turtle.getName();}
+    public String getTurtleName(){
+        return turtle.getName();
+    }
 
     public void updateCommandVariable(String key, String newValue){
         if(userCreatedConstantVariables.containsKey(key)){
             userCreatedConstantVariables.put(key, newValue);
         }
+    }
+
+    public void addUserVariable(String key, String value){
+        userCreatedConstantVariables.putIfAbsent(key, value);
+    }
+
+    public void addUserCommand(String key, String syntax){
+        List<String> commandList = Arrays.asList(syntax.split(" "));
+        userCreatedCommandVariables.putIfAbsent(key, commandList);
     }
 
     /**
@@ -138,7 +156,7 @@ public class Controller {
     /**
      * Resets the turtle and clears all of the stacks
      */
-    public void reset(){
+    public void reset(){ //TODO rename to resetAll?
         turtleMap = new HashMap<>();
         nameCount = new HashMap<>();
         addTurtle();
@@ -229,7 +247,6 @@ public class Controller {
         }
         commandList = fillCommands(commandList);
         executeCommandList(commandList);
-        printCommandList(commandList); //we can get rid of this after submission
         return commandList;
     }
 
@@ -300,7 +317,7 @@ public class Controller {
         tryToMakeCommands(commandList);
     }
 
-    private double getParamsNeeded(String commandParams){
+    private double getParamsNeeded(String commandParams){ //TODO make another properties file that has OneDouble=1.0; TwoDouble=2.0;
         double numberOfParams = ZERO_DOUBLE_PARAM_VALUE;
         double listParam = ZERO_DOUBLE_PARAM_VALUE;
         if (commandParams.contains("OneDouble")){
@@ -350,7 +367,7 @@ public class Controller {
         try{
             Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
             Constructor commandConstructor = getCommandConstructor(commandClass, numberOfParams);
-            return makeCommand(commandName, numberOfParams, commandConstructor, commandClass);
+            return makeCommand(commandName, numberOfParams, commandConstructor);
         } catch (ClassNotFoundException e){
             System.out.println("ClassNotFoundException");
             e.printStackTrace();
@@ -375,43 +392,46 @@ public class Controller {
         return new Not(1.0); //FIXME !!!!
     }
 
-    private Constructor getCommandConstructor(Class command, double numberOfParams) throws NoSuchMethodException {
+        private Constructor getCommandConstructor(Class command, double numberOfParams) throws NoSuchMethodException {
         if(numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 0){
-            return command.getConstructor(new Class[]{Double.class});
+            return command.getConstructor(Double.class);
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == ZERO_DOUBLE_PARAM_VALUE)){
-            return command.getConstructor(new Class[]{Turtle.class, Double.class});
+            return command.getConstructor(Turtle.class, Double.class);
         } else if (!listParametersStack.isEmpty() && (numberOfParams == TWO_DOUBLE_PARAM_VALUE)){
-            return command.getConstructor(new Class[]{Double.class, Double.class});
+            return command.getConstructor(Double.class, Double.class);
         } else if (!listParametersStack.isEmpty() && (numberOfParams == TWO_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == ZERO_DOUBLE_PARAM_VALUE)){
-            return command.getConstructor(new Class[]{Turtle.class, Double.class, Double.class});
+            return command.getConstructor(Turtle.class, Double.class, Double.class);
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ZERO_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ZERO_DOUBLE_PARAM_VALUE)) {
-            return command.getConstructor(new Class[]{});
+            return command.getConstructor();
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ONE_DOUBLE_PARAM_VALUE)) {
-            return command.getConstructor(new Class[]{Double.class, List.class});
+            return command.getConstructor(Double.class, List.class);
         } else if (!listParametersStack.isEmpty() && listParametersStack.peek() == TWO_DOUBLE_PARAM_VALUE) {
-            return command.getConstructor(new Class[]{List.class, List.class});
+            return command.getConstructor(List.class, List.class);
         } else {
-            return command.getConstructor(new Class[]{Turtle.class});
+            return command.getConstructor(Turtle.class);
         }
     }
 
-    private Command makeCommand(String name, double numberOfParams, Constructor constructor, Class myClass) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    private Command makeCommand(String name, double numberOfParams, Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Command myCommand = new Not(1.0);
-        if(!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 0)) {
+        if(listParametersStack.isEmpty()){
+            //fixme throw exception?
+        }
+        if(numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance(argumentStack.pop());
-        } else if(!listParametersStack.isEmpty() && (numberOfParams == TWO_DOUBLE_PARAM_VALUE&& listParametersStack.peek() == 0)) {
+        } else if(numberOfParams == TWO_DOUBLE_PARAM_VALUE&& listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance(argumentStack.pop(), argumentStack.pop());
-        } else if(!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == 0)) {
+        } else if(numberOfParams == ONE_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance(turtle, argumentStack.pop());
-        } else if(!listParametersStack.isEmpty() && (numberOfParams == TWO_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == 0)) {
+        } else if(numberOfParams == TWO_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance(turtle, argumentStack.pop(), argumentStack.pop());
-        } else if(!listParametersStack.isEmpty() && (numberOfParams == ZERO_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 0)) {
+        } else if(numberOfParams == ZERO_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance();
-        } else if(!listParametersStack.isEmpty() && (numberOfParams == TURTLE_PARAM_VALUE && listParametersStack.peek() == 0)) {
+        } else if(numberOfParams == TURTLE_PARAM_VALUE && listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance(turtle);
-        } else if (!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 1.0)) { //fixme remove magic num
+        } else if (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ONE_DOUBLE_PARAM_VALUE) { //fixme remove magic num
             myCommand = (Command) constructor.newInstance(argumentStack.pop(), listStack.pop());
-        } else if (!listParametersStack.isEmpty() && listParametersStack.peek() == 2.0) { //fixme remove magic num
+        } else if (listParametersStack.peek() == TWO_DOUBLE_PARAM_VALUE) { //fixme remove magic num
             myCommand = (Command) constructor.newInstance(listStack.pop(), listStack.pop());
         }
         listParametersStack.pop();
@@ -421,11 +441,7 @@ public class Controller {
     private List<Command> fillCommands(List<Command> l){
         List<Command> extendedList = new ArrayList<>();
         for(Command c : l){
-            if(c instanceof CommandWithReturningList){
-                extendedList.addAll(((CommandWithReturningList) c).getCommandList());
-            } else {
-                extendedList.add(c);
-            }
+            extendedList.addAll(c.getCommandList());
         }
         return extendedList;
     }
@@ -442,7 +458,7 @@ public class Controller {
                 myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
                 myView.clear();
                 myView.updatePenStatus(1);
-            } else if(c instanceof HideTurtle || c instanceof ShowTurtle){
+            } else if(c instanceof HideTurtle || c instanceof ShowTurtle){ //FIXME get rid of instance of. maybe commands can have a string that returns a view method to call and then we use reflection for making the method with one parameter (getResult())...
                 myView.updateTurtleView(c.getResult());
             } else if(c instanceof PenDown || c instanceof PenUp){
                 myView.updatePenStatus(c.getResult());
@@ -462,27 +478,4 @@ public class Controller {
         resetStacks();
         myView.playAnimation();
     }
-
-    private void printCommandList(List<Command> l){  //wont need this in final submission
-        for(Command c : l) {
-            System.out.println(c);
-            System.out.println(c.getResult());
-            System.out.println(
-                    "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
-                            .getHeading());
-        }
-    }
-
-    // utility function that reads given file and returns its entire contents as a single string
-    /*private String readFileToString (String inputSource) {
-        try {
-            // this one line is dense, hard to read, and throws exceptions so better to wrap in method
-            return new String(Files.readAllBytes(Paths.get(new URI(inputSource))));
-        }
-        catch (URISyntaxException | IOException e) {
-            // NOT ideal way to handle exception, but this is just a simple test program
-            System.out.println("ERROR: Unable to read input file " + e.getMessage());
-            return "";
-        }
-    }*/
 }

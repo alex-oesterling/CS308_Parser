@@ -10,7 +10,7 @@ public class SlogoApp {
   public static final String TITLE = "i like turtles <3";
 
   public SlogoApp(Stage stage){
-    Visualizer myVisualizer = new Visualizer();
+    Visualizer myVisualizer = new Visualizer(stage);
     stage.setScene(myVisualizer.setupScene());
     stage.setTitle(TITLE);
     stage.show();
