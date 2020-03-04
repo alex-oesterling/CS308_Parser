@@ -73,6 +73,7 @@ public class Visualizer{
   private ColorPicker backgroundColorPicker;
   private ComboBox<String> turtleBox;
   private ToolBar myToolBar;
+  private ListView<String> myList;
 
 
   public Visualizer (Stage stage){
@@ -83,6 +84,7 @@ public class Visualizer{
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController);
+    myList = new ListView<>();
     myToolBar = new ToolBar(stage);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
@@ -192,33 +194,20 @@ public class Visualizer{
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll(styler.createLabel(myResources.getString("BackgroundColor")),
             backgroundColor(),
-            styler.createLabel(myResources.getString("PenColor")),
-            penColor(),
             styler.createLabel(myResources.getString("ChooseLanguage")),
             languageSelect(),
-//            styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(viewExternal)),
+            styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(viewExternal, currentTurtle)),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
-            styler.createButton(myResources.getString("ChangePenCommand"), e->currentTurtle.changePenStatus()),
-            styler.createButton(myResources.getString("ChangePenWidthCommand"), e->currentTurtle.changePenWidth()),
             styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)));
     return ui;
   }
-
-
 
   private ColorPicker backgroundColor(){
     backgroundColorPicker = new ColorPicker();
     backgroundColorPicker.setMaxHeight(COLORPICKER_HEIGHT);
     backgroundColorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
     return backgroundColorPicker;
-  }
-
-  private ColorPicker penColor(){
-    colorPicker.setValue(Color.BLACK);
-    colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
-    return colorPicker;
   }
 
   private HBox addTurtleInfo(){
@@ -232,10 +221,9 @@ public class Visualizer{
             styler.createLabel(myResources.getString("PenColor")),
             styler.createLabel(myResources.getString("PenWidth")),
             styler.createLabel(myResources.getString("PenDownLabel")));
-    ListView<String> list = new ListView<>();
-    list.itemsProperty().bind(currentTurtle.turtleStats());
-    list.setPrefSize(LISTVIEW_WIDTH, LISTVIEW_HEIGHT);
-    hbox.getChildren().addAll(vbox, list);
+    myList.itemsProperty().bind(currentTurtle.turtleStats());
+    myList.setPrefSize(LISTVIEW_WIDTH, LISTVIEW_HEIGHT);
+    hbox.getChildren().addAll(vbox, myList);
     return hbox;
   }
 
@@ -340,14 +328,19 @@ public class Visualizer{
   }
 
   private void setTurtle(String name){
+    myList.itemsProperty().unbind();
     if(currentTurtle != null) {
       currentTurtle.setOpacity(.5);
       turtleBox.getSelectionModel().select(name);
     }
     currentTurtle = turtleList.get(name);
-    colorPicker.setValue(currentTurtle.getColor());
+    if( penProperties !=null){
+      penProperties.getColorPicker().setValue(currentTurtle.getColor());
+
+    }
     currentTurtle.setOpacity(1);
     myController.chooseTurtle(name);
+    myList.itemsProperty().bind(currentTurtle.turtleStats());
   }
 
   public TurtleView getCurrentTurtle(){return currentTurtle;}
@@ -356,17 +349,23 @@ public class Visualizer{
   public void clear(){turtlePaths.getChildren().clear();}
 
   public void setPenColor(double value){
-    currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
+    if(colorPalette!=null){
+      currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
+    }
   }
 
   public void setBackgroundColorFromPalette(double value){
-    setBackgroundColor(colorPalette.getColorMapValue(value));
+    if(colorPalette!=null){
+      setBackgroundColor(colorPalette.getColorMapValue(value));
+    }
   }
 
   public void setPenSize(double value){currentTurtle.setPenSize(value);}
 
   public void setShape(double value){
-    currentTurtle.setShape(shapePalette.getShapeMapValue(value));
+    if(shapePalette!=null){
+      currentTurtle.setShape(shapePalette.getShapeMapValue(value));
+    }
   }
 
   public void setLanguage(String newLanguage){

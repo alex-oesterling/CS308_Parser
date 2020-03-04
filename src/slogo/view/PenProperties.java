@@ -44,10 +44,6 @@ public class PenProperties {
     private Scene setScene(){
         myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
         root = new Group();
-//        createGrid();
-//        ScrollPane s1 = new ScrollPane();
-//        s1.setPrefSize(SIZE_WIDTH, SIZE_HEIGHT);
-//        s1.setContent(vbox);
         root.getChildren().add(createGrid());
         return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     }
@@ -69,5 +65,7 @@ public class PenProperties {
         colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
         return colorPicker;
     }
+
+    public ColorPicker getColorPicker(){return colorPicker;}
 
 }
