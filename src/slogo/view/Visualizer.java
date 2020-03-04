@@ -239,10 +239,7 @@ public class Visualizer{
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
-    comboBox.setOnAction(event -> {
-      language = comboBox.getValue().toString();
-      myController.addLanguage(language);
-    });
+    comboBox.setOnAction(event -> setLanguage(comboBox.getValue().toString()));
     return comboBox;
   }
 
@@ -334,5 +331,10 @@ public class Visualizer{
 
   public void setShape(double value){
     currentTurtle.setShape(shapePalette.getShapeMapValue(value));
+  }
+
+  public void setLanguage(String newLanguage){
+    language = newLanguage;
+    myController.addLanguage(language);
   }
 }
