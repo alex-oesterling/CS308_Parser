@@ -51,6 +51,8 @@ public class Visualizer{
   private HelpWindow helpWindow;
   private ViewExternal viewExternal;
   private CommandLine commandLine;
+  private PenProperties penProperties;
+  private MoveTurtle moveTurtle;
   private Styler styler;
   private ColorPalette colorPalette;
   private ShapePalette shapePalette;
@@ -62,7 +64,6 @@ public class Visualizer{
   private String language;
   private Group turtlePaths;
   private Group turtles;
-
   private VBox commandHistory;
   private VBox varHistory;
   private Map<String, String> varMap;
@@ -181,10 +182,7 @@ public class Visualizer{
             styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("ResetCommand"),
                     e->{ clear(); myController.reset(); turtleList.get(0).resetTurtle(); }),
-            styler.createButton(myResources.getString("ForwardCommand"), e-> myController.sendCommands("fd 1")),
-            styler.createButton(myResources.getString("BackwardCommand"), e-> myController.sendCommands("bk 1")),
-            styler.createButton(myResources.getString("RRotateCommand"), e-> myController.sendCommands("rt 1")),
-            styler.createButton(myResources.getString("LRotateCommand"), e-> myController.sendCommands("lt 1")),
+            styler.createButton(myResources.getString("MoveTurtle"), e-> moveTurtle = new MoveTurtle(myController)),
             addTurtleInfo());
     return ui;
   }
@@ -198,6 +196,7 @@ public class Visualizer{
             penColor(),
             styler.createLabel(myResources.getString("ChooseLanguage")),
             languageSelect(),
+//            styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(viewExternal)),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
             styler.createButton(myResources.getString("ChangePenCommand"), e->currentTurtle.changePenStatus()),
@@ -205,6 +204,8 @@ public class Visualizer{
             styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)));
     return ui;
   }
+
+
 
   private ColorPicker backgroundColor(){
     backgroundColorPicker = new ColorPicker();
