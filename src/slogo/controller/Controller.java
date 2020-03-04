@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 import slogo.exceptions.InvalidCommandException;
 import slogo.exceptions.InvalidTurtleException;
+import slogo.exceptions.InvalidVariableException;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
@@ -156,7 +157,7 @@ public class Controller {
     /**
      * Resets the turtle and clears all of the stacks
      */
-    public void reset(){ //TODO rename to resetAll?
+    public void resetAll(){
         turtleMap = new HashMap<>();
         nameCount = new HashMap<>();
         addTurtle();
@@ -272,18 +273,18 @@ public class Controller {
         copyLines.remove(variable);
         if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals("Command"))){
             if (!userCreatedConstantVariables.containsKey(variable)){
-                userCreatedCommandVariables.put(variable, copyLines);                           //Added by Alex to interface with view
+                userCreatedCommandVariables.put(variable, copyLines);
                 String commandSyntax = String.join(" ", copyLines.toArray(new String[0]));
                 myView.addCommand(variable, commandSyntax);
             }
-            else { System.out.println("Variable already defined as a constant variable"); } //FIXME make an exception thrown
+            else { throw new InvalidVariableException("Variable already exists as a constant variable", new Throwable()); }
         }
         else if (copyLines.size() == 1 && type.equals("Constant")){
             if (!userCreatedCommandVariables.containsKey(variable)){
-                userCreatedConstantVariables.put(variable, firstCommand);                       //Added by Alex to interface with view
+                userCreatedConstantVariables.put(variable, firstCommand);
                 myView.addVariable(variable, firstCommand);
             }
-            else { System.out.println("Variable already defined as a command variable"); } //FIXME make an exception thrown
+            else { throw new InvalidVariableException("Variable already exists as a command variable", new Throwable()); }
         }
     }
 

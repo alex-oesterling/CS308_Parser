@@ -183,7 +183,7 @@ public class Visualizer{
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
             styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)),
             styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.reset();currentTurtle.resetTurtle(); }));
+                    e->{ clear(); myController.resetAll();currentTurtle.resetTurtle(); }));
     return ui;
   }
 

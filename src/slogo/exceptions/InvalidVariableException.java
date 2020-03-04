@@ -1,8 +1,11 @@
 package slogo.exceptions;
 
-public class InvalidVariableException extends Exception {
+public class InvalidVariableException extends RuntimeException {
+    public InvalidVariableException(Throwable cause) {
+        super(cause);
+    }
 
-    public InvalidVariableException(Throwable cause, String type, String syntax){
-
+    public InvalidVariableException(String message, Throwable cause){
+        super(message, cause);
     }
 }
