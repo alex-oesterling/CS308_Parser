@@ -12,13 +12,14 @@ public class SetPenSize extends Command {
     /**
      * Set pen size constructor, takes in the number of pixels for the
      * size of the pen to be switched to
-     * @param pixels the size for pen to be set to
-     * @param body the turtle being used
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
     public SetPenSize(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        size = pixels;
-        t = body;
+        size = doubleList.get(FIRST_INDEX);
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**
