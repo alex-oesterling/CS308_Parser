@@ -8,20 +8,20 @@ import java.util.List;
 public class If extends Command {
 
   private boolean conditionResult;
-  private List<Command> commandList, returningList;
+  private List<Command> commands, returningList;
   private static final Double DEFAULT = 0.0;
 
   public If(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super();
-    commandList = commands;
-    conditionResult = (condition!=0.0);
+    commands = commandList.get(FIRST_INDEX);
+    conditionResult = (doubleList.get(FIRST_INDEX)!=0.0);
   }
 
   @Override
   public Double getResult() {
     returningList = new ArrayList<>();
     if(conditionResult){
-      returningList = commandList;
+      returningList = commands;
       return returningList.get(returningList.size()-1).getResult();
     }
     return DEFAULT;

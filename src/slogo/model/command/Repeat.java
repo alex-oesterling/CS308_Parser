@@ -18,8 +18,8 @@ public class Repeat extends CommandWithReturningList{
    */
   public Repeat(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super();
-    times = reps;
-    //commands = commandList;
+    times = doubleList.get(FIRST_INDEX);
+    commands = commandList.get(FIRST_INDEX);
   }
 
   @Override

@@ -11,11 +11,11 @@ public class DoTimes{
 
   /**
    *
-   * @param reps
+   * @param //reps
    * @param commandList
    */
   public DoTimes(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    times = reps;
+    //times = reps;
     //commands = commandList;
   }
 

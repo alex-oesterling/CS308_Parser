@@ -161,6 +161,7 @@ public class TurtleView{
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
         }
+        //System.out.println(turtleStats());
     }
 
     public void playAnimation(){
