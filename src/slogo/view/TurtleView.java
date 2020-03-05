@@ -37,8 +37,6 @@ public class TurtleView{
     public static final int TURTLE_SCREEN_WIDTH = 500;
     public static final int TURTLE_SCREEN_HEIGHT = 500;
     public static final int PATH_STROKE_WIDTH = 3;
-    public static final int PATH_TRANSITION_DURATION = 500;
-    public static final int ROTATE_TRANSITION_DURATION = 500;
     public static final int TURTLE_RESET_ANGLE = 0;
     public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
@@ -58,6 +56,7 @@ public class TurtleView{
     private String turtleName;
     private ObservableList<String> observableList;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
+    private int animationDuration;
 
     public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
@@ -72,6 +71,7 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
+        animationDuration = 500;
     }
 
     private ImageView createTurtle(){
@@ -158,15 +158,15 @@ public class TurtleView{
                 path.setOpacity(PATH_NO_OPACITY);
             }
             path.setStroke(myPenColor);
-            myPaths.getChildren().add(path);
             path.getElements().add(new MoveTo(oldX, oldY));
             path.getElements().add(new LineTo(newX, newY));
-            PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
+            PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
             pt.setPath(path);
             st.getChildren().add(pt);
+            myPaths.getChildren().add(path);
         }
         if(orientation != oldHeading) {
-            RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION),
+            RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
                 myImage);
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
@@ -182,7 +182,7 @@ public class TurtleView{
     public void resetTurtle(){
         myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
         myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
-        RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
+        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
         rt.setToAngle(TURTLE_RESET_ANGLE);
         rt.play();
         heading = 0;
@@ -246,9 +246,6 @@ public class TurtleView{
     }
 
     public void set(double newX, double newY, double newHeading){
-        newY = -newY;
-        newX += TURTLE_SCREEN_WIDTH/2;
-        newY += TURTLE_SCREEN_HEIGHT/2;
         currentX = newX;
         currentY = newY;
         heading = newHeading;
@@ -257,5 +254,10 @@ public class TurtleView{
         RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
         rt.setToAngle(newHeading);
         rt.play();
+    }
+
+    public void setCommandSize(int size){
+        if(size == 0){return;}
+        animationDuration = 500/size;
     }
 }

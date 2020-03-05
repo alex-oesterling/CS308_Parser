@@ -14,14 +14,18 @@ import org.xml.sax.SAXException;
 import slogo.view.Visualizer;
 
 public class XMLReader {
+
+  private static final String TXT_FILEPATH = "data/templates/";
   private File myFile;
   private Document myDoc;
   private Visualizer myVisualizer;
+  private Stage myStage;
 
   public XMLReader(File file, Stage stage){
+
     myFile = file;
+    myStage = stage;
     myVisualizer = new Visualizer(stage);
-    stage.setScene(myVisualizer.setupScene());
     setupDocument();
     readFile();
   }
@@ -41,8 +45,9 @@ public class XMLReader {
   }
 
   private void readFile(){
-    readPreferences();
     readTurtles();
+    myStage.setScene(myVisualizer.setupScene());
+    readPreferences();
     readCommandHistory();
     readUserVariables();
     readUserCommands();
@@ -116,6 +121,14 @@ public class XMLReader {
         Element cmdElement = (Element) cmd;
         myVisualizer.getTerminal().addHistory(cmdElement.getAttribute("syntax"));
       }
+    }
+
+    NodeList commandFiles = commandElement.getElementsByTagName("File");
+    Node file = commandHistory.item(0);
+    if(file.getNodeType() == Node.ELEMENT_NODE){
+      Element fileElement = (Element) file;
+      myVisualizer.getTerminal().loadCodeFromFile(new File(TXT_FILEPATH + fileElement.getAttribute("filename")));
+      myVisualizer.getTerminal().submitCommand();
     }
   }
 

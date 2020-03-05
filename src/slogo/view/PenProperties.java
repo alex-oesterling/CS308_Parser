@@ -42,7 +42,7 @@ public class PenProperties {
     }
 
     private Scene setScene(){
-        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
         root = new Group();
         root.getChildren().add(createGrid());
         return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);

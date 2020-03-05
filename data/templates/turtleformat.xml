@@ -10,6 +10,7 @@
   <CommandHistory>
     <Command syntax="fd 50"/>
     <Command syntax="rt 90"/>
+    <File filename="turtleformat.txt"/>
   </CommandHistory>
   <UserVariables>
     <Variable name=":variable" value="50"/>

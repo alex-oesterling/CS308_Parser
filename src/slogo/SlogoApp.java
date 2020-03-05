@@ -11,6 +11,7 @@ public class SlogoApp {
 
   public SlogoApp(Stage stage){
     Visualizer myVisualizer = new Visualizer(stage);
+    myVisualizer.addTurtle();
     stage.setScene(myVisualizer.setupScene());
     stage.setTitle(TITLE);
     stage.show();

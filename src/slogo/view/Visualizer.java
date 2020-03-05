@@ -48,16 +48,12 @@ public class Visualizer{
 
   private Controller myController;
   private BorderPane root;
-  private HelpWindow helpWindow;
   private ViewExternal viewExternal;
   private CommandLine commandLine;
   private PenProperties penProperties;
-  private MoveTurtle moveTurtle;
   private Styler styler;
   private ColorPalette colorPalette;
   private ShapePalette shapePalette;
-  private VBox variables;
-  private VBox commands;
   private Rectangle turtleArea;
   private Map<String, TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
@@ -85,14 +81,14 @@ public class Visualizer{
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController);
     myList = new ListView<>();
-    myToolBar = new ToolBar(stage);
+    myToolBar = new ToolBar(stage, commandLine);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
     styler = new Styler();
   }
 
   public Scene setupScene() {
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
     root = createView();
     Scene myScene = new Scene(root);
     myScene.getStylesheets()
@@ -104,7 +100,6 @@ public class Visualizer{
 
   private BorderPane createView(){
     BorderPane viewPane = new BorderPane();
-    viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
     Node toolBar = myToolBar.setupToolBar();
@@ -129,7 +124,6 @@ public class Visualizer{
     turtleArea.setFill(Color.WHITE);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    addTurtle();
     Group view = new Group();
     view.getChildren().addAll(turtleArea, turtlePaths, turtles);
     return view;
@@ -183,8 +177,8 @@ public class Visualizer{
             makeTurtleSelector(),
             styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.resetAll(); turtleList.get(0).resetTurtle(); }),
-            styler.createButton(myResources.getString("MoveTurtle"), e-> moveTurtle = new MoveTurtle(myController)),
+                    e->{ clear(); myController.resetAll(); currentTurtle.resetTurtle(); }),
+            styler.createButton(myResources.getString("MoveTurtle"), e-> new MoveTurtle(myController)),
             addTurtleInfo());
     return ui;
   }
@@ -199,14 +193,14 @@ public class Visualizer{
             styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(viewExternal, currentTurtle)),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
-            styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)));
+            styler.createButton(myResources.getString("HelpCommand"), e-> new HelpWindow(language)));
     return ui;
   }
 
   private ColorPicker backgroundColor(){
     backgroundColorPicker = new ColorPicker();
     backgroundColorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    backgroundColorPicker.setOnAction(e -> turtleArea.setFill(colorPicker.getValue()));
+    backgroundColorPicker.setOnAction(e -> turtleArea.setFill(backgroundColorPicker.getValue()));
     return backgroundColorPicker;
   }
 
@@ -251,6 +245,7 @@ public class Visualizer{
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
     comboBox.setOnAction(event -> setLanguage(comboBox.getValue().toString()));
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     return comboBox;
   }
 

@@ -25,13 +25,16 @@ public class ToolBar {
   private MenuItem newWindow;
   private MenuItem exit;
   private MenuItem restart;
-  private MenuItem load;
+  private MenuItem loadWorkspace;
+  private MenuItem loadCode;
   private ResourceBundle myResources;
   private Stage myStage;
+  private CommandLine myTerminal;
 
-  public ToolBar(Stage stage){
+  public ToolBar(Stage stage, CommandLine cline){
     myStage = stage;
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+    myTerminal = cline;
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
   }
 
   public Node setupToolBar(){
@@ -44,9 +47,10 @@ public class ToolBar {
       closeWindow();
       makeNewWindow();
     });
-    load = makeMenuItem("Load", e-> new XMLReader(chooseFile(), myStage));
+    loadWorkspace = makeMenuItem("LoadWorkSpace", e-> new XMLReader(chooseXMLFile(), myStage));
+    loadCode = makeMenuItem("LoadCode", e-> myTerminal.loadCodeFromFile(chooseTXTFile()));
     menuBar.getMenus().add(menu);
-    menu.getItems().addAll(newWindow, load, restart, exit);
+    menu.getItems().addAll(newWindow, loadWorkspace, loadCode, restart, exit);
     tools.getChildren().add(menuBar);
     return tools;
   }
@@ -100,11 +104,24 @@ public class ToolBar {
    *
    * @return the File object representing the .xml file to be used by the simulation
    */
-  private File chooseFile() {
+  private File chooseXMLFile() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Choose Simulation File");
     fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
     fileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    File file = fileChooser.showOpenDialog(myStage);
+    if (file != null) {
+      return file;
+    } else {
+      return null;
+    }
+  }
+
+  private File chooseTXTFile() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Choose Code File");
+    fileChooser.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("txt files", "*.txt"));
     File file = fileChooser.showOpenDialog(myStage);
     if (file != null) {
       return file;

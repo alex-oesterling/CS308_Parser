@@ -26,15 +26,8 @@ public class Repeat extends CommandWithReturningList{
    * @return
    */
   public Double getResult(){
-    returningList = new ArrayList<>();
-    Double temp = DEFAULT;
-    for(int k=0; k<times; k++) {
-      for (Command c : commands) {
-        temp = c.getResult();
-        returningList.add(c);
-      }
-    }
-    return temp;
+    List<Command> expandedList = getCommandList();
+    return expandedList.get(expandedList.size()-1).getResult();
   }
 
   /**
@@ -43,7 +36,12 @@ public class Repeat extends CommandWithReturningList{
    */
   @Override
   public List<Command> getCommandList() {
-    this.execute();
+    returningList = new ArrayList<>();
+    for(int k=0; k<times; k++) {
+      for (Command c : commands) {
+        returningList.addAll(c.getCommandList());
+      }
+    }
     return returningList;
   }
 }
