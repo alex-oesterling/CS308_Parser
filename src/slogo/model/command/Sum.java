@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Sum extends Command {
 
   /**
@@ -9,7 +13,7 @@ public class Sum extends Command {
    * @param addend1 a
    * @param addend2 b
    */
-  public Sum(Double addend1, Double addend2){
+  public Sum(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(addend1+addend2);
   }
 }

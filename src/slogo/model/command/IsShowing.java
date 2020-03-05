@@ -2,17 +2,21 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class IsShowing extends Command {
 
     private Turtle t;
 
     /**
      * Return 1 if the turtle is showing, 0 otherwise
-     * @param body turtle to check
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
-    public IsShowing(Turtle body){
-        super(body.isTurtleVisible());
-        t = body;
+    public IsShowing(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+        super(turtleList.get(FIRST_INDEX).isTurtleVisible());
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**

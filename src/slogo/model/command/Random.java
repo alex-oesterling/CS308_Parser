@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Random extends Command {
 
   /**
@@ -8,7 +12,7 @@ public class Random extends Command {
    * less than max
    * @param max maximum random value
    */
-  public Random(Double max){
+  public Random(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(Math.random()*max);
   }
 }

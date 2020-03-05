@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Or extends Command {
 
   /**
@@ -8,7 +12,7 @@ public class Or extends Command {
    * @param value1 a
    * @param value2 b
    */
-  public Or(double value1, Double value2){
+  public Or(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(value1!=0.0||value2!=0.0);
   }
 

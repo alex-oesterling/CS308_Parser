@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class PenUp extends Command {
 
     private Turtle t;
@@ -12,7 +14,7 @@ public class PenUp extends Command {
      * sets the drawing to false
      * @param body the current turtle that will have its pen set up and not drawing
      */
-    public PenUp(Turtle body){
+    public PenUp(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super(NOT_DRAWING);
         t = body;
     }

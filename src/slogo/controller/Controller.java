@@ -33,6 +33,7 @@ public class Controller {
     private static final double TURTLE_PARAM_VALUE = -0.5;
     private static boolean IS_VARIABLE = false;
 
+    private double IdOfTurtle;
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
     private Stack<Double> argumentStack, turtleAndDoubleParametersStack, listParametersStack;
@@ -47,7 +48,6 @@ public class Controller {
     private Turtle turtle;
     private String myCommands;
     private ViewExternal myView;
-    private double IdOfTurtle;
     private Parser commandParser, parametersParser, syntaxParser, listParamsParser, numberOfParamsParser;
 
     /**
@@ -60,9 +60,9 @@ public class Controller {
     public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
+        makeParsers(language);
         makeMaps();
         makeStacks();
-        makeParsers(language);
     }
 
     private void makeParsers(String language){
@@ -90,7 +90,7 @@ public class Controller {
         turtleId = new HashMap<>();
     }
 
-    private void makeStacks() { //TODO remove duplicate with resetStacks()
+    private void makeStacks() {
         makeNewStacks();
         listParametersStack = new Stack<>();
     }

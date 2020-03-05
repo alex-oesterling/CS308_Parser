@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class PenDown extends Command {
 
     private Turtle t;
@@ -11,7 +13,7 @@ public class PenDown extends Command {
      * sets the drawing to true
      * @param body the current turtle that will have its pen set to down
      */
-    public PenDown(Turtle body){
+    public PenDown(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super(DRAWING);
         t = body;
     }

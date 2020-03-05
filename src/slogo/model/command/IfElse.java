@@ -1,5 +1,7 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class IfElse extends CommandWithReturningList {
   private boolean conditionResult;
   private List<Command> trueList, falseList, returningList;
 
-  public IfElse(Double condition, List<Command> falseCommands, List<Command> trueCommands){
+  public IfElse(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super();
     falseList = falseCommands;
     trueList = trueCommands;

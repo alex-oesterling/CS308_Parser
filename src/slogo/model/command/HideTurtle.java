@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class HideTurtle extends Command {
 
     private static final double HIDDEN = 0;
@@ -10,11 +12,13 @@ public class HideTurtle extends Command {
     /**
      * Constructor for hide turtle which allows the turtle to be hidden by setting visibility to be false
      * Pass up the return value to the super constructor, which is 0
-     * @param body the turtle that is currently being used, will set to be hidden
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
-    public HideTurtle(Turtle body){
+    public HideTurtle(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super(HIDDEN);
-        t = body;
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**
