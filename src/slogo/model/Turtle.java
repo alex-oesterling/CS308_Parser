@@ -88,7 +88,7 @@ public class Turtle{
    * @param startingYPosition the y pos of where the turtle starts
    * @param startingHeading the direction/degrees the turtle starts out facing
    */
-  public void initializeBasicThings(double startingXPosition, double startingYPosition, int startingHeading){
+  public void initializeBasicThings(double startingXPosition, double startingYPosition, double startingHeading){
     setX(startingXPosition);
     homeX = xPosition;
     setY(startingYPosition);

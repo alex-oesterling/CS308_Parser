@@ -9,10 +9,10 @@ public class If extends Command {
   private List<Command> commandList, returningList;
   private static final Double DEFAULT = 0.0;
 
-  public If(List<Command> commands, List<Command> conditions){
+  public If(Double condition, List<Command> commands){
     super();
     commandList = commands;
-    conditionResult = (conditions.get(conditions.size()-1).getResult()!=0.0);
+    conditionResult = (condition!=0.0);
   }
 
   @Override

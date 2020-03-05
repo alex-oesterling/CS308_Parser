@@ -18,6 +18,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import slogo.SlogoApp;
 import slogo.config.XMLReader;
+import slogo.config.XMLWriter;
 
 public class ToolBar {
   private static final String RESOURCES = "resources";
@@ -31,14 +32,17 @@ public class ToolBar {
   private MenuItem restart;
   private MenuItem loadWorkspace;
   private MenuItem loadCode;
+  private MenuItem saveWorkspace;
   private ResourceBundle myResources;
   private Stage myStage;
   private CommandLine myTerminal;
+  private Visualizer myVisualizer;
 
-  public ToolBar(Stage stage, CommandLine cline){
+  public ToolBar(Stage stage, Visualizer visualizer, ResourceBundle newResources){
     myStage = stage;
-    myTerminal = cline;
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
+    myVisualizer = visualizer;
+    myTerminal = visualizer.getTerminal();
+    myResources = newResources;
   }
 
   public Node setupToolBar(){
@@ -51,12 +55,21 @@ public class ToolBar {
       closeWindow();
       makeNewWindow();
     });
-    loadWorkspace = makeMenuItem("LoadWorkSpace", e-> new XMLReader(chooseXMLFile(), myStage));
+    loadWorkspace = makeMenuItem("LoadWorkspace", e-> new XMLReader(chooseXMLFile(), myStage));
     loadCode = makeMenuItem("LoadCode", e-> tryLoadCodeFromFile());
+    saveWorkspace = makeMenuItem("SaveWorkspace", e-> pickAndSaveFile());
     menuBar.getMenus().add(menu);
-    menu.getItems().addAll(newWindow, loadWorkspace, loadCode, restart, exit);
+    menu.getItems().addAll(newWindow, saveWorkspace, loadWorkspace, loadCode, restart, exit);
     tools.getChildren().add(menuBar);
     return tools;
+  }
+
+  private void pickAndSaveFile() {
+    XMLWriter writer = new XMLWriter(myVisualizer);
+    String filepath = saveFile();
+    if(filepath != null){
+      writer.saveXML(filepath);
+    }
   }
 
   private void tryLoadCodeFromFile() {
@@ -141,6 +154,24 @@ public class ToolBar {
     File file = fileChooser.showOpenDialog(myStage);
     if (file != null) {
       return file;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Creates filechooser dialog where the user can select the filepath for the current configuration of the simulation
+   * to be saved to.
+   * @return the filepath where the current simulation will be saved to.
+   */
+  private String saveFile() {
+    FileChooser fileSaver = new FileChooser();
+    fileSaver.setTitle("Save Simulation Configuration");
+    fileSaver.setInitialDirectory(new File(System.getProperty(XML_FILEPATH)));
+    fileSaver.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+    File file = fileSaver.showSaveDialog(myStage);
+    if (file != null) {
+      return file.getPath();
     } else {
       return null;
     }

@@ -3,10 +3,7 @@ package slogo.view;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableListValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -25,10 +22,6 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TurtleView{
     public static final String XML_FILEPATH = "user.dir";
@@ -49,7 +42,6 @@ public class TurtleView{
     private Color myPenColor;
     private double currentX;
     private double currentY;
-    private double currentOrienation;
     private SequentialTransition st;
     private double heading;
     private double pathStrokeWidth;
@@ -94,11 +86,10 @@ public class TurtleView{
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
             turtleImage.setFitHeight(TURTLE_HEIGHT);
-            turtleImage.setTranslateX(currentX - turtleImage.getBoundsInLocal().getWidth() / 2);
-            turtleImage.setTranslateY(currentY - turtleImage.getBoundsInLocal().getHeight() / 2);
             myTurtles.getChildren().remove(myImage);
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
+            set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
         } catch (IllegalArgumentException e){
             return;
         } catch (Exception e) {
@@ -147,7 +138,6 @@ public class TurtleView{
         double oldHeading = heading;
         currentX = newX;
         currentY = newY;
-        currentOrienation = orientation;
         heading = orientation;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
@@ -171,7 +161,6 @@ public class TurtleView{
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
         }
-        System.out.println(turtleStats());
     }
 
     public void playAnimation(){
@@ -182,27 +171,18 @@ public class TurtleView{
     public void resetTurtle(){
         myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
         myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
-        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
-        rt.setToAngle(TURTLE_RESET_ANGLE);
-        rt.play();
+        myImage.setRotate(0);
         heading = 0;
         currentY = TURTLE_SCREEN_HEIGHT/2;
         currentX = TURTLE_SCREEN_WIDTH/2;
     }
 
     public SimpleObjectProperty<ObservableList<String>> turtleStats(){
-//        myTurtle.setValue().addAll(turtleName,
-//                Double.toString(currentX),
-//                Double.toString(currentY),
-//                Double.toString(currentOrienation),
-//                String.valueOf(myPenColor),
-//                Double.toString(pathStrokeWidth),
-//                Boolean.toString(penStatus));
         observableList = FXCollections.observableArrayList();
         observableList.addAll(turtleName,
                 Double.toString(currentX),
                 Double.toString(currentY),
-                Double.toString(currentOrienation),
+                Double.toString(heading),
                 String.valueOf(myPenColor),
                 Double.toString(pathStrokeWidth),
                 Boolean.toString(penStatus));
@@ -215,9 +195,11 @@ public class TurtleView{
         myPenColor = color;
     }
 
-    public void changePenStatus(){penStatus = !penStatus;}
+    public void changePenStatus(Boolean status){penStatus = status;}
 
-    public void changePenWidth() {pathStrokeWidth++;}
+    public boolean getPenStatus(){return penStatus;}
+
+    public void changePenWidth(double penWidth) {pathStrokeWidth = penWidth;}
 
     public void updateTurtleView(double value){
         myImage.setVisible(value != 0.0);
@@ -228,11 +210,12 @@ public class TurtleView{
     }
 
     public void setShape(ImageView turtle){
-        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
-        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
+//        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
+//        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().remove(myImage);
         myImage = turtle;
         myTurtles.getChildren().add(myImage);
+        set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
     }
 
     public void updatePenStatus(double value){
@@ -246,18 +229,27 @@ public class TurtleView{
     }
 
     public void set(double newX, double newY, double newHeading){
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
+
         currentX = newX;
         currentY = newY;
         heading = newHeading;
-        myImage.setTranslateX(newX);
-        myImage.setTranslateY(newY);
-        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
-        rt.setToAngle(newHeading);
-        rt.play();
+
+        myImage.setTranslateX(newX-myImage.getBoundsInLocal().getWidth()/2);
+        myImage.setTranslateY(newY-myImage.getBoundsInLocal().getHeight()/2);
+        myImage.setRotate(newHeading);
     }
 
     public void setCommandSize(int size){
         if(size == 0){return;}
         animationDuration = 500/size;
+    }
+
+    public String[] getData(){
+        double coordinateX = currentX - TURTLE_SCREEN_WIDTH/2;
+        double coordinateY = TURTLE_SCREEN_HEIGHT/2 - currentY;
+        return new String[]{turtleName, "" + coordinateX, "" + coordinateY, "" + heading};
     }
 }
