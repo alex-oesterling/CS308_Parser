@@ -15,11 +15,6 @@ public class ViewExternal implements ViewExternalAPI {
   }
 
   @Override
-  public void updatePenColor(Color color) {
-    myVisualizer.getCurrentTurtle().updatePen(color);
-  }
-
-  @Override
   public void updateCommandPenColor(double value){
     myVisualizer.setPenColor(value);
   }
@@ -37,11 +32,6 @@ public class ViewExternal implements ViewExternalAPI {
   @Override
   public void updateShape(double value){
     myVisualizer.setShape(value);
-  }
-
-  @Override
-  public void updateSceneColor() {
-
   }
 
   @Override

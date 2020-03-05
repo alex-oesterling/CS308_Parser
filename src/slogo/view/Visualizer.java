@@ -1,7 +1,6 @@
 package slogo.view;
 
 import java.util.*;
-
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,10 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -21,14 +17,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import slogo.exceptions.InvalidTurtleException;
 
 public class Visualizer{
 
-  public static final Paint BACKGROUND = Color.AZURE;
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
   public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
@@ -48,9 +42,10 @@ public class Visualizer{
   public static final int HBOX_SPACING = 10;
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String DEFAULT_LANGUAGE = "English";
+  public static final double UNSELECTED_OPACITY = .5;
+  public static final int SELECTED_OPACITY = 1;
 
   private Controller myController;
-  private BorderPane root;
   private ViewExternal viewExternal;
   private CommandLine commandLine;
   private PenProperties penProperties;
@@ -60,7 +55,6 @@ public class Visualizer{
   private Rectangle turtleArea;
   private Map<String, TurtleView> turtleMap; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
-  private ResourceBundle myColorResources;
   private String language;
   private Group turtlePaths;
   private Group turtles;
@@ -70,7 +64,6 @@ public class Visualizer{
   private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
-  private ColorPicker colorPicker;
   private ColorPicker backgroundColorPicker;
   private ComboBox<String> turtleBox;
   private ToolBar myToolBar;
@@ -94,7 +87,6 @@ public class Visualizer{
     myList = new ListView<>();
     myToolBar = new ToolBar(stage, this, myResources);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-    colorPicker = new ColorPicker();
     styler = new Styler();
     colorPalette = new ColorPalette(createColorMap());
     shapePalette = new ShapePalette();
@@ -102,8 +94,7 @@ public class Visualizer{
   }
 
   public Scene setupScene() {
-    root = createView();
-    Scene myScene = new Scene(root);
+    Scene myScene = new Scene(createView());
     myScene.getStylesheets()
         .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
             .toExternalForm());
@@ -192,8 +183,8 @@ public class Visualizer{
             styler.createButton(myResources.getString("ResetCommand"), e->{
                     clear();
                     myController.resetAll();
-                    for(String s : turtleMap.keySet()) {
-                      turtleMap.get(s).resetTurtle();
+                    for(TurtleView turtle : turtleMap.values()) {
+                      turtle.resetTurtle();
                     }
             }),
             styler.createButton(myResources.getString("MoveTurtle"), e-> new MoveTurtle(myController)),
@@ -276,7 +267,7 @@ public class Visualizer{
   }
 
   private Map<Double, String> createColorMap(){
-    myColorResources = ResourceBundle.getBundle(DEFAULT_COLOR_RESOURCE_PACKAGE);
+    ResourceBundle myColorResources = ResourceBundle.getBundle(DEFAULT_COLOR_RESOURCE_PACKAGE);
     Enumeration e = myColorResources.getKeys();
     TreeMap<Double, String> treeMap = new TreeMap<>();
     while (e.hasMoreElements()) {
@@ -325,27 +316,22 @@ public class Visualizer{
       Double number = null;
       try{
         number = Double.valueOf(result.get());
-      } catch (NullPointerException e){
-        Alert errorAlert = new Alert(AlertType.ERROR);
-        errorAlert.setHeaderText("Please enter a double:");
-        errorAlert.setContentText("Restoring variable");
-        errorAlert.showAndWait();
+        varMap.put(variableName, number.toString());
+        value.setText(result.get());
+        myController.updateCommandVariable(variableName, number.toString());
+      } catch (NumberFormatException e){
         number = Double.parseDouble(value.getText());
       }
-      varMap.put(variableName, number.toString());
-      value.setText(result.get());
-      myController.updateCommandVariable(variableName, number.toString());
     }
   }
+
+
 
   public void addTurtle(){
     try {
       myController.addTurtle();
     } catch (InvalidTurtleException e){
-      Alert errorAlert = new Alert(AlertType.ERROR);
-      errorAlert.setHeaderText("Turtle already exists!");
-      errorAlert.setContentText("Please choose a unique Turtle name");
-      errorAlert.showAndWait();
+      e.displayError("Please add unique turtle:");
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
@@ -358,10 +344,7 @@ public class Visualizer{
     try {
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e){
-      Alert errorAlert = new Alert(AlertType.ERROR);
-      errorAlert.setHeaderText("Turtle already exists!");
-      errorAlert.setContentText("Please fix XML file to specify unique turtle");
-      errorAlert.showAndWait();
+      e.displayError("Please fix XML to contain unique turtles:");
       return;
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
@@ -375,7 +358,7 @@ public class Visualizer{
   private void setTurtle(String name){
     myList.itemsProperty().unbind();
     if(currentTurtle != null) {
-      currentTurtle.setOpacity(.5);
+      currentTurtle.setOpacity(UNSELECTED_OPACITY);
     }
     currentTurtle = turtleMap.get(name);
     if( penProperties !=null){
@@ -385,7 +368,7 @@ public class Visualizer{
     if(turtleBox != null){
       turtleBox.getSelectionModel().select(name);
     }
-    currentTurtle.setOpacity(1);
+    currentTurtle.setOpacity(SELECTED_OPACITY);
     myController.chooseTurtle(name);
     myList.itemsProperty().bind(currentTurtle.turtleStats());
   }
