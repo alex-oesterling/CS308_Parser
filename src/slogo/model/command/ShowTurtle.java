@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class ShowTurtle extends Command {
 
     private static final double SHOWING = 1;
@@ -11,7 +13,7 @@ public class ShowTurtle extends Command {
      * Constructor for show turtle which allows the turtle to be seen
      * @param body the turtle that is currently being used, will set to be shown
      */
-    public ShowTurtle(Turtle body){
+    public ShowTurtle(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super(SHOWING);
         t = body;
     }

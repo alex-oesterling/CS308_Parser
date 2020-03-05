@@ -1,5 +1,7 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +16,10 @@ public class Repeat extends CommandWithReturningList{
    * @param reps
    * @param commandList
    */
-  public Repeat(Double reps, List<Command> commandList){
+  public Repeat(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super();
-    times = reps;
-    commands = commandList;
+    times = doubleList.get(FIRST_INDEX);
+    commands = commandList.get(FIRST_INDEX);
   }
 
   @Override

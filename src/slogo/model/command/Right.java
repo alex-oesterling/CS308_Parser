@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class Right extends Command {
 
     private Turtle t;
@@ -12,10 +14,10 @@ public class Right extends Command {
      * @param body the specific turtle being used, what the right value will be
      * @param value the value of how far it is turning right
      */
-    public Right(Turtle body, Double value) {
-        super(value);
+    public Right(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
+        super(doubleList.get(FIRST_INDEX));
         t = body;
-        degrees = value;
+        degrees = doubleList.get(FIRST_INDEX);
     }
 
     /**

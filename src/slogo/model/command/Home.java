@@ -2,17 +2,21 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class Home extends Command {
 
   private Turtle t;
 
   /**
    * Constructor for the home command
-   * @param body turtle being used currently
+   * @param turtleList the list of turtles being brought in to use this command (if needed)
+   * @param doubleList the list of doubles to be used for this command (if needed)
+   * @param commandList the list of commands being used for this command (if needed)
    */
-  public Home(Turtle body) {
+  public Home(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
     super();
-    t = body;
+    t = turtleList.get(FIRST_INDEX);
   }
 
   /**

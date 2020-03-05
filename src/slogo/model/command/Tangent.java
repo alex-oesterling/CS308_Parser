@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Tangent extends Command {
 
   /**
@@ -8,7 +12,7 @@ public class Tangent extends Command {
    * performs tan(a)
    * @param a value to take the tangent of
    */
-  public Tangent(Double a){
-    super(Math.tan(a));
+  public Tangent(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+    super(Math.tan(doubleList.get(FIRST_INDEX)));
   }
 }

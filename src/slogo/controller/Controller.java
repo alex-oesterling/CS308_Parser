@@ -61,9 +61,9 @@ public class Controller {
     public Controller(ViewExternal visualizer, String language) {
         myView = visualizer;
         mySymbols = new ArrayList<>();
+        makeParsers(language);
         makeMaps();
         makeStacks();
-        makeParsers(language);
     }
 
     private void makeParsers(String language){
@@ -91,7 +91,7 @@ public class Controller {
         turtleId = new HashMap<>();
     }
 
-    private void makeStacks() { //TODO remove duplicate with resetStacks()
+    private void makeStacks() {
         makeNewStacks();
         listParametersStack = new Stack<>();
     }
@@ -397,14 +397,14 @@ public class Controller {
             turtleAndDoubleParametersStack.push(Double.parseDouble(turtleAndDoubleParamsString)); //add that value to the params stack
         }
     }
-
+/*
     private List<Command> tryToMakeCommands(List<Command> commandList){
         if(checkArgumentStack()&&checkListStack()){
             commandList.add(weHaveEnoughArgumentsToMakeACommand(commandList));
         }
         return commandList;
     }
-
+*/
     private List<Command> tryToMakeCommandsRefactoring(List<Command> commandList){
         if(checkArgumentStackRefactoring()&&checkListStackRefactoring()){
             commandList.add(weHaveEnoughArgumentsToMakeACommandRefactoring(commandList));
@@ -429,7 +429,7 @@ public class Controller {
     private boolean checkListStackRefactoring(){
         return !listParametersStack.isEmpty() && (listStack.size() >= listParametersStack.peek());
     }
-
+/*
     private Command weHaveEnoughArgumentsToMakeACommand(List<Command> commands){
         double numberOfParams = turtleAndDoubleParametersStack.pop(); //to be used in creating the command
         String name = commandStack.pop();
@@ -440,7 +440,7 @@ public class Controller {
         }
         return newCommand;
     }
-
+*/
     private Command weHaveEnoughArgumentsToMakeACommandRefactoring(List<Command> commands){
         double numberOfParams = turtleAndDoubleParametersStack.pop(); //to be used in creating the command
 
@@ -453,7 +453,7 @@ public class Controller {
         return newCommand;
     }
 
-    private Command getCommand(String commandName, double numberOfParams){
+    /*private Command getCommand(String commandName, double numberOfParams){
         try{
             Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
             Constructor commandConstructor = getCommandConstructor(commandClass);//, numberOfParams);
@@ -479,8 +479,8 @@ public class Controller {
             e.printStackTrace();
             //FIXME
         }
-        return new Not(1.0); //FIXME !!!!
-    }
+        return null;//new Not(1.0); //FIXME !!!!
+    }*/
     private Command getCommandRefactoring(String commandName){
         String type = getCommandTypeRefactoring(commandName);
         try{
@@ -509,7 +509,7 @@ public class Controller {
             e.printStackTrace();
             //FIXME
         }
-        return new Not(1.0); //FIXME !!!!
+        return null;// new Not(1.0); //FIXME !!!!
     }
 
     private String getCommandTypeRefactoring(String name){
@@ -538,6 +538,7 @@ public class Controller {
         }*/
     }
 
+    /*
     private Command makeCommand(String name, double numberOfParams, Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Command myCommand = new Not(1.0);
         if(listParametersStack.isEmpty()){
@@ -562,7 +563,7 @@ public class Controller {
         }
         listParametersStack.pop();
         return myCommand;
-    }
+    }*/
 
     private Command makeCommandRefactored(String commandType, Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         List<Turtle> turtleListToGive = new ArrayList<>();

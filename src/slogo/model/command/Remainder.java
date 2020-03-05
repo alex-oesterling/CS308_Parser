@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Remainder extends Command {
 
   /**
@@ -8,7 +12,7 @@ public class Remainder extends Command {
    * @param dividend
    * @param divisor
    */
-  public Remainder(Double divisor, Double dividend){
+  public Remainder(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(dividend%divisor);
   }
 }

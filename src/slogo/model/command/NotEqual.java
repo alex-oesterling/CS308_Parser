@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class NotEqual extends Command {
 
   /**
@@ -7,7 +11,7 @@ public class NotEqual extends Command {
    * @param double1 first double
    * @param double2 second double
    */
-  public NotEqual(Double double1, Double double2){
+  public NotEqual(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(double1!=double2);
   }
 

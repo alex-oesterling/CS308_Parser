@@ -1,5 +1,7 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
 import java.util.List;
 
 public class DoTimes{
@@ -9,12 +11,12 @@ public class DoTimes{
 
   /**
    *
-   * @param reps
+   * @param //reps
    * @param commandList
    */
-  public DoTimes(Double reps, List<Command> commandList){
-    times = reps;
-    commands = commandList;
+  public DoTimes(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+    //times = reps;
+    //commands = commandList;
   }
 
   /**

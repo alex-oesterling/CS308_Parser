@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Sine extends Command {
 
   /**
@@ -8,7 +12,7 @@ public class Sine extends Command {
    * performs sin(a)
    * @param a value to take the sine of
    */
-  public Sine(Double a){
-    super(Math.sin(a));
+  public Sine(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+    super(Math.sin(doubleList.get(FIRST_INDEX)));
   }
 }

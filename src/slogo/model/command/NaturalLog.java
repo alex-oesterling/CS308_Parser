@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class NaturalLog extends Command {
 
   /**
@@ -7,7 +11,7 @@ public class NaturalLog extends Command {
    * performs ln(a)
    * @param a
    */
-  public NaturalLog(Double a){
+  public NaturalLog(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(Math.log(a));
   }
 }
