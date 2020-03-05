@@ -52,7 +52,7 @@ public class Turtle{
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
-  public Turtle(double startingXPosition, double startingYPosition, int startingHeading){
+  public Turtle(double startingXPosition, double startingYPosition, double startingHeading){
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
   }
@@ -80,7 +80,7 @@ public class Turtle{
    * @param startingYPosition the y pos of where the turtle starts
    * @param startingHeading the direction/degrees the turtle starts out facing
    */
-  public void initializeBasicThings(double startingXPosition, double startingYPosition, int startingHeading){
+  public void initializeBasicThings(double startingXPosition, double startingYPosition, double startingHeading){
     setX(startingXPosition);
     homeX = xPosition;
     setY(startingYPosition);
