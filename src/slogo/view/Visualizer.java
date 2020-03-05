@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,7 +15,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import slogo.exceptions.InvalidTurtleException;
@@ -25,23 +23,20 @@ public class Visualizer{
 
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
-  public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
   public static final int COLORPICKER_HEIGHT = 30;
   public static final int LISTVIEW_WIDTH = 100;
   public static final int LISTVIEW_HEIGHT  = 250;
-  private static final String STYLESHEET = "styling.css";
-  private static final String RESOURCES = "resources";
+  public static final String STYLESHEET = "styling.css";
+  public static final String RESOURCES = "resources";
   public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
   public static final String COLOR_RESOURCE = "resources.formats";
   public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = COLOR_RESOURCE + ".Colors";
-
-
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
   public static final int VBOX_SPACING = 10;
   public static final int HBOX_SPACING = 10;
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
-  private static final String DEFAULT_LANGUAGE = "English";
+  public static final String DEFAULT_LANGUAGE = "English";
   public static final double UNSELECTED_OPACITY = .5;
   public static final int SELECTED_OPACITY = 1;
 
@@ -52,14 +47,9 @@ public class Visualizer{
   private Styler styler;
   private ColorPalette colorPalette;
   private ShapePalette shapePalette;
-  private Rectangle turtleArea;
-  private Map<String, TurtleView> turtleMap; //FIXME Map between name and turtle instead of list (number to turtle)
+  private Map<String, TurtleView> turtleMap;
   private ResourceBundle myResources;
   private String language;
-  private Group turtlePaths;
-  private Group turtles;
-  private VBox commandHistory;
-  private VBox varHistory;
   private Map<String, String> varMap;
   private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
@@ -70,15 +60,15 @@ public class Visualizer{
   private ListView<String> myList;
   private Stage myStage;
   private Color backgroundColor;
+  private UserDefined userDefined;
 
 
   public Visualizer (Stage stage){
     language = "English";
     backgroundColor = Color.WHITE;
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
-    turtlePaths = new Group();
+    userDefined = new UserDefined();
     turtleMap = new TreeMap<>();
-    turtles = new Group();
     varMap = new TreeMap<>();
     cmdMap = new TreeMap<>();
     viewExternal = new ViewExternal(this);
@@ -107,13 +97,11 @@ public class Visualizer{
     viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
     Node toolBar = myToolBar.setupToolBar();
-    Node turtleView = showUserDefined();
+    Node turtleView = userDefined.showUserDefined();
     Node cLine = commandLine.setupCommandLine();
-    Node userInterface = createSettingsUI();
-    Node userTurtleInterface = createTurtleUI();
     HBox hbox = new HBox();
     hbox.setSpacing(HBOX_SPACING);
-    hbox.getChildren().addAll(userTurtleInterface, userInterface);
+    hbox.getChildren().addAll(createTurtleUI(), createSettingsUI());
 
     viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setTop(toolBar);
@@ -121,57 +109,6 @@ public class Visualizer{
     viewPane.setCenter(cLine);
     viewPane.setRight(hbox);
     return viewPane;
-  }
-
-  private Group createBox() {
-    turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
-    turtleArea.setFill(backgroundColor);
-    turtleArea.setStroke(Color.BLACK);
-    turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
-    Group view = new Group();
-    view.getChildren().addAll(turtleArea, turtlePaths, turtles);
-    return view;
-  }
-
-  private VBox showUserDefined(){
-    VBox group = new VBox();
-    group.setSpacing(VBOX_SPACING);
-    group.getChildren().add(createBox());
-
-    BorderPane userDefined = new BorderPane();
-
-    commandHistory = new VBox();
-    varHistory = new VBox();
-    Node varScroll = makeHistory(varHistory);
-    Node commandScroll = makeHistory(commandHistory);
-
-    commandHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING);
-    varHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING);
-
-    Label varLabel = styler.createLabel("Variables");
-    VBox variables = new VBox();
-    variables.getChildren().addAll(varLabel, varScroll);
-    variables.setVgrow(commandScroll, Priority.ALWAYS);
-
-    Label cmdLabel = styler.createLabel("Commands");
-    VBox commands = new VBox();
-    commands.getChildren().addAll(cmdLabel, commandScroll);
-    commands.setVgrow(commandScroll, Priority.ALWAYS);
-
-    userDefined.setLeft(commands);
-    userDefined.setRight(variables);
-
-    group.getChildren().addAll(userDefined);
-    group.setVgrow(userDefined, Priority.ALWAYS);
-    return group;
-  }
-
-  private Node makeHistory(VBox history) {
-    ScrollPane userCommands = new ScrollPane();
-    userCommands.setContent(history);
-    userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4);
-    history.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
-    return userCommands;
   }
 
   private Node createTurtleUI() {
@@ -212,7 +149,7 @@ public class Visualizer{
     backgroundColorPicker.setValue(backgroundColor);
     backgroundColorPicker.setOnAction(e -> {
       backgroundColor = backgroundColorPicker.getValue();
-      turtleArea.setFill(backgroundColor);
+      userDefined.setFill(backgroundColor);
     });
     return backgroundColorPicker;
   }
@@ -228,7 +165,6 @@ public class Visualizer{
             styler.createLabel(myResources.getString("PenColor")),
             styler.createLabel(myResources.getString("PenWidth")),
             styler.createLabel(myResources.getString("PenDownLabel")));
-//    myList.itemsProperty().bind(currentTurtle.turtleStats());
     myList.setPrefSize(LISTVIEW_WIDTH, LISTVIEW_HEIGHT);
     hbox.getChildren().addAll(vbox, myList);
     return hbox;
@@ -282,12 +218,12 @@ public class Visualizer{
     Label syntaxLabel = new Label(syntax); //modify based on what model wants it to do
     HBox commandAndSyntax = new HBox();
     commandAndSyntax.setOnMouseClicked(commandLine.setOnClick(command));
-    commandAndSyntax.setMinWidth(commandHistory.getWidth());
+    commandAndSyntax.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
     final Pane spacer = new Pane();
     commandAndSyntax.setHgrow(spacer, Priority.ALWAYS);
     commandAndSyntax.getChildren().addAll(recentCommand, spacer, syntaxLabel);
     cmdMap.put(command, syntax);
-    commandHistory.getChildren().add(commandAndSyntax);
+    userDefined.addCommand(commandAndSyntax);
     myController.addUserCommand(command, syntax);
   }
 
@@ -295,13 +231,13 @@ public class Visualizer{
     Label recentCommand = new Label(variable);
     Label valueLabel = new Label(value);
     HBox variableAndValue = new HBox();
-    variableAndValue.setMinWidth(varHistory.getWidth());
+    variableAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
     final Pane spacer = new Pane();
     variableAndValue.setHgrow(spacer, Priority.ALWAYS);
     variableAndValue.getChildren().addAll(recentCommand, spacer, valueLabel);
     varMap.put(variable, value);
     variableAndValue.setOnMouseClicked(e->updateVariable(variable, valueLabel));
-    varHistory.getChildren().add(variableAndValue);
+    userDefined.addVariable(variableAndValue);
     myController.addUserVariable(variable, value);
   }
 
@@ -325,15 +261,13 @@ public class Visualizer{
     }
   }
 
-
-
   public void addTurtle(){
     try {
       myController.addTurtle();
     } catch (InvalidTurtleException e){
       e.displayError("Please add unique turtle:");
     }
-    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName());
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
@@ -347,7 +281,7 @@ public class Visualizer{
       e.displayError("Please fix XML to contain unique turtles:");
       return;
     }
-    TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName());
     tempTurtle.set(startingX, startingY, heading);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
@@ -376,7 +310,7 @@ public class Visualizer{
   public TurtleView getCurrentTurtle(){return currentTurtle;}
 
 
-  public void clear(){turtlePaths.getChildren().clear();}
+  public void clear(){userDefined.getTurtlePaths().getChildren().clear();}
 
   public void setPenColor(double value){
     if(colorPalette!=null){
@@ -405,7 +339,7 @@ public class Visualizer{
   //FIXME why do we have so many colorpicker methods? can we combine any in any way
   public void setBackgroundColor(String hexColor){
     backgroundColor = Color.web(hexColor);
-    turtleArea.setFill(backgroundColor);
+    userDefined.setFill(backgroundColor);
     backgroundColorPicker.setValue(Color.web(hexColor));
   }
 
@@ -416,7 +350,7 @@ public class Visualizer{
   }
 
   public String getBackground(){
-    return turtleArea.getFill().toString();
+    return userDefined.getFill();
   }
 
   public Map<String, TurtleView> getTurtles(){

@@ -1,6 +1,5 @@
 package slogo.view;
 
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
