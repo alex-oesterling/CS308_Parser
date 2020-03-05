@@ -14,7 +14,7 @@ public class Turtles extends Command {
      */
     public Turtles(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        t = body;
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**
