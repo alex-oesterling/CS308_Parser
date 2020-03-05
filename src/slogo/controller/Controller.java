@@ -153,10 +153,20 @@ public class Controller {
         }
     }
 
+    /**
+     * Add a user created variable to the map of user created variables
+     * @param key variable name
+     * @param value variable value
+     */
     public void addUserVariable(String key, String value){
         userCreatedConstantVariables.putIfAbsent(key, value);
     }
 
+    /**
+     * add a user created command to the map of user created commands
+     * @param key variable name
+     * @param syntax variable commands
+     */
     public void addUserCommand(String key, String syntax){
         List<String> commandList = Arrays.asList(syntax.split(" "));
         userCreatedCommandVariables.putIfAbsent(key, commandList);
@@ -452,6 +462,7 @@ public class Controller {
         for(Command c : l){
             extendedList.addAll(c.getCommandList());
         }
+        myView.setCommandSize(extendedList.size());
         return extendedList;
     }
 
