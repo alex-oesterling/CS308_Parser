@@ -32,13 +32,11 @@ public class PenProperties {
     private Styler styler;
     private ResourceBundle myResources;
     private ColorPicker colorPicker;
-    private ViewExternal viewExternal;
-    private TurtleView turtleView;
+    private Visualizer myVisualzer;
 
-    public PenProperties(ViewExternal myView, TurtleView currentTurtle){
+    public PenProperties(Visualizer visualizer){
         styler = new Styler();
-        this.viewExternal = myView;
-        this.turtleView = currentTurtle;
+        myVisualzer = visualizer;
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);
@@ -46,7 +44,7 @@ public class PenProperties {
     }
 
     private Scene setScene(){
-        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
         root = new Group();
         Scene myScene = new Scene(root,SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
         myScene.getStylesheets()
@@ -60,9 +58,14 @@ public class PenProperties {
         TextField textField = new TextField();
         VBox vbox = new VBox(styler.createLabel(myResources.getString("PenColor")),
                 penColor(),
+<<<<<<< HEAD
                 styler.createButton(myResources.getString("ChangePenCommand"), e->turtleView.changePenStatus()),
                 textField,
                 styler.createButton(myResources.getString("ChangePenWidthCommand"), e->turtleView.changePenWidth(Double.parseDouble(textField.getText())))
+=======
+                styler.createButton(myResources.getString("ChangePenCommand"), e->myVisualzer.getCurrentTurtle().changePenStatus()),
+                styler.createButton(myResources.getString("ChangePenWidthCommand"), e->myVisualzer.getCurrentTurtle().changePenWidth())
+>>>>>>> 094c3585b094fa55d17e706cb6ad27d0c24b308e
                 );
 
         return vbox;
@@ -72,7 +75,7 @@ public class PenProperties {
         colorPicker = new ColorPicker();
         colorPicker.setValue(Color.BLACK);
         colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-        colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
+        colorPicker.setOnAction(e -> myVisualzer.getCurrentTurtle().updatePen(colorPicker.getValue()));
         return colorPicker;
     }
 

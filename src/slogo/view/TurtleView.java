@@ -37,8 +37,6 @@ public class TurtleView{
     public static final int TURTLE_SCREEN_WIDTH = 500;
     public static final int TURTLE_SCREEN_HEIGHT = 500;
     public static final int PATH_STROKE_WIDTH = 3;
-    public static final int PATH_TRANSITION_DURATION = 500;
-    public static final int ROTATE_TRANSITION_DURATION = 500;
     public static final int TURTLE_RESET_ANGLE = 0;
     public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
@@ -51,13 +49,13 @@ public class TurtleView{
     private Color myPenColor;
     private double currentX;
     private double currentY;
-    private double currentOrienation;
     private SequentialTransition st;
     private double heading;
     private double pathStrokeWidth;
     private String turtleName;
     private ObservableList<String> observableList;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
+    private int animationDuration;
 
     public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
@@ -72,6 +70,7 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
+        animationDuration = 500;
     }
 
     private ImageView createTurtle(){
@@ -94,11 +93,10 @@ public class TurtleView{
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
             turtleImage.setFitHeight(TURTLE_HEIGHT);
-            turtleImage.setTranslateX(currentX - turtleImage.getBoundsInLocal().getWidth() / 2);
-            turtleImage.setTranslateY(currentY - turtleImage.getBoundsInLocal().getHeight() / 2);
             myTurtles.getChildren().remove(myImage);
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
+            set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
         } catch (IllegalArgumentException e){
             return;
         } catch (Exception e) {
@@ -147,7 +145,6 @@ public class TurtleView{
         double oldHeading = heading;
         currentX = newX;
         currentY = newY;
-        currentOrienation = orientation;
         heading = orientation;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
@@ -158,15 +155,15 @@ public class TurtleView{
                 path.setOpacity(PATH_NO_OPACITY);
             }
             path.setStroke(myPenColor);
-            myPaths.getChildren().add(path);
             path.getElements().add(new MoveTo(oldX, oldY));
             path.getElements().add(new LineTo(newX, newY));
-            PathTransition pt = new PathTransition(Duration.millis(PATH_TRANSITION_DURATION), path, myImage);
+            PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
             pt.setPath(path);
             st.getChildren().add(pt);
+            myPaths.getChildren().add(path);
         }
         if(orientation != oldHeading) {
-            RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION),
+            RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
                 myImage);
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
@@ -181,9 +178,7 @@ public class TurtleView{
     public void resetTurtle(){
         myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
         myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
-        RotateTransition rt = new RotateTransition(Duration.millis(ROTATE_TRANSITION_DURATION), myImage);
-        rt.setToAngle(TURTLE_RESET_ANGLE);
-        rt.play();
+        myImage.setRotate(0);
         heading = 0;
         currentY = TURTLE_SCREEN_HEIGHT/2;
         currentX = TURTLE_SCREEN_WIDTH/2;
@@ -194,7 +189,7 @@ public class TurtleView{
         observableList.addAll(turtleName,
                 Double.toString(currentX),
                 Double.toString(currentY),
-                Double.toString(currentOrienation),
+                Double.toString(heading),
                 String.valueOf(myPenColor),
                 Double.toString(pathStrokeWidth),
                 Boolean.toString(penStatus));
@@ -220,11 +215,12 @@ public class TurtleView{
     }
 
     public void setShape(ImageView turtle){
-        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
-        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
+//        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
+//        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().remove(myImage);
         myImage = turtle;
         myTurtles.getChildren().add(myImage);
+        set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
     }
 
     public void updatePenStatus(double value){
@@ -241,13 +237,24 @@ public class TurtleView{
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
         newY += TURTLE_SCREEN_HEIGHT/2;
+
         currentX = newX;
         currentY = newY;
         heading = newHeading;
-        myImage.setTranslateX(newX);
-        myImage.setTranslateY(newY);
-        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
-        rt.setToAngle(newHeading);
-        rt.play();
+
+        myImage.setTranslateX(newX-myImage.getBoundsInLocal().getWidth()/2);
+        myImage.setTranslateY(newY-myImage.getBoundsInLocal().getHeight()/2);
+        myImage.setRotate(newHeading);
+    }
+
+    public void setCommandSize(int size){
+        if(size == 0){return;}
+        animationDuration = 500/size;
+    }
+
+    public String[] getData(){
+        double coordinateX = currentX - TURTLE_SCREEN_WIDTH/2;
+        double coordinateY = TURTLE_SCREEN_HEIGHT/2 - currentY;
+        return new String[]{turtleName, "" + coordinateX, "" + coordinateY, "" + heading};
     }
 }

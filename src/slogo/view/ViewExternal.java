@@ -60,8 +60,9 @@ public class ViewExternal implements ViewExternalAPI {
   }
 
   @Override
-  public void playAnimation(){
+  public void updateStatus(){
     myVisualizer.getCurrentTurtle().playAnimation();
+    myVisualizer.getCurrentTurtle().turtleStats();
   }
 
   @Override
@@ -72,6 +73,11 @@ public class ViewExternal implements ViewExternalAPI {
   @Override
   public void addVariable(String newVariable, String newValue) {
     myVisualizer.addVariable(newVariable, newValue);
+  }
+
+  @Override
+  public void setCommandSize(int size){
+    myVisualizer.getCurrentTurtle().setCommandSize(size);
   }
 
 }

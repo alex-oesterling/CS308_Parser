@@ -38,7 +38,7 @@ public class MoveTurtle {
     }
 
     private Scene setScene(){
-        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
         root = new Group();
         myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
         myScene.getStylesheets()
