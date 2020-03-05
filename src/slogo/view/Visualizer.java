@@ -182,7 +182,7 @@ public class Visualizer{
             makeTurtleSelector(),
             styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.reset(); currentTurtle.resetTurtle(); }),
+                    e->{ clear(); myController.resetAll(); currentTurtle.resetTurtle(); }),
             styler.createButton(myResources.getString("MoveTurtle"), e-> moveTurtle = new MoveTurtle(myController)),
             addTurtleInfo());
     return ui;
