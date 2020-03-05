@@ -1,14 +1,11 @@
 package slogo.view;
 
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
@@ -16,7 +13,7 @@ import java.util.TreeMap;
 
 public class HelpWindow {
 
-    public final String TITLE = "Command Reference Page";
+    public static final String TITLE = "Command Reference Page";
     public static final Paint BACKGROUND = Color.AZURE;
     public static final String RESOURCE = "resources.languages";
     public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
@@ -25,8 +22,6 @@ public class HelpWindow {
     public static final int GRID_VGAP = 5;
     public static final int GRID_HGAP = 70;
 
-    Scene myScene;
-    Group root;
     GridPane grid;
     ResourceBundle myResources;
 
@@ -39,12 +34,10 @@ public class HelpWindow {
     }
 
     private Scene setScene(){
-        root = new Group();
         ScrollPane s1 = new ScrollPane();
         s1.setPrefSize(SIZE_WIDTH, SIZE_HEIGHT);
         s1.setContent(grid);
-        root.getChildren().add(s1);
-        return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+        return new Scene(s1, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     }
 
     public void createGrid(String language){

@@ -7,8 +7,7 @@ import javafx.scene.control.Label;
 public class Styler {
 
     public Label createLabel(String string){
-        Label label = new Label(string);
-        return label;
+        return new Label(string);
     }
 
     public Button createButton(String string, EventHandler e){
