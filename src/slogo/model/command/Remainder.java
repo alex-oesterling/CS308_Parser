@@ -14,6 +14,6 @@ public class Remainder extends Command {
    * @param commandList the list of commands being used for this command (if needed)
    */
   public Remainder(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    super(doubleList.get(FIRST_INDEX)%doubleList.get(SECOND_INDEX));
+    super(doubleList.get(SECOND_INDEX)%doubleList.get(FIRST_INDEX));
   }
 }

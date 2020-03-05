@@ -14,6 +14,6 @@ public class Power extends Command {
    * @param commandList the list of commands being used for this command (if needed)
    */
   public Power(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    super(Math.pow(doubleList.get(FIRST_INDEX), doubleList.get(SECOND_INDEX)));
+    super(Math.pow(doubleList.get(SECOND_INDEX), doubleList.get(FIRST_INDEX)));
   }
 }
