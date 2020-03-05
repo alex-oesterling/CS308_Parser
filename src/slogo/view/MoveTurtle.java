@@ -35,7 +35,7 @@ public class MoveTurtle {
     }
 
     private Scene setScene(){
-        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
         root = new Group();
         VBox vbox = new VBox(styler.createButton(myResources.getString("ForwardCommand"), e-> myController.sendCommands("fd 1")),
                 styler.createButton(myResources.getString("BackwardCommand"), e-> myController.sendCommands("bk 1")),

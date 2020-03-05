@@ -10,6 +10,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -48,16 +49,12 @@ public class Visualizer{
 
   private Controller myController;
   private BorderPane root;
-  private HelpWindow helpWindow;
   private ViewExternal viewExternal;
   private CommandLine commandLine;
   private PenProperties penProperties;
-  private MoveTurtle moveTurtle;
   private Styler styler;
   private ColorPalette colorPalette;
   private ShapePalette shapePalette;
-  private VBox variables;
-  private VBox commands;
   private Rectangle turtleArea;
   private Map<String, TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
@@ -85,14 +82,14 @@ public class Visualizer{
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController);
     myList = new ListView<>();
-    myToolBar = new ToolBar(stage);
+    myToolBar = new ToolBar(stage, commandLine);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
     styler = new Styler();
   }
 
   public Scene setupScene() {
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
     root = createView();
     Scene myScene = new Scene(root);
     myScene.getStylesheets()
@@ -104,7 +101,6 @@ public class Visualizer{
 
   private BorderPane createView(){
     BorderPane viewPane = new BorderPane();
-//    viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
     Node toolBar = myToolBar.setupToolBar();
@@ -183,7 +179,7 @@ public class Visualizer{
             styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
             styler.createButton(myResources.getString("ResetCommand"),
                     e->{ clear(); myController.resetAll(); currentTurtle.resetTurtle(); }),
-            styler.createButton(myResources.getString("MoveTurtle"), e-> moveTurtle = new MoveTurtle(myController)),
+            styler.createButton(myResources.getString("MoveTurtle"), e-> new MoveTurtle(myController)),
             addTurtleInfo());
     return ui;
   }
@@ -198,7 +194,7 @@ public class Visualizer{
             styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(viewExternal, currentTurtle)),
             styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
-            styler.createButton(myResources.getString("HelpCommand"), e->helpWindow = new HelpWindow(language)));
+            styler.createButton(myResources.getString("HelpCommand"), e-> new HelpWindow(language)));
     return ui;
   }
 
@@ -250,6 +246,7 @@ public class Visualizer{
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
     comboBox.setOnAction(event -> setLanguage(comboBox.getValue().toString()));
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     return comboBox;
   }
 
@@ -292,7 +289,10 @@ public class Visualizer{
       try{
         number = Double.valueOf(result.get());
       } catch (NullPointerException e){
-        //ERROR DIALOG: Please enter a valid constant
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText("Please enter a double:");
+        errorAlert.setContentText("Restoring variable");
+        errorAlert.showAndWait();
         number = Double.parseDouble(value.getText());
       }
       varMap.put(variableName, number.toString());
@@ -305,7 +305,10 @@ public class Visualizer{
     try {
       myController.addTurtle();
     } catch (InvalidTurtleException e){
-      //ERROR DIALOG: Turtle Already Exists!
+      Alert errorAlert = new Alert(AlertType.ERROR);
+      errorAlert.setHeaderText("Turtle already exists!");
+      errorAlert.setContentText("Please choose a unique Turtle name");
+      errorAlert.showAndWait();
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
@@ -317,7 +320,11 @@ public class Visualizer{
     try {
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e){
-      //ERROR DIALOG: Turtle Already Exists!
+      Alert errorAlert = new Alert(AlertType.ERROR);
+      errorAlert.setHeaderText("Turtle already exists!");
+      errorAlert.setContentText("Please fix XML file to specify unique turtle");
+      errorAlert.showAndWait();
+      return;
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     tempTurtle.set(startingX, startingY, heading);

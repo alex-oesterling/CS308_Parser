@@ -175,7 +175,6 @@ public class TurtleView{
     }
 
     public void playAnimation(){
-        st.rateProperty().setValue(50);
         st.play();
         st = new SequentialTransition();
     }
@@ -247,9 +246,6 @@ public class TurtleView{
     }
 
     public void set(double newX, double newY, double newHeading){
-        newY = -newY;
-        newX += TURTLE_SCREEN_WIDTH/2;
-        newY += TURTLE_SCREEN_HEIGHT/2;
         currentX = newX;
         currentY = newY;
         heading = newHeading;
@@ -261,6 +257,7 @@ public class TurtleView{
     }
 
     public void setCommandSize(int size){
-        animationDuration = 5000/size;
+        if(size == 0){return;}
+        animationDuration = 500/size;
     }
 }

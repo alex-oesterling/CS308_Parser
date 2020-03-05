@@ -2,6 +2,9 @@ package slogo.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,14 +17,20 @@ import org.xml.sax.SAXException;
 import slogo.view.Visualizer;
 
 public class XMLReader {
+
+  private static final String TXT_FILEPATH = "data/templates/";
   private File myFile;
   private Document myDoc;
   private Visualizer myVisualizer;
+  private Stage myStage;
 
   public XMLReader(File file, Stage stage){
+    if(file == null){
+      return;
+    }
     myFile = file;
+    myStage = stage;
     myVisualizer = new Visualizer(stage);
-    stage.setScene(myVisualizer.setupScene());
     setupDocument();
     readFile();
   }
@@ -41,8 +50,9 @@ public class XMLReader {
   }
 
   private void readFile(){
-    readPreferences();
     readTurtles();
+    myStage.setScene(myVisualizer.setupScene());
+    readPreferences();
     readCommandHistory();
     readUserVariables();
     readUserCommands();
@@ -115,6 +125,20 @@ public class XMLReader {
       if(cmd.getNodeType() == Node.ELEMENT_NODE){
         Element cmdElement = (Element) cmd;
         myVisualizer.getTerminal().addHistory(cmdElement.getAttribute("syntax"));
+      }
+    }
+
+    NodeList commandFiles = commandElement.getElementsByTagName("File");
+    Node file = commandFiles.item(0);
+    if(file.getNodeType() == Node.ELEMENT_NODE){
+      Element fileElement = (Element) file;
+      try {
+        myVisualizer.getTerminal().addHistory(Files.readString(new File(TXT_FILEPATH + fileElement.getAttribute("filename")).toPath()));
+      } catch (IOException e) {
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText("Command history text file does not exist");
+        errorAlert.setContentText("Please specify a valid text file in your XML");
+        errorAlert.showAndWait();
       }
     }
   }

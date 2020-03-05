@@ -1,5 +1,8 @@
 package slogo.view;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -35,7 +38,7 @@ public class CommandLine {
   private VBox historyBox;
 
   public CommandLine(Controller controller){
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
     myController = controller;
     history = new ArrayList<>();
     historyBox = new VBox();
@@ -83,13 +86,14 @@ public class CommandLine {
     return commandLine;
   }
 
-  private void submitCommand() {
+  public void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
       try {
         myController.sendCommands(textBox.getText());
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
-        recentCommand.setTextFill(Color.RED);
+        recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
+        System.out.println(recentCommand.getTextFill());
         recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
         historyBox.getChildren().add(recentCommand);
         history.add(new Label(textBox.getText()));
@@ -122,5 +126,9 @@ public class CommandLine {
     historyBox.getChildren().add(recentCommand);
     textBox.clear();
     historyIndex = -1;
+  }
+
+  public void loadCodeFromFile(File file) throws IOException {
+    textBox.setText(Files.readString(file.toPath()));
   }
 }
