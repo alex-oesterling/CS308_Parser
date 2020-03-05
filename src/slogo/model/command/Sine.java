@@ -13,6 +13,6 @@ public class Sine extends Command {
    * @param a value to take the sine of
    */
   public Sine(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    super(Math.sin(a));
+    super(Math.sin(doubleList.get(FIRST_INDEX)));
   }
 }

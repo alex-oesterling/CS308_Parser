@@ -15,9 +15,9 @@ public class Right extends Command {
      * @param value the value of how far it is turning right
      */
     public Right(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
-        super(value);
-        t = body;
-        degrees = value;
+        super(doubleList.get(FIRST_INDEX));
+        t = turtleList.get(FIRST_INDEX);
+        degrees = doubleList.get(FIRST_INDEX);
     }
 
     /**

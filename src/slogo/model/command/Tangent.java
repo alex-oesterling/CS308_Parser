@@ -13,6 +13,6 @@ public class Tangent extends Command {
    * @param a value to take the tangent of
    */
   public Tangent(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    super(Math.tan(a));
+    super(Math.tan(doubleList.get(FIRST_INDEX)));
   }
 }

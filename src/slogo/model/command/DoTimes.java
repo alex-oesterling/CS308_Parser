@@ -1,22 +1,23 @@
 package slogo.model.command;
 
+import java.util.ArrayList;
 import slogo.model.Turtle;
 
 import java.util.List;
 
-public class DoTimes{
+public class DoTimes extends CommandWithReturningList{
 
   private Double times;
-  private List<Command> commands;
+  private List<Command> commands, returningList;
 
   /**
    *
-   * @param reps
+   * @param //reps
    * @param commandList
    */
   public DoTimes(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    times = reps;
-    //commands = commandList;
+    times = doubleList.get(FIRST_INDEX);
+    commands = commandList.get(FIRST_INDEX);
   }
 
   /**
@@ -28,13 +29,17 @@ public class DoTimes{
   }
 
   /**
-   * executes the list of commands the specified number of times
+   * return the commands the number of times asked for
+   * @return commands * times in one list
    */
-  public void execute(){
+  @Override
+  public List<Command> getCommandList() {
+    returningList = new ArrayList<>();
     for(int k=0; k<times; k++) {
       for (Command c : commands) {
-        c.execute();
+        returningList.addAll(c.getCommandList());
       }
     }
+    return returningList;
   }
 }

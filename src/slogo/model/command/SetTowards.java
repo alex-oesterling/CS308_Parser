@@ -18,9 +18,9 @@ public class SetTowards extends Command {
      */
     public SetTowards(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        t = body;
-        xPos = x;
-        yPos = y;
+        t = turtleList.get(FIRST_INDEX);
+        xPos = doubleList.get(SECOND_INDEX);
+        yPos = doubleList.get(FIRST_INDEX);
     }
     @Override
     public Double getResult(){

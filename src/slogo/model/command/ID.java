@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ID extends Command {
 
-    private Turtle t;
+    //priva IDTurtle t;
 
     /**
      * Constructor for the ID command
@@ -16,7 +16,7 @@ public class ID extends Command {
      */
     public ID(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        t = turtleList.get(FIRST_INDEX);
+        //t = turtleList.get(FIRST_INDEX);
     }
 
     /**
@@ -25,6 +25,6 @@ public class ID extends Command {
      */
     @Override
     public Double getResult() {
-        return t.getId();
+        return 0.0;//t.getId();
     }
 }
