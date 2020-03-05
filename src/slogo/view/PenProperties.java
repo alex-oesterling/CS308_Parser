@@ -1,12 +1,10 @@
 package slogo.view;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,21 +15,18 @@ import java.util.ResourceBundle;
 
 public class PenProperties {
 
-    public final String TITLE = "Pen Properties";
+    public static final String TITLE = "Pen Properties";
     public static final Paint BACKGROUND = Color.web("#808080");
-    private static final String RESOURCES = "resources";
+    public static final String RESOURCES = "resources";
     public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
     public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
-    private static final String STYLESHEET = "styling.css";
-
+    public static final String STYLESHEET = "styling.css";
     public static final int SIZE_WIDTH = 300;
     public static final int SIZE_HEIGHT = 170;
     public static final int COLORPICKER_HEIGHT = 30;
     public static final int HBOX_SPACING = 10;
     public static final int VBOX_SPACING = 15;
 
-    private Group root;
-    private Scene myScene;
     private Styler styler;
     private ResourceBundle myResources;
     private ColorPicker colorPicker;
@@ -48,12 +43,10 @@ public class PenProperties {
 
     private Scene setScene(){
         myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
-        root = new Group();
-        Scene myScene = new Scene(root,SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+        Scene myScene = new Scene(createGrid(),SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
         myScene.getStylesheets()
                 .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
                         .toExternalForm());
-        root.getChildren().add(createGrid());
         return myScene;
     }
 
@@ -65,14 +58,7 @@ public class PenProperties {
         HBox hbox2 = new HBox(textField, styler.createButton(myResources.getString("ChangePenWidthCommand"), e->myVisualzer.getCurrentTurtle().changePenWidth(Double.parseDouble(textField.getText()))));
         hbox2.setSpacing(HBOX_SPACING);
         ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(myResources.getString("PenUp"), myResources.getString("PenDown")));
-        comboBox.setOnAction(e->{
-            System.out.println(comboBox.getValue());
-            if(comboBox.getValue().equals("Put pen down")){
-                myVisualzer.getCurrentTurtle().changePenStatus(true);
-            } else{
-                myVisualzer.getCurrentTurtle().changePenStatus(false);
-            }
-        });
+        comboBox.setOnAction(e->myVisualzer.getCurrentTurtle().changePenStatus(comboBox.getValue().equals("Put pen down")));
         HBox hbox3 = new HBox(styler.createLabel(myResources.getString("ChangePenCommand")), comboBox);
         hbox3.setSpacing(HBOX_SPACING);
         VBox vbox = new VBox(hbox1, hbox2, hbox3);

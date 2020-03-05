@@ -3,7 +3,6 @@ package slogo.view;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -25,14 +24,6 @@ public class ToolBar {
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String XML_FILEPATH = "user.dir";
 
-  private MenuBar menuBar;
-  private Menu menu;
-  private MenuItem newWindow;
-  private MenuItem exit;
-  private MenuItem restart;
-  private MenuItem loadWorkspace;
-  private MenuItem loadCode;
-  private MenuItem saveWorkspace;
   private ResourceBundle myResources;
   private Stage myStage;
   private CommandLine myTerminal;
@@ -47,17 +38,17 @@ public class ToolBar {
 
   public Node setupToolBar(){
     HBox tools = new HBox();
-    menuBar = new MenuBar();
-    menu = makeMenu("Menu");
-    newWindow = makeMenuItem("New", e-> makeNewWindow());
-    exit = makeMenuItem("Exit", e-> closeWindow());
-    restart = makeMenuItem("Restart", e->{
+    MenuBar menuBar = new MenuBar();
+    Menu menu = makeMenu("Menu");
+    MenuItem newWindow = makeMenuItem("New", e-> makeNewWindow());
+    MenuItem exit = makeMenuItem("Exit", e-> closeWindow());
+    MenuItem restart = makeMenuItem("Restart", e->{
       closeWindow();
       makeNewWindow();
     });
-    loadWorkspace = makeMenuItem("LoadWorkspace", e-> new XMLReader(chooseXMLFile(), myStage));
-    loadCode = makeMenuItem("LoadCode", e-> tryLoadCodeFromFile());
-    saveWorkspace = makeMenuItem("SaveWorkspace", e-> pickAndSaveFile());
+    MenuItem loadWorkspace = makeMenuItem("LoadWorkspace", e-> new XMLReader(chooseXMLFile(), myStage));
+    MenuItem loadCode = makeMenuItem("LoadCode", e-> tryLoadCodeFromFile());
+    MenuItem saveWorkspace = makeMenuItem("SaveWorkspace", e-> pickAndSaveFile());
     menuBar.getMenus().add(menu);
     menu.getItems().addAll(newWindow, saveWorkspace, loadWorkspace, loadCode, restart, exit);
     tools.getChildren().add(menuBar);

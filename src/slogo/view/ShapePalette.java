@@ -15,7 +15,7 @@ import java.util.TreeMap;
 
 public class ShapePalette {
 
-    public final String TITLE = "Shape Palette";
+    public static final String TITLE = "Shape Palette";
     public static final Paint BACKGROUND = Color.AZURE;
     public static final int SIZE_WIDTH = 150;
     public static final int SIZE_HEIGHT = 500;
@@ -24,8 +24,6 @@ public class ShapePalette {
     public static final int TURTLE_WIDTH = 40;
     public static final int TURTLE_HEIGHT = 40;
 
-    private Group root;
-    private Scene myScene;
     private VBox vbox;
     private Map<Double, String> map;
 
@@ -37,13 +35,11 @@ public class ShapePalette {
     }
 
     private Scene setScene(){
-        root = new Group();
         createGrid();
         ScrollPane s1 = new ScrollPane();
         s1.setPrefSize(SIZE_WIDTH, SIZE_HEIGHT);
         s1.setContent(vbox);
-        root.getChildren().add(s1);
-        return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+        return new Scene(s1, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     }
 
     private void createGrid(){
@@ -93,7 +89,6 @@ public class ShapePalette {
     }
 
     public ImageView getShapeMapValue(double value){
-        ImageView image = addTurtle(map.get(value));
-        return image;
+        return addTurtle(map.get(value));
     }
 }
