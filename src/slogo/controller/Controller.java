@@ -49,6 +49,7 @@ public class Controller {
     private ViewExternal myView;
     private double IdOfTurtle;
     private Parser commandParser, parametersParser, syntaxParser, listParamsParser, numberOfParamsParser;
+    private List<Command> currentList;
 
     /**
      * The constructor for controller class, initializes the view, list of
@@ -247,8 +248,8 @@ public class Controller {
     }
 
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
-        List<Command> commandList = new ArrayList<>();
-        List<Command> currentList = commandList;
+        //List<Command> commandList = new ArrayList<>();
+       currentList = new ArrayList<>();
         ListIterator<String> iterator = lines.listIterator();
         String isFirstConstant = lines.get(ZERO);
 
@@ -279,20 +280,9 @@ public class Controller {
                         //FIXME Need to add an exception (better one) here
                     }
                 } else if (commandSyntax.equals("ListStart")){
-                    //doListStartWork(currentList);
-                    List<Command> tempList = new ArrayList<>();
-                    holdStacks();
-
-                    currentListHolder.push(currentList);
-                    currentList = tempList;
+                    doListStartWork();
                 } else if (commandSyntax.equals("ListEnd")){
-                    //doListEndWork();
-                    if(currentList.size() != 0) {
-                        listStack.push(currentList); //FIXME this is the bad part ---> error lies here
-                    }
-                    stopHoldingStacks();
-                    currentList = currentListHolder.pop();
-                    tryToMakeCommands(currentList);
+                    doListEndWork();
                 }
             }
         }
@@ -305,12 +295,21 @@ public class Controller {
         return currentList;
     }
 
-    private void doListStartWork(List<Command> currentList){
+    private void doListStartWork(){
         List<Command> tempList = new ArrayList<>();
         holdStacks();
 
         currentListHolder.push(currentList);
         currentList = tempList;
+    }
+
+    private void doListEndWork(){
+        if(currentList.size() != 0) {
+            listStack.push(currentList); //FIXME this is the bad part ---> error lies here
+        }
+        stopHoldingStacks();
+        currentList = currentListHolder.pop();
+        tryToMakeCommands(currentList);
     }
 
     private void doCommandWork(Parser params, Parser lang, Parser syntax, List<Command> commandList, String line, String commandSyntax, List<String> lines){
