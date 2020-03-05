@@ -259,4 +259,10 @@ public class TurtleView{
         if(size == 0){return;}
         animationDuration = 500/size;
     }
+
+    public String[] getData(){
+        double coordinateX = currentX - TURTLE_SCREEN_WIDTH/2;
+        double coordinateY = TURTLE_SCREEN_HEIGHT/2 - currentY;
+        return new String[]{turtleName, "" + coordinateX, "" + coordinateY, "" + heading};
+    }
 }

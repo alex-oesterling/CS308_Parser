@@ -131,4 +131,12 @@ public class CommandLine {
   public void loadCodeFromFile(File file) throws IOException {
     textBox.setText(Files.readString(file.toPath()));
   }
+
+  public List<String> getHistory(){
+    List<String> cmdHistory = new ArrayList<String>();
+    for(Label l : history){
+      cmdHistory.add(l.getText());
+    }
+    return cmdHistory;
+  }
 }

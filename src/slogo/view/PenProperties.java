@@ -28,13 +28,11 @@ public class PenProperties {
     private Styler styler;
     private ResourceBundle myResources;
     private ColorPicker colorPicker;
-    private ViewExternal viewExternal;
-    private TurtleView turtleView;
+    private Visualizer myVisualzer;
 
-    public PenProperties(ViewExternal myView, TurtleView currentTurtle){
+    public PenProperties(Visualizer visualizer){
         styler = new Styler();
-        this.viewExternal = myView;
-        this.turtleView = currentTurtle;
+        myVisualzer = visualizer;
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);
@@ -51,8 +49,8 @@ public class PenProperties {
     private VBox createGrid(){
         VBox vbox = new VBox(styler.createLabel(myResources.getString("PenColor")),
                 penColor(),
-                styler.createButton(myResources.getString("ChangePenCommand"), e->turtleView.changePenStatus()),
-                styler.createButton(myResources.getString("ChangePenWidthCommand"), e->turtleView.changePenWidth())
+                styler.createButton(myResources.getString("ChangePenCommand"), e->myVisualzer.getCurrentTurtle().changePenStatus()),
+                styler.createButton(myResources.getString("ChangePenWidthCommand"), e->myVisualzer.getCurrentTurtle().changePenWidth())
                 );
 
         return vbox;
@@ -62,7 +60,7 @@ public class PenProperties {
         colorPicker = new ColorPicker();
         colorPicker.setValue(Color.BLACK);
         colorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-        colorPicker.setOnAction(e -> viewExternal.updatePenColor(colorPicker.getValue()));
+        colorPicker.setOnAction(e -> myVisualzer.getCurrentTurtle().updatePen(colorPicker.getValue()));
         return colorPicker;
     }
 

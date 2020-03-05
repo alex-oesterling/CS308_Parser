@@ -100,7 +100,7 @@ public class XMLReader {
         myVisualizer.addTurtle(turtleElement.getAttribute("name"),
             Double.parseDouble(turtleElement.getAttribute("xpos")),
             Double.parseDouble(turtleElement.getAttribute("ypos")),
-            Integer.parseInt(turtleElement.getAttribute("heading"))
+            Double.parseDouble(turtleElement.getAttribute("heading"))
             );
       }
     }
@@ -130,10 +130,11 @@ public class XMLReader {
 
     NodeList commandFiles = commandElement.getElementsByTagName("File");
     Node file = commandFiles.item(0);
-    if(file.getNodeType() == Node.ELEMENT_NODE){
+    if (file != null && file.getNodeType() == Node.ELEMENT_NODE) {
       Element fileElement = (Element) file;
       try {
-        myVisualizer.getTerminal().addHistory(Files.readString(new File(TXT_FILEPATH + fileElement.getAttribute("filename")).toPath()));
+        myVisualizer.getTerminal().addHistory(Files
+            .readString(new File(TXT_FILEPATH + fileElement.getAttribute("filename")).toPath()));
       } catch (IOException e) {
         Alert errorAlert = new Alert(AlertType.ERROR);
         errorAlert.setHeaderText("Command history text file does not exist");
