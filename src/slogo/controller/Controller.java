@@ -35,7 +35,7 @@ public class Controller {
 
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
-    private Stack<Double> argumentStack, doubleAndTurtleParametersStack, listParametersStack;
+    private Stack<Double> argumentStack, turtleAndDoubleParametersStack, listParametersStack;
     private Stack<List<Command>> listStack;
     private Map<String, List> userCreatedCommandVariables;
     private Map<String, String> userCreatedConstantVariables;
@@ -96,7 +96,7 @@ public class Controller {
     private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
-        doubleAndTurtleParametersStack = new Stack<>();
+        turtleAndDoubleParametersStack = new Stack<>();
         listStack = new Stack<>();
     }
 
@@ -247,7 +247,7 @@ public class Controller {
                     List<Command> tempList = new ArrayList<>();
                     commandStackHolder.push(commandStack);
                     argumentStackHolder.push(argumentStack);
-                    parametersStackHolder.push(doubleAndTurtleParametersStack);
+                    parametersStackHolder.push(turtleAndDoubleParametersStack);
                     listStackHolder.push(listStack);
                     listParametersStackHolder.push(listParametersStack);
                     makeNewStacks();
@@ -260,7 +260,7 @@ public class Controller {
                     }
                     commandStack = commandStackHolder.pop();
                     argumentStack = argumentStackHolder.pop();
-                    doubleAndTurtleParametersStack = parametersStackHolder.pop();
+                    turtleAndDoubleParametersStack = parametersStackHolder.pop();
                     listParametersStack = listParametersStackHolder.pop();
                     currentList = currentListHolder.pop();
                     tryToMakeCommands(currentList);
@@ -318,7 +318,7 @@ public class Controller {
         String commandParams = params.getSymbol(commandName); //get Parameters string, such as "OneDouble" or "TurtleOneDouble"
 
         double paramsNeeded  = getParamsNeeded(commandParams); //convert that string to a double
-        doubleAndTurtleParametersStack.push(paramsNeeded); //add that value to the params stack
+        turtleAndDoubleParametersStack.push(paramsNeeded); //add that value to the params stack
 
         return tryToMakeCommands(commandList);
     }
@@ -343,27 +343,30 @@ public class Controller {
         tryToMakeCommands(commandList);
     }
 
-    private double getParamsNeeded(String commandParams){ //TODO make another properties file that has OneDouble=1.0; TwoDouble=2.0;
-        double numberOfParams = ZERO_DOUBLE_PARAM_VALUE;
-        double listParam = ZERO_DOUBLE_PARAM_VALUE;
+    private double getParamsNeeded(String commandParams){
+
+        Parser listParamsParser = new Parser(INFORMATION_PACKAGE);
+        listParamsParser.addPatterns("ListParameters");
+        //System.out.println("l: "+listParamsParser.getSymbol(commandParams));
+        String listParamString = listParamsParser.getSymbol(commandParams);
+        if(listParamString.equals(NO_MATCH)){
+            //todo throw new Exception("you didn't edit the properties files properly");
+        } else {
+            listParametersStack.push(Double.parseDouble(listParamString));
+        }
+
         Parser numberOfParamsParser = new Parser(INFORMATION_PACKAGE);
+        //System.out.println(commandParams);
         numberOfParamsParser.addPatterns("TurtleAndDoubleParameters");
-        System.out.println(numberOfParamsParser.getSymbol(commandParams));
-        if (commandParams.contains("OneDouble")){
-            numberOfParams = ONE_DOUBLE_PARAM_VALUE;
-        } else if (commandParams.contains("TwoDouble")){
-            numberOfParams = TWO_DOUBLE_PARAM_VALUE;
+        //System.out.println("d: "+numberOfParamsParser.getSymbol(commandParams));
+        String turtleAndDoubleParamsString = numberOfParamsParser.getSymbol(commandParams);
+        if(turtleAndDoubleParamsString.equals(NO_MATCH)){
+            //todo throw new Exception("you didn't edit the properties files properly");
+            return ZERO_DOUBLE_PARAM_VALUE; //fixme delete this line after throwing an exception
+        } else {
+            return Double.parseDouble(turtleAndDoubleParamsString);
         }
-        if (commandParams.contains("Turtle")){
-            numberOfParams += TURTLE_PARAM_VALUE;
-        }
-        if(commandParams.contains("OneList")) {
-            listParam = ONE_DOUBLE_PARAM_VALUE;
-        } else if (commandParams.contains("TwoList")) {
-            listParam = TWO_DOUBLE_PARAM_VALUE;
-        }
-        listParametersStack.push(listParam);
-        return numberOfParams;
+
     }
 
     private List<Command> tryToMakeCommands(List<Command> commandList){
@@ -374,7 +377,8 @@ public class Controller {
     }
 
     private boolean checkArgumentStack(){
-        return !doubleAndTurtleParametersStack.isEmpty() && argumentStack.size() >= doubleAndTurtleParametersStack.peek();
+        return !turtleAndDoubleParametersStack.isEmpty() && argumentStack.size() >= turtleAndDoubleParametersStack
+            .peek();
     }
 
     private boolean checkListStack(){
@@ -382,7 +386,7 @@ public class Controller {
     }
 
     private Command weHaveEnoughArgumentsToMakeACommand(List<Command> commands){
-        double numberOfParams = doubleAndTurtleParametersStack.pop(); //to be used in creating the command
+        double numberOfParams = turtleAndDoubleParametersStack.pop(); //to be used in creating the command
         String name = commandStack.pop();
         Command newCommand = getCommand(name, numberOfParams);
         if(commandStack.size()!=0){
