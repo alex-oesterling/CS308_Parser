@@ -261,6 +261,6 @@ public class TurtleView{
     }
 
     public void setCommandSize(int size){
-        animationDuration = 500/size;
+        animationDuration = 5000/size;
     }
 }

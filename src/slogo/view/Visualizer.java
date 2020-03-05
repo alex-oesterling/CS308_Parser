@@ -104,7 +104,7 @@ public class Visualizer{
 
   private BorderPane createView(){
     BorderPane viewPane = new BorderPane();
-    viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
+//    viewPane.setBackground(new Background(new BackgroundFill(BACKGROUND, null, null)));
     viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
 
     Node toolBar = myToolBar.setupToolBar();
