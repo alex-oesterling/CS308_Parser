@@ -38,6 +38,8 @@ public class Visualizer{
   private static final String STYLESHEET = "styling.css";
   private static final String RESOURCES = "resources";
   public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+  public static final String COLOR_RESOURCE = "resources.formats";
+  public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = COLOR_RESOURCE + ".Colors";
 
 
   public static final int VIEWPANE_PADDING = 10;
@@ -56,14 +58,16 @@ public class Visualizer{
   private ColorPalette colorPalette;
   private ShapePalette shapePalette;
   private Rectangle turtleArea;
-  private Map<String, TurtleView> turtleList; //FIXME Map between name and turtle instead of list (number to turtle)
+  private Map<String, TurtleView> turtleMap; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
+  private ResourceBundle myColorResources;
   private String language;
   private Group turtlePaths;
   private Group turtles;
   private VBox commandHistory;
   private VBox varHistory;
   private Map<String, String> varMap;
+  private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
   private ColorPicker colorPicker;
@@ -78,17 +82,20 @@ public class Visualizer{
     language = "English";
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     turtlePaths = new Group();
-    turtleList = new HashMap<>();
+    turtleMap = new TreeMap<>();
     turtles = new Group();
-    varMap = new HashMap<>();
+    varMap = new TreeMap<>();
+    cmdMap = new TreeMap<>();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(myController, myResources);
     myList = new ListView<>();
-    myToolBar = new ToolBar(stage, commandLine, myResources);
+    myToolBar = new ToolBar(stage, this, myResources);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
     styler = new Styler();
+    colorPalette = new ColorPalette(createColorMap());
+    shapePalette = new ShapePalette();
     myStage = stage;
   }
 
@@ -179,9 +186,14 @@ public class Visualizer{
     ui.setSpacing(VBOX_SPACING);
     ui.getChildren().addAll( styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
             makeTurtleSelector(),
-            styler.createButton(myResources.getString("ChooseTurtle"), e->currentTurtle.chooseTurtle(currentTurtle.getTurtleImage(new Stage()))),
-            styler.createButton(myResources.getString("ResetCommand"),
-                    e->{ clear(); myController.resetAll(); currentTurtle.resetTurtle(); }),
+            styler.createButton(myResources.getString("ChooseTurtle"), e-> getCurrentTurtle().chooseTurtle(getCurrentTurtle().getTurtleImage(new Stage()))),
+            styler.createButton(myResources.getString("ResetCommand"), e->{
+                    clear();
+                    myController.resetAll();
+                    for(String s : turtleMap.keySet()) {
+                      turtleMap.get(s).resetTurtle();
+                    }
+            }),
             styler.createButton(myResources.getString("MoveTurtle"), e-> new MoveTurtle(myController)),
             addTurtleInfo());
     return ui;
@@ -194,8 +206,8 @@ public class Visualizer{
             backgroundColor(),
             styler.createLabel(myResources.getString("ChooseLanguage")),
             languageSelect(),
-            styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(viewExternal, currentTurtle)),
-            styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
+            styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(this)),
+            styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette(createColorMap())),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
             styler.createButton(myResources.getString("HelpCommand"), e-> new HelpWindow(language)));
     return ui;
@@ -219,7 +231,7 @@ public class Visualizer{
             styler.createLabel(myResources.getString("PenColor")),
             styler.createLabel(myResources.getString("PenWidth")),
             styler.createLabel(myResources.getString("PenDownLabel")));
-    myList.itemsProperty().bind(currentTurtle.turtleStats());
+//    myList.itemsProperty().bind(currentTurtle.turtleStats());
     myList.setPrefSize(LISTVIEW_WIDTH, LISTVIEW_HEIGHT);
     hbox.getChildren().addAll(vbox, myList);
     return hbox;
@@ -251,11 +263,22 @@ public class Visualizer{
       setLanguage(comboBox.getValue().toString());
       myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
       commandLine = new CommandLine(myController, myResources);
-      myToolBar = new ToolBar(myStage, commandLine, myResources);
+      myToolBar = new ToolBar(myStage, this, myResources);
       myStage.setScene(setupScene());
     });
 
     return comboBox;
+  }
+
+  private Map<Double, String> createColorMap(){
+    myColorResources = ResourceBundle.getBundle(DEFAULT_COLOR_RESOURCE_PACKAGE);
+    Enumeration e = myColorResources.getKeys();
+    TreeMap<Double, String> treeMap = new TreeMap<>();
+    while (e.hasMoreElements()) {
+      String keyStr = (String) e.nextElement();
+      treeMap.put(Double.valueOf(keyStr), myColorResources.getString(keyStr));
+    }
+    return treeMap;
   }
 
   public void addCommand(String command, String syntax){
@@ -267,6 +290,7 @@ public class Visualizer{
     final Pane spacer = new Pane();
     commandAndSyntax.setHgrow(spacer, Priority.ALWAYS);
     commandAndSyntax.getChildren().addAll(recentCommand, spacer, syntaxLabel);
+    cmdMap.put(command, syntax);
     commandHistory.getChildren().add(commandAndSyntax);
     myController.addUserCommand(command, syntax);
   }
@@ -319,12 +343,12 @@ public class Visualizer{
       errorAlert.showAndWait();
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
-    turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
+    turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
   }
 
-  public void addTurtle(String name, double startingX, double startingY, int heading){
+  public void addTurtle(String name, double startingX, double startingY, double heading){
     System.out.println(startingX + " " + startingY + " " + heading);
     try {
       myController.addTurtle(name, startingX, startingY, heading);
@@ -337,8 +361,9 @@ public class Visualizer{
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     tempTurtle.set(startingX, startingY, heading);
-    turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
+    turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
+
     setTurtle(myController.getTurtleName());
   }
 
@@ -346,12 +371,14 @@ public class Visualizer{
     myList.itemsProperty().unbind();
     if(currentTurtle != null) {
       currentTurtle.setOpacity(.5);
-      turtleBox.getSelectionModel().select(name);
     }
-    currentTurtle = turtleList.get(name);
+    currentTurtle = turtleMap.get(name);
     if( penProperties !=null){
       penProperties.getColorPicker().setValue(currentTurtle.getColor());
-
+    }
+    //FIXME Shitty way to do things
+    if(turtleBox != null){
+      turtleBox.getSelectionModel().select(name);
     }
     currentTurtle.setOpacity(1);
     myController.chooseTurtle(name);
@@ -370,17 +397,13 @@ public class Visualizer{
   }
 
   public void setBackgroundColorFromPalette(double value){
-    if(colorPalette!=null){
       setBackgroundColor(colorPalette.getColorMapValue(value));
-    }
   }
 
   public void setPenSize(double value){currentTurtle.setPenSize(value);}
 
   public void setShape(double value){
-    if(shapePalette!=null){
       currentTurtle.setShape(shapePalette.getShapeMapValue(value));
-    }
   }
 
   public void setLanguage(String newLanguage){
@@ -395,4 +418,23 @@ public class Visualizer{
 
   public CommandLine getTerminal(){return commandLine;}
 
+  public String getLanguage(){
+    return language;
+  }
+
+  public String getBackground(){
+    return turtleArea.getFill().toString();
+  }
+
+  public Map<String, TurtleView> getTurtles(){
+    return turtleMap;
+  }
+
+  public Map<String, String> getUserVariables(){
+    return varMap;
+  }
+
+  public Map<String, String> getUserCommands(){
+    return cmdMap;
+  }
 }

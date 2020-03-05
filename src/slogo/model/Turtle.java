@@ -41,7 +41,7 @@ public class Turtle{
   private double sizePixels;
   private String name;
 
-  public Turtle(String turtleName, double startingXPosition, double startingYPosition, int startingHeading){
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading){
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
   }
