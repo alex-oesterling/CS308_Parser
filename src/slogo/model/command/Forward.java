@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class Forward extends Command {
 
   private Turtle t;
@@ -10,13 +12,14 @@ public class Forward extends Command {
   /**
    * Forward constructor, to get the value for going forward
    * Calls super
-   * @param body the specific turtle being used, what the forward value will be
-   * @param value the value of how far it is going forward
+   * @param turtleList the list of turtles being brought in to use this command (if needed)
+   * @param doubleList the list of doubles to be used for this command (if needed)
+   * @param commandList the list of commands being used for this command (if needed)
    */
-  public Forward(Turtle body, Double value) {
-    super(value);
-    t = body;
-    distance = value;
+  public Forward(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
+    super(doubleList.get(FIRST_INDEX));
+    t = turtleList.get(FIRST_INDEX);
+    distance = doubleList.get(FIRST_INDEX);
   }
 
   /**
