@@ -9,7 +9,7 @@ public class Turtle{
 
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
-  private static final int DEFAULT_HEADING = 0;
+  private static final double DEFAULT_HEADING = 0;
   private static final int DEFAULT_PEN_INDEX = 0;
   private static final int DEFAULT_BG_INDEX = 7;
   private static final int DEFAULT_SHAPE_INDEX = 0;
@@ -45,7 +45,7 @@ public class Turtle{
   private List<String> turtleCount = new ArrayList<>();
   private String name;
 
-  public Turtle(String turtleName, double startingXPosition, double startingYPosition, int startingHeading, double IdOfTurtle){
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
     Id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
@@ -58,7 +58,7 @@ public class Turtle{
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
-  public Turtle(double startingXPosition, double startingYPosition, int startingHeading, double IdOfTurtle){
+  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
     Id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));

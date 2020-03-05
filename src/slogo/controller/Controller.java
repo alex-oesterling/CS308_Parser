@@ -166,7 +166,7 @@ public class Controller {
      * @param startingY the y position of where the turtle will start
      * @param startingHeading where the turtle will be facing
      */
-    public void addTurtle(String name, double startingX, double startingY, int startingHeading){
+    public void addTurtle(String name, double startingX, double startingY, double startingHeading){
         IdOfTurtle ++;
         Turtle t = new Turtle(name, startingX, startingY, startingHeading, IdOfTurtle);
         if(nameToTurtle.containsKey(t.getName())){
