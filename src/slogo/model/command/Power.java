@@ -9,10 +9,11 @@ public class Power extends Command {
   /**
    * Power Constructor, passes up result to super
    * performs a^b
-   * @param base a
-   * @param exponent b
+   * @param turtleList the list of turtles being brought in to use this command (if needed)
+   * @param doubleList the list of doubles to be used for this command (if needed)
+   * @param commandList the list of commands being used for this command (if needed)
    */
   public Power(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    super(Math.pow(base, exponent));
+    super(Math.pow(doubleList.get(FIRST_INDEX), doubleList.get(SECOND_INDEX)));
   }
 }

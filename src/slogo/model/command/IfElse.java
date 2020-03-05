@@ -12,9 +12,9 @@ public class IfElse extends CommandWithReturningList {
 
   public IfElse(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super();
-    falseList = falseCommands;
-    trueList = trueCommands;
-    conditionResult = (condition!=0.0);
+    falseList = commandList.get(FIRST_INDEX);
+    trueList = commandList.get(SECOND_INDEX);
+    conditionResult = (doubleList.get(FIRST_INDEX)!=0.0);
   }
 
   @Override

@@ -12,11 +12,13 @@ public class PenUp extends Command {
     /**
      * Constructor for pen up which allows the turtle to move without drawing, lifts pen
      * sets the drawing to false
-     * @param body the current turtle that will have its pen set up and not drawing
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
     public PenUp(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super(NOT_DRAWING);
-        t = body;
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**

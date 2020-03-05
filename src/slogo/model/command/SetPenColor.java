@@ -12,13 +12,14 @@ public class SetPenColor extends Command{
     /**
      * Set pen color constructor, takes in the index of the color
      * for which the pen should be set to
-     * @param index the color to be set to
-     * @param body the turtle being used
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
     public SetPenColor(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        color = index;
-        t = body;
+        color = doubleList.get(FIRST_INDEX);
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**
