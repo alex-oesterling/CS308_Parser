@@ -1,13 +1,15 @@
 package slogo.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import slogo.view.Visualizer;
 
 public class Turtle{
 
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
-  private static final int DEFAULT_HEADING = 0;
+  private static final double DEFAULT_HEADING = 0;
   private static final int DEFAULT_PEN_INDEX = 0;
   private static final int DEFAULT_BG_INDEX = 7;
   private static final int DEFAULT_SHAPE_INDEX = 0;
@@ -39,11 +41,15 @@ public class Turtle{
   private double bgIndex;
   private double shapeIndex;
   private double sizePixels;
+  private double Id;
+  private List<String> turtleCount = new ArrayList<>();
   private String name;
 
-  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading){
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
+    Id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
+    turtleCount.add(name);
   }
 
   /**
@@ -52,9 +58,11 @@ public class Turtle{
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
-  public Turtle(double startingXPosition, double startingYPosition, double startingHeading){
+  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
+    Id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
+    turtleCount.add(name);
   }
 
   /**
@@ -62,16 +70,16 @@ public class Turtle{
    * but with a specific name
    * @param turtleName string to set name to
    */
-  public Turtle(String turtleName){
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING);
+  public Turtle(String turtleName, double IdOfTurtle){
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
     name = turtleName;
   }
 
   /**
    * Default Turtle constructor
    */
-  public Turtle(){
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING);
+  public Turtle(double IdOfTurtle){
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
   }
 
   /**
@@ -260,20 +268,29 @@ public class Turtle{
   }
 
   /**
-   * Return the unique id of the turtle
-   * @return the object's hashcode
+   * Gets the ID of the turtle
+   * @return the ID of the turtle
    */
-  public int getId(){
-    return this.hashCode();
+  public double getId(){
+    return Id;
   }
 
   /**
    * get the turtle's name
-   * @return
+   * @return name of turtle
    */
   public String getName(){
     return name;
   }
+
+  /**
+   * Get's the turtle count
+   * @return amount of turtles created thus far
+   */
+  public double getTurtleCount(){
+    return turtleCount.size();
+  }
+
   /**
    * Get the x position
    * @return xPosition
