@@ -35,10 +35,10 @@ public class ToolBar {
   private Stage myStage;
   private CommandLine myTerminal;
 
-  public ToolBar(Stage stage, CommandLine cline){
+  public ToolBar(Stage stage, CommandLine cline, ResourceBundle newResources){
     myStage = stage;
     myTerminal = cline;
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
+    myResources = newResources;
   }
 
   public Node setupToolBar(){

@@ -71,25 +71,28 @@ public class Visualizer{
   private ComboBox<String> turtleBox;
   private ToolBar myToolBar;
   private ListView<String> myList;
+  private Stage myStage;
 
 
   public Visualizer (Stage stage){
+    language = "English";
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     turtlePaths = new Group();
     turtleList = new HashMap<>();
     turtles = new Group();
     varMap = new HashMap<>();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
-    commandLine = new CommandLine(myController);
+    commandLine = new CommandLine(myController, myResources);
     myList = new ListView<>();
-    myToolBar = new ToolBar(stage, commandLine);
+    myToolBar = new ToolBar(stage, commandLine, myResources);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
     styler = new Styler();
+    myStage = stage;
   }
 
   public Scene setupScene() {
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
     root = createView();
     Scene myScene = new Scene(root);
     myScene.getStylesheets()
@@ -243,10 +246,15 @@ public class Visualizer{
             myResources.getString("Urdu")
     };
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
-    comboBox.setValue(myResources.getString("English"));
-    language = comboBox.getValue().toString();
-    comboBox.setOnAction(event -> setLanguage(comboBox.getValue().toString()));
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
+    comboBox.setValue(myResources.getString(language));
+    comboBox.setOnAction(event -> {
+      setLanguage(comboBox.getValue().toString());
+      myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
+      commandLine = new CommandLine(myController, myResources);
+      myToolBar = new ToolBar(myStage, commandLine, myResources);
+      myStage.setScene(setupScene());
+    });
+
     return comboBox;
   }
 
@@ -317,6 +325,7 @@ public class Visualizer{
   }
 
   public void addTurtle(String name, double startingX, double startingY, int heading){
+    System.out.println(startingX + " " + startingY + " " + heading);
     try {
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e){

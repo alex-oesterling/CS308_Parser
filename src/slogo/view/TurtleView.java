@@ -49,7 +49,6 @@ public class TurtleView{
     private Color myPenColor;
     private double currentX;
     private double currentY;
-    private double currentOrienation;
     private SequentialTransition st;
     private double heading;
     private double pathStrokeWidth;
@@ -94,11 +93,10 @@ public class TurtleView{
             turtleImage.setImage(image);
             turtleImage.setFitWidth(TURTLE_WIDTH);
             turtleImage.setFitHeight(TURTLE_HEIGHT);
-            turtleImage.setTranslateX(currentX - turtleImage.getBoundsInLocal().getWidth() / 2);
-            turtleImage.setTranslateY(currentY - turtleImage.getBoundsInLocal().getHeight() / 2);
             myTurtles.getChildren().remove(myImage);
             myImage = turtleImage;
             myTurtles.getChildren().add(myImage);
+            set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
         } catch (IllegalArgumentException e){
             return;
         } catch (Exception e) {
@@ -147,7 +145,6 @@ public class TurtleView{
         double oldHeading = heading;
         currentX = newX;
         currentY = newY;
-        currentOrienation = orientation;
         heading = orientation;
         if(newX != oldX || newY != oldY) {
             Path path = new Path();
@@ -182,9 +179,7 @@ public class TurtleView{
     public void resetTurtle(){
         myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
         myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
-        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
-        rt.setToAngle(TURTLE_RESET_ANGLE);
-        rt.play();
+        myImage.setRotate(0);
         heading = 0;
         currentY = TURTLE_SCREEN_HEIGHT/2;
         currentX = TURTLE_SCREEN_WIDTH/2;
@@ -202,7 +197,7 @@ public class TurtleView{
         observableList.addAll(turtleName,
                 Double.toString(currentX),
                 Double.toString(currentY),
-                Double.toString(currentOrienation),
+                Double.toString(heading),
                 String.valueOf(myPenColor),
                 Double.toString(pathStrokeWidth),
                 Boolean.toString(penStatus));
@@ -228,11 +223,12 @@ public class TurtleView{
     }
 
     public void setShape(ImageView turtle){
-        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
-        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
+//        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
+//        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().remove(myImage);
         myImage = turtle;
         myTurtles.getChildren().add(myImage);
+        set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
     }
 
     public void updatePenStatus(double value){
@@ -246,14 +242,17 @@ public class TurtleView{
     }
 
     public void set(double newX, double newY, double newHeading){
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
+
         currentX = newX;
         currentY = newY;
         heading = newHeading;
-        myImage.setTranslateX(newX);
-        myImage.setTranslateY(newY);
-        RotateTransition rt = new RotateTransition(Duration.ZERO, myImage);
-        rt.setToAngle(newHeading);
-        rt.play();
+
+        myImage.setTranslateX(newX-myImage.getBoundsInLocal().getWidth()/2);
+        myImage.setTranslateY(newY-myImage.getBoundsInLocal().getHeight()/2);
+        myImage.setRotate(newHeading);
     }
 
     public void setCommandSize(int size){
