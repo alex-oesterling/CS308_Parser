@@ -38,6 +38,8 @@ public class Visualizer{
   private static final String STYLESHEET = "styling.css";
   private static final String RESOURCES = "resources";
   public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+  public static final String COLOR_RESOURCE = "resources.formats";
+  public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = COLOR_RESOURCE + ".Colors";
 
 
   public static final int VIEWPANE_PADDING = 10;
@@ -58,6 +60,7 @@ public class Visualizer{
   private Rectangle turtleArea;
   private Map<String, TurtleView> turtleMap; //FIXME Map between name and turtle instead of list (number to turtle)
   private ResourceBundle myResources;
+  private ResourceBundle myColorResources;
   private String language;
   private Group turtlePaths;
   private Group turtles;
@@ -91,6 +94,8 @@ public class Visualizer{
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
     styler = new Styler();
+    colorPalette = new ColorPalette(createColorMap());
+    shapePalette = new ShapePalette();
     myStage = stage;
   }
 
@@ -202,7 +207,7 @@ public class Visualizer{
             styler.createLabel(myResources.getString("ChooseLanguage")),
             languageSelect(),
             styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(this)),
-            styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette()),
+            styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette(createColorMap())),
             styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
             styler.createButton(myResources.getString("HelpCommand"), e-> new HelpWindow(language)));
     return ui;
@@ -263,6 +268,17 @@ public class Visualizer{
     });
 
     return comboBox;
+  }
+
+  private Map<Double, String> createColorMap(){
+    myColorResources = ResourceBundle.getBundle(DEFAULT_COLOR_RESOURCE_PACKAGE);
+    Enumeration e = myColorResources.getKeys();
+    TreeMap<Double, String> treeMap = new TreeMap<>();
+    while (e.hasMoreElements()) {
+      String keyStr = (String) e.nextElement();
+      treeMap.put(Double.valueOf(keyStr), myColorResources.getString(keyStr));
+    }
+    return treeMap;
   }
 
   public void addCommand(String command, String syntax){
@@ -381,17 +397,13 @@ public class Visualizer{
   }
 
   public void setBackgroundColorFromPalette(double value){
-    if(colorPalette!=null){
       setBackgroundColor(colorPalette.getColorMapValue(value));
-    }
   }
 
   public void setPenSize(double value){currentTurtle.setPenSize(value);}
 
   public void setShape(double value){
-    if(shapePalette!=null){
       currentTurtle.setShape(shapePalette.getShapeMapValue(value));
-    }
   }
 
   public void setLanguage(String newLanguage){

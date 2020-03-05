@@ -58,15 +58,9 @@ public class PenProperties {
         TextField textField = new TextField();
         VBox vbox = new VBox(styler.createLabel(myResources.getString("PenColor")),
                 penColor(),
-<<<<<<< HEAD
-                styler.createButton(myResources.getString("ChangePenCommand"), e->turtleView.changePenStatus()),
                 textField,
-                styler.createButton(myResources.getString("ChangePenWidthCommand"), e->turtleView.changePenWidth(Double.parseDouble(textField.getText())))
-=======
                 styler.createButton(myResources.getString("ChangePenCommand"), e->myVisualzer.getCurrentTurtle().changePenStatus()),
-                styler.createButton(myResources.getString("ChangePenWidthCommand"), e->myVisualzer.getCurrentTurtle().changePenWidth())
->>>>>>> 094c3585b094fa55d17e706cb6ad27d0c24b308e
-                );
+                styler.createButton(myResources.getString("ChangePenWidthCommand"), e->myVisualzer.getCurrentTurtle().changePenWidth(Double.parseDouble(textField.getText()))));
 
         return vbox;
     }
