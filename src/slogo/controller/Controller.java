@@ -45,7 +45,7 @@ public class Controller {
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
-    private double turtleCount;
+    private double IdOfTurtle;
 
     /**
      * The constructor for controller class, initializes the view, list of
@@ -104,8 +104,8 @@ public class Controller {
      * this newly created turtle; turtle with a default "name" that is its hashcode
      */
     public void addTurtle(){
-        turtleCount +=1;
-        Turtle t = new Turtle();
+        IdOfTurtle ++;
+        Turtle t = new Turtle(IdOfTurtle);
         if(nameCount.containsKey(t.getName())){
             Integer generation = nameCount.get(t.getName());
             nameCount.put(t.getName(), nameCount.get(t.getName())+1);
@@ -128,8 +128,8 @@ public class Controller {
      * @param startingHeading where the turtle will be facing
      */
     public void addTurtle(String name, double startingX, double startingY, int startingHeading){
-        turtleCount +=1;
-        Turtle t = new Turtle(name, startingX, startingY, startingHeading);
+        IdOfTurtle ++;
+        Turtle t = new Turtle(name, startingX, startingY, startingHeading, IdOfTurtle);
         if(turtleMap.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
         }
@@ -490,9 +490,13 @@ public class Controller {
             } else if(c instanceof SetPenColor){
                 myView.updateCommandPenColor(c.getResult());
             } else if(c instanceof SetShape){
+                System.out.println(c.getResult());
+                System.out.println("hereeee");
                 myView.updateShape(c.getResult());
             } else if(c instanceof SetPenSize){
                 myView.updatePenSize(c.getResult());
+            } else if(c instanceof ID){
+                System.out.println(c.getResult());
             }
             else {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());

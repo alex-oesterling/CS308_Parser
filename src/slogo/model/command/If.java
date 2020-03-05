@@ -3,10 +3,11 @@ package slogo.model.command;
 import java.util.ArrayList;
 import java.util.List;
 
-public class If extends CommandWithReturningList {
+public class If extends Command {
 
   private boolean conditionResult;
   private List<Command> commandList, returningList;
+  private static final Double DEFAULT = 0.0;
 
   public If(List<Command> commands, List<Command> conditions){
     super();
