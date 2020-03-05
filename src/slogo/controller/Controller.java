@@ -355,7 +355,7 @@ public class Controller {
 
         pushParamsNeeded(commandParams); //convert that string to a double
 
-        return tryToMakeCommands(commandList);
+        return tryToMakeCommandsRefactoring(commandList);
     }
 
     private void doCommandVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
@@ -375,7 +375,7 @@ public class Controller {
     private void doConstantWork(String line, List<Command> commandList){
         Double argumentValue = Double.parseDouble(line);
         argumentStack.push(argumentValue);
-        tryToMakeCommands(commandList);
+        tryToMakeCommandsRefactoring(commandList);
     }
 
     private void pushParamsNeeded(String commandParams){ //TODO clean up
