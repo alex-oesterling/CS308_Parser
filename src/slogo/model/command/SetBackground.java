@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class SetBackground extends Command {
 
     private Double color;
@@ -10,13 +12,14 @@ public class SetBackground extends Command {
     /**
      * Set background constructor, takes in the index of the color
      * for which the background should be set to
-     * @param index the color to be set to
-     * @param body the turtle being used
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
-    public SetBackground(Turtle body, Double index){
+    public SetBackground(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        color = index;
-        t = body;
+        color = doubleList.get(FIRST_INDEX);
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**
