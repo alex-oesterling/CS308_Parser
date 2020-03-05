@@ -4,7 +4,7 @@ import slogo.model.Turtle;
 
 public class ID extends Command {
 
-    private Turtle t;
+    priva IDTurtle t;
 
     /**
      * Constructor for the ID command
