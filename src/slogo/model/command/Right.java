@@ -11,8 +11,9 @@ public class Right extends Command {
     /**
      * Right constructor, to get the value of going right
      * Calls super and sets the right turn value
-     * @param body the specific turtle being used, what the right value will be
-     * @param value the value of how far it is turning right
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
     public Right(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
         super(doubleList.get(FIRST_INDEX));
