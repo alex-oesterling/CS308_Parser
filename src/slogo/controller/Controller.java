@@ -46,7 +46,6 @@ public class Controller {
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
-    private int counter; //TODO DELETE
 
     /**
      * The constructor for controller class, initializes the view, list of
@@ -60,7 +59,6 @@ public class Controller {
         mySymbols = new ArrayList<>();
         makeMaps();
         makeStacks();
-        counter = 0; //TODO DELETE
 
         commandParser = new Parser(LANGUAGES_PACKAGE);
         commandParser.addPatterns(language);
@@ -118,7 +116,6 @@ public class Controller {
         if(nameToTurtle.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
         }
-        //TODO UNCOMMENT @TYLER @TYLER @TYLER turtleId.putIfAbsent(t.getName(), turtleCount);
         nameToTurtle.putIfAbsent(t.getName(), t);
         turtle = t;
     }
@@ -135,7 +132,6 @@ public class Controller {
         if(nameCount.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
         }
-        //TODO UNCOMMENT @TYLER @TYLER @TYLER turtleId.putIfAbsent(t.getName(), turtleCount);
         nameToTurtle.putIfAbsent(t.getName(), t);
         turtle = t;
     }
@@ -211,7 +207,6 @@ public class Controller {
     }
 
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
-        counter=0;
         List<Command> commandList = new ArrayList<>();
         List<Command> currentList = commandList;
         ListIterator<String> iterator = lines.listIterator();
@@ -351,6 +346,9 @@ public class Controller {
     private double getParamsNeeded(String commandParams){ //TODO make another properties file that has OneDouble=1.0; TwoDouble=2.0;
         double numberOfParams = ZERO_DOUBLE_PARAM_VALUE;
         double listParam = ZERO_DOUBLE_PARAM_VALUE;
+        Parser numberOfParamsParser = new Parser(INFORMATION_PACKAGE);
+        numberOfParamsParser.addPatterns("TurtleAndDoubleParameters");
+        System.out.println(numberOfParamsParser.getSymbol(commandParams));
         if (commandParams.contains("OneDouble")){
             numberOfParams = ONE_DOUBLE_PARAM_VALUE;
         } else if (commandParams.contains("TwoDouble")){
@@ -435,7 +433,7 @@ public class Controller {
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ZERO_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ZERO_DOUBLE_PARAM_VALUE)) {
             return command.getConstructor();
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ONE_DOUBLE_PARAM_VALUE)) {
-            return command.getConstructor(Double.class, List.class, String.class); //TODO TAKE OUT THE STRING
+            return command.getConstructor(Double.class, List.class);
         } else if (!listParametersStack.isEmpty() && listParametersStack.peek() == TWO_DOUBLE_PARAM_VALUE) {
             return command.getConstructor(List.class, List.class);
         } else {
@@ -461,7 +459,7 @@ public class Controller {
         } else if(numberOfParams == TURTLE_PARAM_VALUE && listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance(turtle);
         } else if (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ONE_DOUBLE_PARAM_VALUE) {
-            myCommand = (Command) constructor.newInstance(argumentStack.pop(), listStack.pop(), "repeat"+counter);
+            myCommand = (Command) constructor.newInstance(argumentStack.pop(), listStack.pop());
         } else if (listParametersStack.peek() == TWO_DOUBLE_PARAM_VALUE) {
             myCommand = (Command) constructor.newInstance(listStack.pop(), listStack.pop());
         }
@@ -480,11 +478,9 @@ public class Controller {
 
     private void executeCommandList(List<Command> l){
         for(Command c : l){
-            System.out.println(c);
-            System.out.println("YAHAHA"+c.execute());
-            System.out.println(
-                "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
-                    .getHeading());
+            //System.out.println(c);
+            /*System.out.println(*/c.execute()/*)*/;
+            //System.out.println("DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle.getHeading());
             if(c instanceof ClearScreen){
                 myView.updatePenStatus(0);
                 myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
