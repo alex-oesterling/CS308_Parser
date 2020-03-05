@@ -12,8 +12,8 @@ public class XCoordinate extends Command {
    * @param body turtle
    */
   public XCoordinate(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
-    super(body.getX());
-    t = body;
+    super(turtleList.get(FIRST_INDEX).getX());
+    t = turtleList.get(FIRST_INDEX);
   }
 
   /**

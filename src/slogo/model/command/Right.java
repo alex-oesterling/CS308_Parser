@@ -16,7 +16,7 @@ public class Right extends Command {
      */
     public Right(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
         super(doubleList.get(FIRST_INDEX));
-        t = body;
+        t = turtleList.get(FIRST_INDEX);
         degrees = doubleList.get(FIRST_INDEX);
     }
 
