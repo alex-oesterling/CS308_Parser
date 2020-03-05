@@ -76,10 +76,12 @@ public class Visualizer{
   private ToolBar myToolBar;
   private ListView<String> myList;
   private Stage myStage;
+  private Color backgroundColor;
 
 
   public Visualizer (Stage stage){
     language = "English";
+    backgroundColor = Color.WHITE;
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     turtlePaths = new Group();
     turtleMap = new TreeMap<>();
@@ -132,7 +134,7 @@ public class Visualizer{
 
   private Group createBox() {
     turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
-    turtleArea.setFill(Color.WHITE);
+    turtleArea.setFill(backgroundColor);
     turtleArea.setStroke(Color.BLACK);
     turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
     Group view = new Group();
@@ -216,7 +218,11 @@ public class Visualizer{
   private ColorPicker backgroundColor(){
     backgroundColorPicker = new ColorPicker();
     backgroundColorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-    backgroundColorPicker.setOnAction(e -> turtleArea.setFill(backgroundColorPicker.getValue()));
+    backgroundColorPicker.setValue(backgroundColor);
+    backgroundColorPicker.setOnAction(e -> {
+      backgroundColor = backgroundColorPicker.getValue();
+      turtleArea.setFill(backgroundColor);
+    });
     return backgroundColorPicker;
   }
 
@@ -260,13 +266,12 @@ public class Visualizer{
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
     comboBox.setValue(myResources.getString(language));
     comboBox.setOnAction(event -> {
-      setLanguage(comboBox.getValue().toString());
-      myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
-      commandLine = new CommandLine(myController, myResources);
-      myToolBar = new ToolBar(myStage, this, myResources);
-      myStage.setScene(setupScene());
+      for(String key : myResources.keySet()){
+        if(comboBox.getValue().toString().equals(myResources.getObject(key))){
+          setLanguage(key);
+        }
+      }
     });
-
     return comboBox;
   }
 
@@ -409,10 +414,15 @@ public class Visualizer{
   public void setLanguage(String newLanguage){
     language = newLanguage;
     myController.addLanguage(language);
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
+    commandLine = new CommandLine(myController, myResources);
+    myToolBar = new ToolBar(myStage, this, myResources);
+    myStage.setScene(setupScene());
   }
-
+  //FIXME why do we have so many colorpicker methods? can we combine any in any way
   public void setBackgroundColor(String hexColor){
-    turtleArea.setFill(Color.web(hexColor));
+    backgroundColor = Color.web(hexColor);
+    turtleArea.setFill(backgroundColor);
     backgroundColorPicker.setValue(Color.web(hexColor));
   }
 

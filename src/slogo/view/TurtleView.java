@@ -3,10 +3,7 @@ package slogo.view;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableListValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -25,10 +22,6 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TurtleView{
     public static final String XML_FILEPATH = "user.dir";
@@ -203,7 +196,9 @@ public class TurtleView{
         myPenColor = color;
     }
 
-    public void changePenStatus(){penStatus = !penStatus;}
+    public void changePenStatus(Boolean status){penStatus = status;}
+
+    public boolean getPenStatus(){return penStatus;}
 
     public void changePenWidth(double penWidth) {pathStrokeWidth = penWidth;}
 

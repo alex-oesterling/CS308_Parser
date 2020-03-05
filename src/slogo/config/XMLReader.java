@@ -50,8 +50,8 @@ public class XMLReader {
   }
 
   private void readFile(){
-    readTurtles();
     myStage.setScene(myVisualizer.setupScene());
+    readTurtles();
     readPreferences();
     readCommandHistory();
     readUserVariables();
