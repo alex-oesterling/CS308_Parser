@@ -285,7 +285,7 @@ public class Controller {
                 } else if (commandSyntax.equals("ListEnd")){
                     //doListEndWork();
                     if(currentList.size() != 0) {
-                        listStack.push(currentList); //FIXME this is the bad part ---> error lies here
+                        listStack.push(currentList);
                     }
                     stopHoldingStacks();
                     currentList = currentListHolder.pop();
@@ -302,12 +302,21 @@ public class Controller {
         return currentList;
     }
 
-    private void doListStartWork(List<Command> currentList){
+    private void doListStartWork(List<Command> commandList){
         List<Command> tempList = new ArrayList<>();
         holdStacks();
 
-        currentListHolder.push(currentList);
-        currentList = tempList;
+        currentListHolder.push(commandList);
+        commandList = tempList;
+    }
+
+    private void doListEndWork(List<Command> commandList){
+        if(commandList.size() != 0) {
+            listStack.push(commandList);
+        }
+        stopHoldingStacks();
+        commandList = currentListHolder.pop();
+        tryToMakeCommands(commandList);
     }
 
     private void doCommandWork(Parser params, Parser lang, Parser syntax, List<Command> commandList, String line, String commandSyntax, List<String> lines){
