@@ -261,9 +261,12 @@ public class Visualizer{
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
     comboBox.setValue(myResources.getString(language));
     comboBox.setOnAction(event -> {
-      setLanguage(comboBox.getValue().toString());
+      for(String key : myResources.keySet()){
+        if(comboBox.getValue().toString().equals(myResources.getObject(key))){
+          setLanguage(key);
+        }
+      }
     });
-
     return comboBox;
   }
 
