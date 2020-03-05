@@ -45,6 +45,7 @@ public class Controller {
     private String myCommands;
     private ViewExternal myView;
     private Parser commandParser, parametersParser, syntaxParser;
+    private double turtleCount;
 
     /**
      * The constructor for controller class, initializes the view, list of
@@ -103,6 +104,7 @@ public class Controller {
      * this newly created turtle; turtle with a default "name" that is its hashcode
      */
     public void addTurtle(){
+        turtleCount +=1;
         Turtle t = new Turtle();
         if(nameCount.containsKey(t.getName())){
             Integer generation = nameCount.get(t.getName());
@@ -126,6 +128,7 @@ public class Controller {
      * @param startingHeading where the turtle will be facing
      */
     public void addTurtle(String name, double startingX, double startingY, int startingHeading){
+        turtleCount +=1;
         Turtle t = new Turtle(name, startingX, startingY, startingHeading);
         if(turtleMap.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this

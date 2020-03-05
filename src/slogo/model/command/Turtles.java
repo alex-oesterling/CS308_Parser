@@ -1,9 +1,11 @@
 package slogo.model.command;
 
-import slogo.model.Turtle;
-
 public class Turtles extends Command {
-    public Turtles(Turtle body){
+
+    /**
+     * Constructor for turtles commands, returns the current number of turtles created
+     */
+    public Turtles(){
         super();
     }
 }
