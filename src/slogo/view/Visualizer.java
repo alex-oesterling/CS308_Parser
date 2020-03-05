@@ -10,6 +10,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -70,25 +71,28 @@ public class Visualizer{
   private ComboBox<String> turtleBox;
   private ToolBar myToolBar;
   private ListView<String> myList;
+  private Stage myStage;
 
 
   public Visualizer (Stage stage){
+    language = "English";
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     turtlePaths = new Group();
     turtleList = new HashMap<>();
     turtles = new Group();
     varMap = new HashMap<>();
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
-    commandLine = new CommandLine(myController);
+    commandLine = new CommandLine(myController, myResources);
     myList = new ListView<>();
-    myToolBar = new ToolBar(stage, commandLine);
+    myToolBar = new ToolBar(stage, commandLine, myResources);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     colorPicker = new ColorPicker();
     styler = new Styler();
+    myStage = stage;
   }
 
   public Scene setupScene() {
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
     root = createView();
     Scene myScene = new Scene(root);
     myScene.getStylesheets()
@@ -242,10 +246,15 @@ public class Visualizer{
             myResources.getString("Urdu")
     };
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
-    comboBox.setValue(myResources.getString("English"));
-    language = comboBox.getValue().toString();
-    comboBox.setOnAction(event -> setLanguage(comboBox.getValue().toString()));
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
+    comboBox.setValue(myResources.getString(language));
+    comboBox.setOnAction(event -> {
+      setLanguage(comboBox.getValue().toString());
+      myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
+      commandLine = new CommandLine(myController, myResources);
+      myToolBar = new ToolBar(myStage, commandLine, myResources);
+      myStage.setScene(setupScene());
+    });
+
     return comboBox;
   }
 
@@ -288,7 +297,10 @@ public class Visualizer{
       try{
         number = Double.valueOf(result.get());
       } catch (NullPointerException e){
-        //ERROR DIALOG: Please enter a valid constant
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText("Please enter a double:");
+        errorAlert.setContentText("Restoring variable");
+        errorAlert.showAndWait();
         number = Double.parseDouble(value.getText());
       }
       varMap.put(variableName, number.toString());
@@ -301,7 +313,10 @@ public class Visualizer{
     try {
       myController.addTurtle();
     } catch (InvalidTurtleException e){
-      //ERROR DIALOG: Turtle Already Exists!
+      Alert errorAlert = new Alert(AlertType.ERROR);
+      errorAlert.setHeaderText("Turtle already exists!");
+      errorAlert.setContentText("Please choose a unique Turtle name");
+      errorAlert.showAndWait();
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
@@ -310,10 +325,15 @@ public class Visualizer{
   }
 
   public void addTurtle(String name, double startingX, double startingY, int heading){
+    System.out.println(startingX + " " + startingY + " " + heading);
     try {
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e){
-      //ERROR DIALOG: Turtle Already Exists!
+      Alert errorAlert = new Alert(AlertType.ERROR);
+      errorAlert.setHeaderText("Turtle already exists!");
+      errorAlert.setContentText("Please fix XML file to specify unique turtle");
+      errorAlert.showAndWait();
+      return;
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     tempTurtle.set(startingX, startingY, heading);

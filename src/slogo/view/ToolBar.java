@@ -1,10 +1,14 @@
 package slogo.view;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -31,10 +35,10 @@ public class ToolBar {
   private Stage myStage;
   private CommandLine myTerminal;
 
-  public ToolBar(Stage stage, CommandLine cline){
+  public ToolBar(Stage stage, CommandLine cline, ResourceBundle newResources){
     myStage = stage;
     myTerminal = cline;
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
+    myResources = newResources;
   }
 
   public Node setupToolBar(){
@@ -48,11 +52,23 @@ public class ToolBar {
       makeNewWindow();
     });
     loadWorkspace = makeMenuItem("LoadWorkSpace", e-> new XMLReader(chooseXMLFile(), myStage));
-    loadCode = makeMenuItem("LoadCode", e-> myTerminal.loadCodeFromFile(chooseTXTFile()));
+    loadCode = makeMenuItem("LoadCode", e-> tryLoadCodeFromFile());
     menuBar.getMenus().add(menu);
     menu.getItems().addAll(newWindow, loadWorkspace, loadCode, restart, exit);
     tools.getChildren().add(menuBar);
     return tools;
+  }
+
+  private void tryLoadCodeFromFile() {
+    try {
+      File textfile = chooseTXTFile();
+      if(textfile == null){
+        return;
+      }
+      myTerminal.loadCodeFromFile(textfile);
+    } catch (IOException ex) {
+      retryLoadFile("Invalid text command history file");
+    }
   }
 
   private void closeWindow() {
@@ -128,5 +144,36 @@ public class ToolBar {
     } else {
       return null;
     }
+  }
+
+  /**
+   * Helps with error handling by creating a loop which will pop up an error message until the user has
+   * selected a valid XML file
+   * @param message - The string message to be displayed by the error popup
+   */
+  private void retryLoadFile(String message) {
+    boolean badFile;
+    displayError(message);
+    do {
+      badFile = false;
+      try {
+        myTerminal.loadCodeFromFile(chooseTXTFile());
+      } catch (IOException e) {
+        displayError(message);
+        badFile = true;
+      }
+    } while (badFile);
+  }
+
+  /**
+   * Creates the error dialog box which pops up on handling different forms of exceptions
+   * for an invalid XML file
+   * @param message - The message to be displayed by the error dialog
+   */
+  private void displayError(String message) {
+    Alert errorAlert = new Alert(AlertType.ERROR);
+    errorAlert.setHeaderText(message);
+    errorAlert.setContentText("Please select another file");
+    errorAlert.showAndWait();
   }
 }

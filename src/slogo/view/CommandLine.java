@@ -37,8 +37,8 @@ public class CommandLine {
   private int historyIndex;
   private VBox historyBox;
 
-  public CommandLine(Controller controller){
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
+  public CommandLine(Controller controller, ResourceBundle newResources){
+    myResources = newResources;
     myController = controller;
     history = new ArrayList<>();
     historyBox = new VBox();
@@ -128,11 +128,7 @@ public class CommandLine {
     historyIndex = -1;
   }
 
-  public void loadCodeFromFile(File file){
-    try {
-      textBox.setText(Files.readString(file.toPath()));
-    } catch (IOException e) {
-      //HANDLE
-    }
+  public void loadCodeFromFile(File file) throws IOException {
+    textBox.setText(Files.readString(file.toPath()));
   }
 }
