@@ -35,7 +35,7 @@ public class CommandLine {
   private VBox historyBox;
 
   public CommandLine(Controller controller){
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
     myController = controller;
     history = new ArrayList<>();
     historyBox = new VBox();

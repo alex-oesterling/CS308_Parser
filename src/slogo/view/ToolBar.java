@@ -31,7 +31,7 @@ public class ToolBar {
 
   public ToolBar(Stage stage){
     myStage = stage;
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
   }
 
   public Node setupToolBar(){

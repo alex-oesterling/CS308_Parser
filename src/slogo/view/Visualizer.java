@@ -92,7 +92,7 @@ public class Visualizer{
   }
 
   public Scene setupScene() {
-    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "Buttons");
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
     root = createView();
     Scene myScene = new Scene(root);
     myScene.getStylesheets()
@@ -250,6 +250,7 @@ public class Visualizer{
     comboBox.setValue(myResources.getString("English"));
     language = comboBox.getValue().toString();
     comboBox.setOnAction(event -> setLanguage(comboBox.getValue().toString()));
+    myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     return comboBox;
   }
 

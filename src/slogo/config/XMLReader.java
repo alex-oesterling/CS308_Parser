@@ -17,11 +17,12 @@ public class XMLReader {
   private File myFile;
   private Document myDoc;
   private Visualizer myVisualizer;
+  private Stage myStage;
 
   public XMLReader(File file, Stage stage){
     myFile = file;
+    myStage = stage;
     myVisualizer = new Visualizer(stage);
-    stage.setScene(myVisualizer.setupScene());
     setupDocument();
     readFile();
   }
@@ -41,8 +42,9 @@ public class XMLReader {
   }
 
   private void readFile(){
-    readPreferences();
     readTurtles();
+    myStage.setScene(myVisualizer.setupScene());
+    readPreferences();
     readCommandHistory();
     readUserVariables();
     readUserCommands();
