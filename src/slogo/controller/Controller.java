@@ -476,6 +476,6 @@ public class Controller {
            }
         }
         resetStacks();
-        myView.playAnimation();
+        myView.updateStatus();
     }
 }
