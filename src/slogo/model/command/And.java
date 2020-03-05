@@ -1,14 +1,19 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class And extends Command {
 
   /**
    * Constructor of 'and' logic
-   * @param value1 condition 1
-   * @param value2 condition 2
+   * @param turtleList the list of turtles being brought in to use this command (if needed)
+   * @param doubleList the list of doubles to be used for this command (if needed)
+   * @param commandList the list of commands being used for this command (if needed)
    */
-  public And(Double value1, Double value2){
-   super(value1!=0.0&&value2!=0.0); //'convert' to booleans
+  public And(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+   super(doubleList.get(FIRST_INDEX)!=0.0 && doubleList.get(SECOND_INDEX)!=0.0); //'convert' to booleans
   }
 
 }

@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class SetPosition extends Command {
 
     private Turtle t;
@@ -15,7 +17,7 @@ public class SetPosition extends Command {
      * @param x the new x position that the turtle will be at
      * @param y the new  y position that the turtle will be at
      */
-    public SetPosition(Turtle body, Double y, Double x){
+    public SetPosition(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
         t = body;
         xPos = x;

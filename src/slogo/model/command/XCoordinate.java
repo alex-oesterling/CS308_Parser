@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class XCoordinate extends Command {
 
   private Turtle t;
@@ -9,7 +11,7 @@ public class XCoordinate extends Command {
    * Takes in a turtle, and returns the x coordinate of that turtle
    * @param body turtle
    */
-  public XCoordinate(Turtle body){
+  public XCoordinate(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(body.getX());
     t = body;
   }

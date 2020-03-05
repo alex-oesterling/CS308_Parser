@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class SetPenSize extends Command {
 
     private Double size;
@@ -13,7 +15,7 @@ public class SetPenSize extends Command {
      * @param pixels the size for pen to be set to
      * @param body the turtle being used
      */
-    public SetPenSize(Turtle body, Double pixels){
+    public SetPenSize(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
         size = pixels;
         t = body;

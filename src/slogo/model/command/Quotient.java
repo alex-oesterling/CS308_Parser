@@ -1,5 +1,9 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Quotient extends Command {
 
   /**
@@ -9,7 +13,7 @@ public class Quotient extends Command {
    * @param dividend number to be divided; a
    * @param divisor number to divide by; b
    */
-  public Quotient(Double divisor, Double dividend){
+  public Quotient(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
     super(dividend/divisor);
   }
 }
