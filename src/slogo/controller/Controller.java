@@ -35,8 +35,10 @@ public class Controller {
 
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
-    private Stack<Double> argumentStack, doubleAndTurtleParametersStack, listParametersStack;
+    private Stack<Double> argumentStack, turtleAndDoubleParametersStack, listParametersStack;
     private Stack<List<Command>> listStack;
+    private Stack<Stack> commandStackHolder, argumentStackHolder, parametersStackHolder, listParametersStackHolder, listStackHolder;
+    private Stack<List<Command>> currentListHolder = new Stack<>();
     private Map<String, List> userCreatedCommandVariables;
     private Map<String, String> userCreatedConstantVariables;
     private Map<String, Turtle> nameToTurtle;
@@ -45,8 +47,7 @@ public class Controller {
     private Turtle turtle;
     private String myCommands;
     private ViewExternal myView;
-    private Parser commandParser, parametersParser, syntaxParser;
-    private int counter; //TODO DELETE
+    private Parser commandParser, parametersParser, syntaxParser, listParamsParser, numberOfParamsParser;
 
     /**
      * The constructor for controller class, initializes the view, list of
@@ -60,8 +61,10 @@ public class Controller {
         mySymbols = new ArrayList<>();
         makeMaps();
         makeStacks();
-        counter = 0; //TODO DELETE
+        makeParsers(language);
+    }
 
+    private void makeParsers(String language){
         commandParser = new Parser(LANGUAGES_PACKAGE);
         commandParser.addPatterns(language);
 
@@ -70,6 +73,12 @@ public class Controller {
 
         parametersParser = new Parser(INFORMATION_PACKAGE);
         parametersParser.addPatterns("Parameters");
+
+        listParamsParser = new Parser(INFORMATION_PACKAGE);
+        listParamsParser.addPatterns("ListParameters");
+
+        numberOfParamsParser = new Parser(INFORMATION_PACKAGE);
+        numberOfParamsParser.addPatterns("TurtleAndDoubleParameters");
     }
 
     private void makeMaps() {
@@ -85,6 +94,39 @@ public class Controller {
         listParametersStack = new Stack<>();
     }
 
+    private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
+        commandStack = new Stack<>();
+        argumentStack = new Stack<>();
+        turtleAndDoubleParametersStack = new Stack<>();
+        listStack = new Stack<>();
+    }
+
+    private void makeHolderStacks() {
+        commandStackHolder = new Stack<>();
+        argumentStackHolder = new Stack<>();
+        parametersStackHolder = new Stack<>();
+        listParametersStackHolder = new Stack<>();
+        listStackHolder = new Stack<>();
+        currentListHolder = new Stack<>();
+    }
+
+    private void holdStacks(){
+        commandStackHolder.push(commandStack);
+        argumentStackHolder.push(argumentStack);
+        parametersStackHolder.push(turtleAndDoubleParametersStack);
+        listParametersStackHolder.push(listParametersStack);
+        listStackHolder.push(listStack);
+        makeNewStacks();
+        listStack =  listStackHolder.pop();
+    }
+
+    private void stopHoldingStacks(){
+        commandStack = commandStackHolder.pop();
+        argumentStack = argumentStackHolder.pop();
+        turtleAndDoubleParametersStack = parametersStackHolder.pop();
+        listParametersStack = listParametersStackHolder.pop();
+    }
+
     /**
      * Resets the turtle and clears all of the stacks
      */
@@ -93,13 +135,6 @@ public class Controller {
         nameCount = new HashMap<>();
         addTurtle();
         makeNewStacks();
-    }
-
-    private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
-        commandStack = new Stack<>();
-        argumentStack = new Stack<>();
-        doubleAndTurtleParametersStack = new Stack<>();
-        listStack = new Stack<>();
     }
 
     /**
@@ -118,7 +153,6 @@ public class Controller {
         if(nameToTurtle.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
         }
-        //TODO UNCOMMENT @TYLER @TYLER @TYLER turtleId.putIfAbsent(t.getName(), turtleCount);
         nameToTurtle.putIfAbsent(t.getName(), t);
         turtle = t;
     }
@@ -135,7 +169,6 @@ public class Controller {
         if(nameCount.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
         }
-        //TODO UNCOMMENT @TYLER @TYLER @TYLER turtleId.putIfAbsent(t.getName(), turtleCount);
         nameToTurtle.putIfAbsent(t.getName(), t);
         turtle = t;
     }
@@ -211,7 +244,6 @@ public class Controller {
     }
 
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
-        counter=0;
         List<Command> commandList = new ArrayList<>();
         List<Command> currentList = commandList;
         ListIterator<String> iterator = lines.listIterator();
@@ -222,12 +254,7 @@ public class Controller {
             throw new InvalidCommandException(new Throwable(), syntax.getSymbol(isFirstConstant), isFirstConstant);
             //FIXME Need to add an exception (better one) here
         }
-        Stack<Stack> commandStackHolder = new Stack<>();
-        Stack<Stack> argumentStackHolder = new Stack<>();
-        Stack<Stack> parametersStackHolder = new Stack<>();
-        Stack<Stack> listParametersStackHolder = new Stack<>();
-        Stack<Stack> listStackHolder = new Stack<>();
-        Stack<List<Command>> currentListHolder = new Stack<>();
+        makeHolderStacks();
         while(iterator.hasNext() && !IS_VARIABLE) {
             String line = iterator.next();
             if (line.trim().length() > 0) {
@@ -249,24 +276,18 @@ public class Controller {
                         //FIXME Need to add an exception (better one) here
                     }
                 } else if (commandSyntax.equals("ListStart")){
+                    //doListStartWork(currentList);
                     List<Command> tempList = new ArrayList<>();
-                    commandStackHolder.push(commandStack);
-                    argumentStackHolder.push(argumentStack);
-                    parametersStackHolder.push(doubleAndTurtleParametersStack);
-                    listStackHolder.push(listStack);
-                    listParametersStackHolder.push(listParametersStack);
-                    makeNewStacks();
-                    listStack = listStackHolder.pop();
+                    holdStacks();
+
                     currentListHolder.push(currentList);
                     currentList = tempList;
                 } else if (commandSyntax.equals("ListEnd")){
+                    //doListEndWork();
                     if(currentList.size() != 0) {
                         listStack.push(currentList); //FIXME this is the bad part ---> error lies here
                     }
-                    commandStack = commandStackHolder.pop();
-                    argumentStack = argumentStackHolder.pop();
-                    doubleAndTurtleParametersStack = parametersStackHolder.pop();
-                    listParametersStack = listParametersStackHolder.pop();
+                    stopHoldingStacks();
                     currentList = currentListHolder.pop();
                     tryToMakeCommands(currentList);
                 }
@@ -279,6 +300,14 @@ public class Controller {
         currentList = fillCommands(currentList);
         executeCommandList(currentList);
         return currentList;
+    }
+
+    private void doListStartWork(List<Command> currentList){
+        List<Command> tempList = new ArrayList<>();
+        holdStacks();
+
+        currentListHolder.push(currentList);
+        currentList = tempList;
     }
 
     private void doCommandWork(Parser params, Parser lang, Parser syntax, List<Command> commandList, String line, String commandSyntax, List<String> lines){
@@ -322,8 +351,7 @@ public class Controller {
         commandStack.push(commandName); //add string to stack
         String commandParams = params.getSymbol(commandName); //get Parameters string, such as "OneDouble" or "TurtleOneDouble"
 
-        double paramsNeeded  = getParamsNeeded(commandParams); //convert that string to a double
-        doubleAndTurtleParametersStack.push(paramsNeeded); //add that value to the params stack
+        pushParamsNeeded(commandParams); //convert that string to a double
 
         return tryToMakeCommands(commandList);
     }
@@ -348,24 +376,24 @@ public class Controller {
         tryToMakeCommands(commandList);
     }
 
-    private double getParamsNeeded(String commandParams){ //TODO make another properties file that has OneDouble=1.0; TwoDouble=2.0;
-        double numberOfParams = ZERO_DOUBLE_PARAM_VALUE;
-        double listParam = ZERO_DOUBLE_PARAM_VALUE;
-        if (commandParams.contains("OneDouble")){
-            numberOfParams = ONE_DOUBLE_PARAM_VALUE;
-        } else if (commandParams.contains("TwoDouble")){
-            numberOfParams = TWO_DOUBLE_PARAM_VALUE;
+    private void pushParamsNeeded(String commandParams){ //TODO clean up
+        //System.out.println("l: "+listParamsParser.getSymbol(commandParams));
+        //System.out.println(commandParams);
+        //System.out.println("d: "+numberOfParamsParser.getSymbol(commandParams));
+
+        String listParamString = listParamsParser.getSymbol(commandParams);
+        if(listParamString.equals(NO_MATCH)){
+            //todo throw new Exception("you didn't edit the properties files properly");
+        } else {
+            listParametersStack.push(Double.parseDouble(listParamString));
         }
-        if (commandParams.contains("Turtle")){
-            numberOfParams += TURTLE_PARAM_VALUE;
+
+        String turtleAndDoubleParamsString = numberOfParamsParser.getSymbol(commandParams);
+        if(turtleAndDoubleParamsString.equals(NO_MATCH)){
+            //todo throw new Exception("you didn't edit the properties files properly");
+        } else {
+            turtleAndDoubleParametersStack.push(Double.parseDouble(turtleAndDoubleParamsString)); //add that value to the params stack
         }
-        if(commandParams.contains("OneList")) {
-            listParam = ONE_DOUBLE_PARAM_VALUE;
-        } else if (commandParams.contains("TwoList")) {
-            listParam = TWO_DOUBLE_PARAM_VALUE;
-        }
-        listParametersStack.push(listParam);
-        return numberOfParams;
     }
 
     private List<Command> tryToMakeCommands(List<Command> commandList){
@@ -376,7 +404,8 @@ public class Controller {
     }
 
     private boolean checkArgumentStack(){
-        return !doubleAndTurtleParametersStack.isEmpty() && argumentStack.size() >= doubleAndTurtleParametersStack.peek();
+        return !turtleAndDoubleParametersStack.isEmpty() && argumentStack.size() >= turtleAndDoubleParametersStack
+            .peek();
     }
 
     private boolean checkListStack(){
@@ -384,7 +413,7 @@ public class Controller {
     }
 
     private Command weHaveEnoughArgumentsToMakeACommand(List<Command> commands){
-        double numberOfParams = doubleAndTurtleParametersStack.pop(); //to be used in creating the command
+        double numberOfParams = turtleAndDoubleParametersStack.pop(); //to be used in creating the command
         String name = commandStack.pop();
         Command newCommand = getCommand(name, numberOfParams);
         if(commandStack.size()!=0){
@@ -435,7 +464,7 @@ public class Controller {
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ZERO_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ZERO_DOUBLE_PARAM_VALUE)) {
             return command.getConstructor();
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ONE_DOUBLE_PARAM_VALUE)) {
-            return command.getConstructor(Double.class, List.class, String.class); //TODO TAKE OUT THE STRING
+            return command.getConstructor(Double.class, List.class);
         } else if (!listParametersStack.isEmpty() && listParametersStack.peek() == TWO_DOUBLE_PARAM_VALUE) {
             return command.getConstructor(List.class, List.class);
         } else {
@@ -461,7 +490,7 @@ public class Controller {
         } else if(numberOfParams == TURTLE_PARAM_VALUE && listParametersStack.peek() == 0) {
             myCommand = (Command) constructor.newInstance(turtle);
         } else if (numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == ONE_DOUBLE_PARAM_VALUE) {
-            myCommand = (Command) constructor.newInstance(argumentStack.pop(), listStack.pop(), "repeat"+counter);
+            myCommand = (Command) constructor.newInstance(argumentStack.pop(), listStack.pop());
         } else if (listParametersStack.peek() == TWO_DOUBLE_PARAM_VALUE) {
             myCommand = (Command) constructor.newInstance(listStack.pop(), listStack.pop());
         }
@@ -480,11 +509,9 @@ public class Controller {
 
     private void executeCommandList(List<Command> l){
         for(Command c : l){
-            System.out.println(c);
-            System.out.println("YAHAHA"+c.execute());
-            System.out.println(
-                "DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle
-                    .getHeading());
+            //System.out.println(c);
+            /*System.out.println(*/c.execute()/*)*/;
+            //System.out.println("DURING:: x: " + turtle.getX() + " y: " + turtle.getY() + " heading: " + turtle.getHeading());
             if(c instanceof ClearScreen){
                 myView.updatePenStatus(0);
                 myView.update(turtle.getX(),turtle.getY(), turtle.getHeading());
