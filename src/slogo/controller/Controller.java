@@ -288,7 +288,7 @@ public class Controller {
         }
         IS_VARIABLE = false;
         while(commandStack.size()>0 ){
-            tryToMakeCommands(currentList);
+            tryToMakeCommandsRefactoring(currentList);
         }
         currentList = fillCommands(currentList);
         executeCommandList(currentList);
@@ -309,7 +309,7 @@ public class Controller {
         }
         stopHoldingStacks();
         currentList = currentListHolder.pop();
-        tryToMakeCommands(currentList);
+        tryToMakeCommandsRefactoring(currentList);
     }
 
     private void doCommandWork(Parser params, Parser lang, Parser syntax, List<Command> commandList, String line, String commandSyntax, List<String> lines){
