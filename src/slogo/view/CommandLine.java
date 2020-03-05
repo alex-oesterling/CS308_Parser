@@ -93,7 +93,6 @@ public class CommandLine {
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
-        System.out.println(recentCommand.getTextFill());
         recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
         historyBox.getChildren().add(recentCommand);
         history.add(new Label(textBox.getText()));
@@ -133,7 +132,7 @@ public class CommandLine {
   }
 
   public List<String> getHistory(){
-    List<String> cmdHistory = new ArrayList<String>();
+    List<String> cmdHistory = new ArrayList<>();
     for(Label l : history){
       cmdHistory.add(l.getText());
     }
