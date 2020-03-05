@@ -64,7 +64,7 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
-        animationDuration = 500;
+        animationDuration = TOTAL_DURATION;
     }
 
     private ImageView createTurtle(){
@@ -162,6 +162,7 @@ public class TurtleView{
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
         }
+        //System.out.println(turtleStats());
     }
 
     public void playAnimation(){

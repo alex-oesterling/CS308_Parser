@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class Left extends Command {
 
     private static final Double LEFT = -1.0;
@@ -11,13 +13,14 @@ public class Left extends Command {
     /**
      * Left constructor, to get the value to be a left value
      * Calls super and sets the left turn value
-     * @param body the specific turtle being used, what the left is being set for
-     * @param value the value of how far it is being turned to the left (changed to negative)
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
-    public Left(Turtle body, Double value) {
-        super(value);
-        t = body;
-        degrees = value;
+    public Left(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
+        super(doubleList.get(FIRST_INDEX));
+        t = turtleList.get(FIRST_INDEX);
+        degrees = doubleList.get(FIRST_INDEX);
     }
 
     /**

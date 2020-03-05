@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class SetShape extends Command {
 
     private Double shape;
@@ -10,13 +12,14 @@ public class SetShape extends Command {
     /**
      * Set shape constructor, takes in the index for the shape
      * of which the current turtle should be changed to
-     * @param index the shape to be set to
-     * @param body the turtle being used
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
-    public SetShape(Turtle body, Double index){
+    public SetShape(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        shape = index;
-        t = body;
+        shape = doubleList.get(FIRST_INDEX);
+        t = turtleList.get(FIRST_INDEX);
     }
 
     /**

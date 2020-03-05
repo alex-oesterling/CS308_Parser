@@ -6,6 +6,9 @@ import java.util.List;
 abstract public class Command {
   //TODO make error catching in each of the command classes, so that if the wrong parameters are passed in the code doesn't break
 
+
+  protected static final int FIRST_INDEX = 0;
+  protected static final int SECOND_INDEX = 1;
   private static final double DEFAULT_COMMAND_RESULT = 0;
   private double result;
 

@@ -1,15 +1,20 @@
 package slogo.model.command;
 
+import slogo.model.Turtle;
+
+import java.util.List;
+
 public class Quotient extends Command {
 
   /**
    * Calls the super constructor, and sets the result to be returned
    * as the quotient of the two provided numbers;
    * performs a/b
-   * @param dividend number to be divided; a
-   * @param divisor number to divide by; b
+   * @param turtleList the list of turtles being brought in to use this command (if needed)
+   * @param doubleList the list of doubles to be used for this command (if needed)
+   * @param commandList the list of commands being used for this command (if needed)
    */
-  public Quotient(Double divisor, Double dividend){
-    super(dividend/divisor);
+  public Quotient(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+    super(doubleList.get(SECOND_INDEX)/doubleList.get(FIRST_INDEX));
   }
 }

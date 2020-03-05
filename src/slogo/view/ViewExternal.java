@@ -1,7 +1,5 @@
 package slogo.view;
 
-import javafx.scene.paint.Color;
-
 public class ViewExternal implements ViewExternalAPI {
   private Visualizer myVisualizer;
 
