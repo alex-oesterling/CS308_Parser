@@ -2,6 +2,7 @@ package slogo.view;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -13,11 +14,13 @@ import java.util.ResourceBundle;
 public class MoveTurtle {
 
     public final String TITLE = "Move Turtle";
-    public static final Paint BACKGROUND = Color.AZURE;
+    public static final Paint BACKGROUND = Color.web("#808080");
     private static final String RESOURCES = "resources";
     public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
-    public static final int SIZE_WIDTH = 85;
-    public static final int SIZE_HEIGHT = 110;
+    public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+    private static final String STYLESHEET = "styling.css";
+    public static final int SIZE_WIDTH = 210;
+    public static final int SIZE_HEIGHT = 105;
 
     private Controller myController;
     private Styler styler;
@@ -37,11 +40,16 @@ public class MoveTurtle {
     private Scene setScene(){
         myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
         root = new Group();
-        VBox vbox = new VBox(styler.createButton(myResources.getString("ForwardCommand"), e-> myController.sendCommands("fd 1")),
-                styler.createButton(myResources.getString("BackwardCommand"), e-> myController.sendCommands("bk 1")),
-                styler.createButton(myResources.getString("RRotateCommand"), e-> myController.sendCommands("rt 1")),
+        myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+        myScene.getStylesheets()
+                .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
+                        .toExternalForm());
+        HBox hbox1 = new HBox(styler.createButton(myResources.getString("ForwardCommand"), e-> myController.sendCommands("fd 1")),
+                styler.createButton(myResources.getString("BackwardCommand"), e-> myController.sendCommands("bk 1")));
+        HBox hbox2 = new HBox(styler.createButton(myResources.getString("RRotateCommand"), e-> myController.sendCommands("rt 1")),
                 styler.createButton(myResources.getString("LRotateCommand"), e-> myController.sendCommands("lt 1")));
+        VBox vbox = new VBox(hbox1, hbox2);
         root.getChildren().add(vbox);
-        return myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+        return myScene;
     }
 }

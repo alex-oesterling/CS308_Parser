@@ -47,6 +47,7 @@ public class Controller {
     private Turtle turtle;
     private String myCommands;
     private ViewExternal myView;
+    private double IdOfTurtle;
     private Parser commandParser, parametersParser, syntaxParser, listParamsParser, numberOfParamsParser;
 
     /**
@@ -141,8 +142,9 @@ public class Controller {
      * Add a new turtle to the map of turtles, change the current turtle to
      * this newly created turtle; turtle with a default "name" that is its hashcode
      */
-    public void addTurtle(){ //todo somehow refactor so this doesn't duplicate
-        Turtle t = new Turtle();
+    public void addTurtle(){
+        IdOfTurtle ++;
+        Turtle t = new Turtle(IdOfTurtle);
         if(nameCount.containsKey(t.getName())){
             Integer generation = nameCount.get(t.getName());
             nameCount.put(t.getName(), nameCount.get(t.getName())+1);
@@ -164,9 +166,10 @@ public class Controller {
      * @param startingY the y position of where the turtle will start
      * @param startingHeading where the turtle will be facing
      */
-    public void addTurtle(String name, double startingX, double startingY, int startingHeading){
-        Turtle t = new Turtle(name, startingX, startingY, startingHeading);
-        if(nameCount.containsKey(t.getName())){
+    public void addTurtle(String name, double startingX, double startingY, double startingHeading){
+        IdOfTurtle ++;
+        Turtle t = new Turtle(name, startingX, startingY, startingHeading, IdOfTurtle);
+        if(nameToTurtle.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
         }
         nameToTurtle.putIfAbsent(t.getName(), t);
@@ -526,9 +529,13 @@ public class Controller {
             } else if(c instanceof SetPenColor){
                 myView.updateCommandPenColor(c.getResult());
             } else if(c instanceof SetShape){
+                System.out.println(c.getResult());
+                System.out.println("hereeee");
                 myView.updateShape(c.getResult());
             } else if(c instanceof SetPenSize){
                 myView.updatePenSize(c.getResult());
+            } else if(c instanceof ID){
+                System.out.println(c.getResult());
             }
             else {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
