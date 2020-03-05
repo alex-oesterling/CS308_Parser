@@ -2,6 +2,9 @@ package slogo.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,7 +25,9 @@ public class XMLReader {
   private Stage myStage;
 
   public XMLReader(File file, Stage stage){
-
+    if(file == null){
+      return;
+    }
     myFile = file;
     myStage = stage;
     myVisualizer = new Visualizer(stage);
@@ -124,11 +129,17 @@ public class XMLReader {
     }
 
     NodeList commandFiles = commandElement.getElementsByTagName("File");
-    Node file = commandHistory.item(0);
+    Node file = commandFiles.item(0);
     if(file.getNodeType() == Node.ELEMENT_NODE){
       Element fileElement = (Element) file;
-      myVisualizer.getTerminal().loadCodeFromFile(new File(TXT_FILEPATH + fileElement.getAttribute("filename")));
-      myVisualizer.getTerminal().submitCommand();
+      try {
+        myVisualizer.getTerminal().addHistory(Files.readString(new File(TXT_FILEPATH + fileElement.getAttribute("filename")).toPath()));
+      } catch (IOException e) {
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText("Command history text file does not exist");
+        errorAlert.setContentText("Please specify a valid text file in your XML");
+        errorAlert.showAndWait();
+      }
     }
   }
 

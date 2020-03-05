@@ -128,11 +128,7 @@ public class CommandLine {
     historyIndex = -1;
   }
 
-  public void loadCodeFromFile(File file){
-    try {
-      textBox.setText(Files.readString(file.toPath()));
-    } catch (IOException e) {
-      //HANDLE
-    }
+  public void loadCodeFromFile(File file) throws IOException {
+    textBox.setText(Files.readString(file.toPath()));
   }
 }

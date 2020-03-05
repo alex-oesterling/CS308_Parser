@@ -10,6 +10,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -288,7 +289,10 @@ public class Visualizer{
       try{
         number = Double.valueOf(result.get());
       } catch (NullPointerException e){
-        //ERROR DIALOG: Please enter a valid constant
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText("Please enter a double:");
+        errorAlert.setContentText("Restoring variable");
+        errorAlert.showAndWait();
         number = Double.parseDouble(value.getText());
       }
       varMap.put(variableName, number.toString());
@@ -301,7 +305,10 @@ public class Visualizer{
     try {
       myController.addTurtle();
     } catch (InvalidTurtleException e){
-      //ERROR DIALOG: Turtle Already Exists!
+      Alert errorAlert = new Alert(AlertType.ERROR);
+      errorAlert.setHeaderText("Turtle already exists!");
+      errorAlert.setContentText("Please choose a unique Turtle name");
+      errorAlert.showAndWait();
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     turtleList.putIfAbsent(myController.getTurtleName(), tempTurtle);
@@ -313,7 +320,11 @@ public class Visualizer{
     try {
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e){
-      //ERROR DIALOG: Turtle Already Exists!
+      Alert errorAlert = new Alert(AlertType.ERROR);
+      errorAlert.setHeaderText("Turtle already exists!");
+      errorAlert.setContentText("Please fix XML file to specify unique turtle");
+      errorAlert.showAndWait();
+      return;
     }
     TurtleView tempTurtle = new TurtleView(turtles, turtlePaths, myController.getTurtleName());
     tempTurtle.set(startingX, startingY, heading);
