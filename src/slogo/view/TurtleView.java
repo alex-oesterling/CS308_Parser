@@ -168,7 +168,6 @@ public class TurtleView{
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
         }
-        System.out.println(turtleStats());
     }
 
     public void playAnimation(){
@@ -186,13 +185,6 @@ public class TurtleView{
     }
 
     public SimpleObjectProperty<ObservableList<String>> turtleStats(){
-//        myTurtle.setValue().addAll(turtleName,
-//                Double.toString(currentX),
-//                Double.toString(currentY),
-//                Double.toString(currentOrienation),
-//                String.valueOf(myPenColor),
-//                Double.toString(pathStrokeWidth),
-//                Boolean.toString(penStatus));
         observableList = FXCollections.observableArrayList();
         observableList.addAll(turtleName,
                 Double.toString(currentX),
@@ -212,7 +204,7 @@ public class TurtleView{
 
     public void changePenStatus(){penStatus = !penStatus;}
 
-    public void changePenWidth() {pathStrokeWidth++;}
+    public void changePenWidth(double penWidth) {pathStrokeWidth = penWidth;}
 
     public void updateTurtleView(double value){
         myImage.setVisible(value != 0.0);
