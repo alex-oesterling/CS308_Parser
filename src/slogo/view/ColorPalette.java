@@ -34,7 +34,8 @@ public class ColorPalette {
     private ResourceBundle myResources;
     private Map<Double, String> treeMap;
 
-    public ColorPalette(){
+    public ColorPalette(Map<Double, String> colorMap){
+        this.treeMap = colorMap;
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);
@@ -54,13 +55,6 @@ public class ColorPalette {
     private void createGrid() {
         vbox = new VBox();
         vbox.setSpacing(VBOX_SPACING);
-        myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE);
-        Enumeration e = myResources.getKeys();
-        treeMap = new TreeMap<>();
-        while (e.hasMoreElements()) {
-            String keyStr = (String) e.nextElement();
-            treeMap.put(Double.valueOf(keyStr), myResources.getString(keyStr));
-        }
         for (Double key : treeMap.keySet()) {
             HBox hbox = new HBox();
             hbox.setSpacing(HBOX_SPACING);
