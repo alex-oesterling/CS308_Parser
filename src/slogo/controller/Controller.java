@@ -48,7 +48,7 @@ public class Controller {
     private String myCommands;
     private ViewExternal myView;
     private double IdOfTurtle;
-    private Parser commandParser, parametersParser, syntaxParser, listParamsParser, numberOfParamsParser;
+    private Parser commandParser, parametersParser, syntaxParser, listParamsParser, doubleParamsParser;
     private List<Command> currentList;
 
     /**
@@ -79,8 +79,8 @@ public class Controller {
         listParamsParser = new Parser(INFORMATION_PACKAGE);
         listParamsParser.addPatterns("ListParameters");
 
-        numberOfParamsParser = new Parser(INFORMATION_PACKAGE);
-        numberOfParamsParser.addPatterns("TurtleAndDoubleParameters");
+        doubleParamsParser = new Parser(INFORMATION_PACKAGE);
+        doubleParamsParser.addPatterns("TurtleAndDoubleParameters");
     }
 
     private void makeMaps() {
@@ -390,7 +390,7 @@ public class Controller {
             listParametersStack.push(Double.parseDouble(listParamString));
         }
 
-        String turtleAndDoubleParamsString = numberOfParamsParser.getSymbol(commandParams);
+        String turtleAndDoubleParamsString = doubleParamsParser.getSymbol(commandParams);
         if(turtleAndDoubleParamsString.equals(NO_MATCH)){
             //todo throw new Exception("you didn't edit the properties files properly");
         } else {
@@ -405,12 +405,28 @@ public class Controller {
         return commandList;
     }
 
+    private List<Command> tryToMakeCommandsRefactoring(List<Command> commandList){
+        if(checkArgumentStackRefactoring()&&checkListStackRefactoring()){
+            commandList.add(weHaveEnoughArgumentsToMakeACommandRefactoring(commandList));
+        }
+        return commandList;
+    }
+
     private boolean checkArgumentStack(){
         return !turtleAndDoubleParametersStack.isEmpty() && argumentStack.size() >= turtleAndDoubleParametersStack
             .peek();
     }
 
+    private boolean checkArgumentStackRefactoring(){
+        return !turtleAndDoubleParametersStack.isEmpty() && argumentStack.size() >= turtleAndDoubleParametersStack
+            .peek();
+    }
+
     private boolean checkListStack(){
+        return !listParametersStack.isEmpty() && (listStack.size() >= listParametersStack.peek());
+    }
+
+    private boolean checkListStackRefactoring(){
         return !listParametersStack.isEmpty() && (listStack.size() >= listParametersStack.peek());
     }
 
@@ -425,10 +441,22 @@ public class Controller {
         return newCommand;
     }
 
+    private Command weHaveEnoughArgumentsToMakeACommandRefactoring(List<Command> commands){
+        double numberOfParams = turtleAndDoubleParametersStack.pop(); //to be used in creating the command
+
+        String name = commandStack.pop();
+        Command newCommand = getCommandRefactoring(name);
+        if(commandStack.size()!=0){
+            argumentStack.push(newCommand.getResult());
+            tryToMakeCommandsRefactoring(commands); //slightly recursive :D
+        }
+        return newCommand;
+    }
+
     private Command getCommand(String commandName, double numberOfParams){
         try{
             Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
-            Constructor commandConstructor = getCommandConstructor(commandClass, numberOfParams);
+            Constructor commandConstructor = getCommandConstructor(commandClass);//, numberOfParams);
             return makeCommand(commandName, numberOfParams, commandConstructor);
         } catch (ClassNotFoundException e){
             System.out.println("ClassNotFoundException");
@@ -453,8 +481,44 @@ public class Controller {
         }
         return new Not(1.0); //FIXME !!!!
     }
+    private Command getCommandRefactoring(String commandName){
+        String type = getCommandTypeRefactoring(commandName);
+        try{
+            Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
+            Constructor commandConstructor = getCommandConstructor(commandClass);
+            return makeCommandRefactored(type, commandConstructor);
 
-        private Constructor getCommandConstructor(Class command, double numberOfParams) throws NoSuchMethodException {
+        } catch (ClassNotFoundException e){
+            System.out.println("ClassNotFoundException");
+            e.printStackTrace();
+            //FIXME !!!!!!!!!!!!
+        } catch (NoSuchMethodException e){
+            System.out.println("NoSuchMethodException!!");
+            e.printStackTrace();
+            //FIXME part 2
+        } catch (IllegalAccessException e) {
+            System.out.println("IllegalAccessException");
+            e.printStackTrace();
+            //FIXME
+        } catch (InstantiationException e) {
+            System.out.println("InstantiationException");
+            e.printStackTrace();
+            //FIXME
+        } catch (InvocationTargetException e) {
+            System.out.println("InvocationTargetException");
+            e.printStackTrace();
+            //FIXME
+        }
+        return new Not(1.0); //FIXME !!!!
+    }
+
+    private String getCommandTypeRefactoring(String name){
+        //todo no match throw error
+        return parametersParser.getSymbol(name);
+    }
+
+    private Constructor getCommandConstructor(Class command/*, double numberOfParams*/) throws NoSuchMethodException {
+        return command.getConstructor(List.class, List.class, List.class);/*
         if(numberOfParams == ONE_DOUBLE_PARAM_VALUE && listParametersStack.peek() == 0){
             return command.getConstructor(Double.class);
         } else if (!listParametersStack.isEmpty() && (numberOfParams == ONE_DOUBLE_PARAM_VALUE + TURTLE_PARAM_VALUE && listParametersStack.peek() == ZERO_DOUBLE_PARAM_VALUE)){
@@ -471,7 +535,7 @@ public class Controller {
             return command.getConstructor(List.class, List.class);
         } else {
             return command.getConstructor(Turtle.class);
-        }
+        }*/
     }
 
     private Command makeCommand(String name, double numberOfParams, Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -498,6 +562,36 @@ public class Controller {
         }
         listParametersStack.pop();
         return myCommand;
+    }
+
+    private Command makeCommandRefactored(String commandType, Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        List<Turtle> turtleListToGive = new ArrayList<>();
+
+        turtleListToGive.add(turtle/*activeTurtles*/); //fixme
+        List<Double> doubleListToGive = getDoubleListToGive(commandType);
+        List<List<Command>> listStackListToGive = getListStackListToGive(commandType);
+
+        return (Command) constructor.newInstance(turtleListToGive,doubleListToGive,listStackListToGive);
+    }
+
+    private List<Double> getDoubleListToGive(String commandType){
+        //todo check for NO MATCH
+        List<Double> doubles = new ArrayList<>();
+        Integer doubleParamCount = Integer.parseInt(doubleParamsParser.getSymbol(commandType));
+        for(int k=0; k<doubleParamCount; k++){
+            doubles.add(argumentStack.pop());
+        }
+        return doubles;
+    }
+
+    private List<List<Command>> getListStackListToGive(String commandType){
+        //todo check for NO MATCH
+        List<List<Command>> lists = new ArrayList<>();
+        Integer listParamCount = Integer.parseInt(listParamsParser.getSymbol(commandType));
+        for(int k=0; k<listParamCount; k++){
+            lists.add(listStack.pop());
+        }
+        return lists;
     }
 
     private List<Command> fillCommands(List<Command> l){
