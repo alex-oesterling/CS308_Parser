@@ -14,9 +14,8 @@ public class Repeat extends CommandWithReturningList{
    * @param reps
    * @param commandList
    */
-  public Repeat(Double reps, List<Command> commandList, String help){
+  public Repeat(Double reps, List<Command> commandList){
     super();
-    System.out.println(help);
     times = reps;
     commands = commandList;
   }
@@ -27,7 +26,8 @@ public class Repeat extends CommandWithReturningList{
    * @return
    */
   public Double getResult(){
-    return 0.0;
+    List<Command> expandedList = getCommandList();
+    return expandedList.get(expandedList.size()-1).getResult();
   }
 
   /**
@@ -39,7 +39,6 @@ public class Repeat extends CommandWithReturningList{
     returningList = new ArrayList<>();
     for(int k=0; k<times; k++) {
       for (Command c : commands) {
-        System.out.println("C: "+c);
         returningList.addAll(c.getCommandList());
       }
     }
