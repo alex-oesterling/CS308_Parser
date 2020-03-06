@@ -376,7 +376,6 @@ public class TurtleView{
      * @param size
      */
     public void setCommandSize(int size){
-        currentSize = size;
         if(size == 0){
             return;
         }
@@ -424,7 +423,7 @@ public class TurtleView{
         st = new SequentialTransition();
     }
 
-    public void setSpeed(int value){ ;
+    public void setSpeed(int value){
         totalDuration = value;
     }
 
