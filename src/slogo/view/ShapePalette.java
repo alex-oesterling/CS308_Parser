@@ -40,7 +40,9 @@ public class ShapePalette {
      * Here, a new stage is set. The ShapePalette class creates a new window and displays the palette using a map of doubles
      * mapped to strings which then correspond to images in the resource file.
      */
-    public ShapePalette(){
+    public ShapePalette(){ }
+
+    public void showPalette(){
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);

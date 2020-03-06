@@ -26,15 +26,15 @@ public class MoveTurtle {
     public static final int SIZE_WIDTH = 210;
     public static final int SIZE_HEIGHT = 105;
 
-    private Controller myController;
+    private Visualizer myVisualizer;
     private Styler styler;
 
     /**
      * This constructor takes in the controller as a means of updating the turtle's position every time a button is clicked.
-     * @param controller
+     * @param visualizer
      */
-    public MoveTurtle(Controller controller){
-        this.myController = controller;
+    public MoveTurtle(Visualizer visualizer){
+        myVisualizer = visualizer;
         styler = new Styler();
         Stage stage = new Stage();
         stage.setScene(setScene());
@@ -49,10 +49,10 @@ public class MoveTurtle {
         myScene.getStylesheets()
                 .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
                         .toExternalForm());
-        HBox hbox1 = new HBox(styler.createButton(myResources.getString("ForwardCommand"), e-> myController.sendCommands("fd 1")),
-                styler.createButton(myResources.getString("BackwardCommand"), e-> myController.sendCommands("bk 1")));
-        HBox hbox2 = new HBox(styler.createButton(myResources.getString("RRotateCommand"), e-> myController.sendCommands("rt 1")),
-                styler.createButton(myResources.getString("LRotateCommand"), e-> myController.sendCommands("lt 1")));
+        HBox hbox1 = new HBox(styler.createButton(myResources.getString("ForwardCommand"), e-> myVisualizer.sendCommands("fd 1")),
+                styler.createButton(myResources.getString("BackwardCommand"), e-> myVisualizer.sendCommands("bk 1")));
+        HBox hbox2 = new HBox(styler.createButton(myResources.getString("RRotateCommand"), e-> myVisualizer.sendCommands("rt 1")),
+                styler.createButton(myResources.getString("LRotateCommand"), e-> myVisualizer.sendCommands("lt 1")));
         VBox vbox = new VBox(hbox1, hbox2);
         root.getChildren().add(vbox);
         return myScene;

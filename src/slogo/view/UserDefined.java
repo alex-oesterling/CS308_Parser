@@ -87,10 +87,11 @@ public class UserDefined {
 
     public void setFill(Color color){
         turtleArea.setFill(color);
+        backgroundColor = color;
     }
 
-    public String getFill(){
-        return turtleArea.getFill().toString();
+    public Color getFill(){
+        return backgroundColor;
     }
 
     public void addCommand(Node newCommand){

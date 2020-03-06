@@ -30,16 +30,16 @@ public class CommandLine {
   public static final String RESOURCES = "resources.";
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
 
-  private Controller myController;
+  private Visualizer myVisualizer;
   private ResourceBundle myResources;
   private TextArea textBox;
   private List<Label> history;
   private int historyIndex;
   private VBox historyBox;
 
-  public CommandLine(Controller controller, ResourceBundle newResources){
+  public CommandLine(Visualizer visualizer, ResourceBundle newResources){
     myResources = newResources;
-    myController = controller;
+    myVisualizer = visualizer;
     history = new ArrayList<>();
     historyBox = new VBox();
     historyIndex = -1;
@@ -89,7 +89,7 @@ public class CommandLine {
   public void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
       try {
-        myController.sendCommands(textBox.getText());
+        myVisualizer.sendCommands(textBox.getText());
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
@@ -103,7 +103,7 @@ public class CommandLine {
     }
   }
 
-  public EventHandler<? super MouseEvent> setOnClick(String fill){
+  public EventHandler setOnClick(String fill){
     return e->textBox.setText(fill);
   }
 
