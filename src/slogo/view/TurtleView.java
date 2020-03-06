@@ -391,4 +391,8 @@ public class TurtleView{
     public void setSpeed(int value){
         totalDuration = value;
     }
+
+    public int getSpeed(){
+        return totalDuration;
+    }
 }
