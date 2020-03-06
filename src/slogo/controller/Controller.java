@@ -503,7 +503,7 @@ public class Controller {
             }
             else {
                 myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
-           }
+            }
         }
         makeNewStacks();
         myView.updateStatus();
