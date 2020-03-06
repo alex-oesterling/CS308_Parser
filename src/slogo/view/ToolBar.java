@@ -172,6 +172,9 @@ public class ToolBar {
     Button play = myStyler.createButton("Play", e->myVisualizer.getCurrentTurtle().play());
     Button step = myStyler.createButton("Step", e->myVisualizer.getCurrentTurtle().step());
     Slider slider = new Slider();
+    slider.setMin(0);
+    slider.setMax(100);
+    
     controlBox.getChildren().addAll(pause, play, step);
     return controlBox;
   }

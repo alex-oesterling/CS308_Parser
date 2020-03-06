@@ -31,18 +31,18 @@ public class CommandLine {
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
 
   private Visualizer myVisualizer;
-  private ResourceBundle myResources;
   private TextArea textBox;
   private List<Label> history;
   private int historyIndex;
   private VBox historyBox;
+  private Styler myStyler;
 
   public CommandLine(Visualizer visualizer, ResourceBundle newResources){
-    myResources = newResources;
     myVisualizer = visualizer;
     history = new ArrayList<>();
     historyBox = new VBox();
     historyIndex = -1;
+    myStyler = new Styler(newResources);
   }
 
   public Node setupCommandLine(){
@@ -60,20 +60,20 @@ public class CommandLine {
 
     textBox.setPrefWidth(TEXTBOX_WIDTH-BUTTON_WIDTH);
     textBox.setMaxHeight(TEXTBOX_HEIGHT);
-    textBox.setPromptText(myResources.getString("TextBoxFiller"));
+    textBox.setPromptText(myStyler.getResourceText("TextBoxFiller"));
     userControls.setHgrow(textBox, Priority.ALWAYS);
     userControls.getChildren().add(textBox);
 
     VBox buttonBox = new VBox();
-    Button run = new Button(myResources.getString("RunCommand"));
+    Button run = myStyler.createButton("RunCommand", e->submitCommand());
     run.setMinWidth(BUTTON_WIDTH);
-    run.setOnAction(e->submitCommand());
     buttonBox.getChildren().add(run);
 
-    Button clear = new Button(myResources.getString("ClearCommand"));
-    clear.setOnAction(e->{
+    Button clear = myStyler.createButton("ClearCommand", e->{
       textBox.clear();
-      historyIndex = -1;
+      historyIndex=-1;
+      history.clear();
+      historyBox.getChildren().clear();
     });
     clear.setMinWidth(BUTTON_WIDTH);
     buttonBox.getChildren().add(clear);
