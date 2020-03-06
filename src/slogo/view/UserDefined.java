@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -27,11 +28,11 @@ public class UserDefined {
     private VBox varHistory;
     private Styler styler;
 
-    public UserDefined(){
+    public UserDefined(ResourceBundle resources){
         turtlePaths = new Group();
         turtles = new Group();
         backgroundColor = Color.WHITE;
-        styler = new Styler();
+        styler = new Styler(resources);
     }
 
     public VBox showUserDefined(){

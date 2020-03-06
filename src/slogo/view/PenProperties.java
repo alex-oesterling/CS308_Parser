@@ -31,7 +31,6 @@ public class PenProperties {
     public static final int VBOX_SPACING = 15;
 
     private Styler styler;
-    private ResourceBundle myResources;
     private ColorPicker colorPicker;
     private Visualizer myVisualzer;
     private Stage stage;
@@ -41,8 +40,8 @@ public class PenProperties {
      * the turtleView and update its properties.
      * @param visualizer
      */
-    public PenProperties(Visualizer visualizer){
-        styler = new Styler();
+    public PenProperties(Visualizer visualizer, ResourceBundle resources){
+        styler = new Styler(resources);
         myVisualzer = visualizer;
         stage = new Stage();
         stage.setScene(setScene());
@@ -54,7 +53,6 @@ public class PenProperties {
     }
 
     private Scene setScene(){
-        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
         Scene myScene = new Scene(createGrid(),SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
         myScene.getStylesheets()
                 .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
@@ -64,14 +62,14 @@ public class PenProperties {
 
     private VBox createGrid(){
         TextField textField = new TextField();
-        textField.setPromptText(myResources.getString("TextfieldText"));
-        HBox hbox1 = new HBox(styler.createLabel(myResources.getString("PenColor")), penColor());
+        textField.setPromptText(styler.getResourceText("TextfieldText"));
+        HBox hbox1 = new HBox(styler.createLabel("PenColor"), penColor());
         hbox1.setSpacing(HBOX_SPACING);
-        HBox hbox2 = new HBox(textField, styler.createButton(myResources.getString("ChangePenWidthCommand"), e->myVisualzer.getCurrentTurtle().changePenWidth(Double.parseDouble(textField.getText()))));
+        HBox hbox2 = new HBox(textField, styler.createButton("ChangePenWidthCommand", e->myVisualzer.getCurrentTurtle().changePenWidth(Double.parseDouble(textField.getText()))));
         hbox2.setSpacing(HBOX_SPACING);
-        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(myResources.getString("PenUp"), myResources.getString("PenDown")));
+        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(styler.getResourceText("PenUp"), styler.getResourceText("PenDown")));
         comboBox.setOnAction(e->myVisualzer.getCurrentTurtle().changePenStatus(comboBox.getValue().equals("Put pen down")));
-        HBox hbox3 = new HBox(styler.createLabel(myResources.getString("ChangePenCommand")), comboBox);
+        HBox hbox3 = new HBox(styler.createLabel("ChangePenCommand"), comboBox);
         hbox3.setSpacing(HBOX_SPACING);
         VBox vbox = new VBox(hbox1, hbox2, hbox3);
         vbox.setSpacing(VBOX_SPACING);

@@ -38,7 +38,6 @@ public class Visualizer{
   private ViewExternal viewExternal;
   private CommandLine commandLine;
   private PenProperties penProperties;
-  private Styler styler;
   private ColorPalette colorPalette;
   private ShapePalette shapePalette;
   private Map<String, TurtleView> turtleMap;
@@ -58,7 +57,7 @@ public class Visualizer{
   public Visualizer (Stage stage){
     language = "English";
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
-    userDefined = new UserDefined();
+    userDefined = new UserDefined(myResources);
     turtleMap = new TreeMap<>();
     varMap = new TreeMap<>();
     cmdMap = new TreeMap<>();
@@ -67,11 +66,10 @@ public class Visualizer{
     commandLine = new CommandLine(this, myResources);
     myToolBar = new ToolBar(stage, this, myResources);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-    styler = new Styler();
     userInterface = new UserInterface(this, myResources);
     colorPalette = new ColorPalette(createColorMap());
     shapePalette = new ShapePalette();
-    penProperties = new PenProperties(this);
+    penProperties = new PenProperties(this, myResources);
     myStage = stage;
   }
 
@@ -214,7 +212,11 @@ public class Visualizer{
   public void clear(){userDefined.getTurtlePaths().getChildren().clear();}
 
   public void setPenColor(double value){
-    userInterface.updatePen(currentTurtle, value);
+    updatePen(currentTurtle, value);
+  }
+
+  public void updatePen(TurtleView currentTurtle, double value){
+    currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
   }
 
   public EventHandler showColorPalette(){
@@ -227,6 +229,10 @@ public class Visualizer{
 
   public EventHandler createPenProperties() {
     return e->penProperties.showProperties();
+  }
+
+  public EventHandler createMoveWindow(){
+    return e-> new MoveTurtle(this, myResources);
   }
 
   public void setBackgroundColorFromPalette(double value){
@@ -281,6 +287,4 @@ public class Visualizer{
   public UserDefined getUserDefined(){return userDefined;}
 
   public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty(){return myTurtlesProperty;}
-
-
 }
