@@ -74,7 +74,9 @@ public class ToolBar {
     Slider slider = new Slider();
     slider.setMin(0);
     slider.setMax(2000);
+//    slider.setValue(500);
     slider.valueProperty().addListener((o, old, neww) -> myVisualizer.getCurrentTurtle().setSpeed(neww.intValue()));
+    return slider;
   }
 
   private void pickAndSaveFile() {
@@ -191,11 +193,7 @@ public class ToolBar {
     Button pause = myStyler.createButton("Pause", e->myVisualizer.getCurrentTurtle().pause());
     Button play = myStyler.createButton("Play", e->myVisualizer.getCurrentTurtle().play());
     Button step = myStyler.createButton("Step", e->myVisualizer.getCurrentTurtle().step());
-    Slider slider = new Slider();
-    slider.setMin(0);
-    slider.setMax(100);
-    
-    controlBox.getChildren().addAll(pause, play, step);
+    controlBox.getChildren().addAll(pause, play, step, createSlider());
     return controlBox;
   }
 }

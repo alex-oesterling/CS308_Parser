@@ -79,7 +79,7 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
-        totalDuration = 500
+        totalDuration = 500;
         animationDuration = totalDuration;
         transitionQueue = new LinkedList<>();
         stopped = true;
@@ -202,7 +202,12 @@ public class TurtleView{
      * Once the turtle's position is updated, the animation is played in order to see the turtle move.
      */
     public void playAnimation(){
-        if(!transitionQueue.isEmpty()) {
+        if(animationDuration == 0) {
+            while(!transitionQueue.isEmpty()){
+                st.getChildren().add(transitionQueue.remove());
+                st.play();
+            }
+        } else if(!transitionQueue.isEmpty()) {
             stopped = false;
             st = new SequentialTransition(transitionQueue.remove());
             st.setOnFinished(e -> playAnimation());
@@ -211,18 +216,6 @@ public class TurtleView{
             stopped = true;
             st = new SequentialTransition();
         }
-
-
-//            st.getChildren().add(transitionQueue.remove());
-//            st.play();
-//            st.setOnFinished(e -> {
-//                if (!transitionQueue.isEmpty()) {
-//                    st.getChildren().add(transitionQueue.remove());
-//                } else {
-//                    st = new SequentialTransition();
-//                }
-//            });
-//        }
     }
 
     /**
@@ -355,8 +348,10 @@ public class TurtleView{
      * @param size
      */
     public void setCommandSize(int size){
-        if(size == 0){return;}
-        animationDuration = TOTAL_DURATION /size;
+        if(size == 0){
+            return;
+        }
+        animationDuration = totalDuration / size;
     }
 
     /**
