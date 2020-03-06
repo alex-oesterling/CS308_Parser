@@ -100,7 +100,7 @@ public class CommandLine {
    * Once the button to run the command is clicked, this method calls on the controller which then sends info to the model
    * in order for the command to be executed.
    */
-  public void submitCommand() {
+  private void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
       try {
         myVisualizer.sendCommands(textBox.getText());
