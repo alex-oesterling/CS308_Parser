@@ -1,5 +1,8 @@
 package slogo.model;
 
+import java.util.List;
+import slogo.model.command.Command;
+
 /**
  * Author: Alex Oesterling
  * The API for the external portion of the Model.
@@ -7,5 +10,7 @@ package slogo.model;
  * effort between all team members)
  */
 public interface ModelExternalAPI {
-  void readCommandFromString(String command);
+  void setTurtle(Turtle t);
+  void setLanguage(String language);
+  List<Command> getCommandsOf(String commands);
 }

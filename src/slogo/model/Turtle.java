@@ -16,7 +16,7 @@ public class Turtle{
   private static final int DEFAULT_SIZE_PIXELS = 3;
   private static final int POSITIVE = 1;
   private static final int NEGATIVE = -1;
-  private static final int QUAD1_BEGINS = 0;
+//  private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
@@ -328,8 +328,11 @@ public class Turtle{
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
   public void setDrawing(double penStatus){
-    if(penStatus!=0.0){ turtleIsDrawing = DRAWING; }
-    else { turtleIsDrawing = NOT_DRAWING; }
+    if(penStatus!=0.0){
+      turtleIsDrawing = DRAWING;
+    } else {
+      turtleIsDrawing = NOT_DRAWING;
+    }
   }
 
   /**
@@ -337,8 +340,11 @@ public class Turtle{
    * @param visibility true if the turtle can be seen, false otherwise
    */
   public void setVisibility(double visibility){
-    if(visibility!=0.0){ turtleIsVisible = VISIBLE; }
-    else { turtleIsVisible = INVISIBLE; }
+    if(visibility!=0.0){
+      turtleIsVisible = VISIBLE;
+    } else {
+      turtleIsVisible = INVISIBLE;
+    }
   }
 
   /**
