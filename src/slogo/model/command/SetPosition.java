@@ -13,11 +13,12 @@ public class SetPosition extends Command {
     /**
      * Set position constructor, sets position of turtle without actually turning it, moves to that position
      * Calls super and sets the new position, with turtle facing same way
-     * @param body the current turtle that is going to have its position changed
-     * @param x the new x position that the turtle will be at
-     * @param y the new  y position that the turtle will be at
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
+     * @param stringList the list of strings being used for this command (if needed)
      */
-    public SetPosition(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+    public SetPosition(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
         super();
         t = turtleList.get(FIRST_INDEX);
         xPos = doubleList.get(FIRST_INDEX);

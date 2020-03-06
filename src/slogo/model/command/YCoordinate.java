@@ -13,8 +13,9 @@ public class YCoordinate extends Command {
      * @param turtleList the list of turtles being brought in to use this command (if needed)
      * @param doubleList the list of doubles to be used for this command (if needed)
      * @param commandList the list of commands being used for this command (if needed)
+     * @param stringList the list of strings being used for this command (if needed)
      */
-    public YCoordinate(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+    public YCoordinate(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
         super(turtleList.get(FIRST_INDEX).getY());
         t = turtleList.get(FIRST_INDEX);
     }

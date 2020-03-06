@@ -12,11 +12,12 @@ public class SetTowards extends Command {
 
     /**
      * Set Towards constructor, turns the turtle to face the given point
-     * @param body the turtle currently being used
-     * @param x the x position of where the turtle will turn to
-     * @param y the y position of where the turtle will turn to
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
+     * @param stringList the list of strings being used for this command (if needed)
      */
-    public SetTowards(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+    public SetTowards(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
         super();
         t = turtleList.get(FIRST_INDEX);
         xPos = doubleList.get(SECOND_INDEX);

@@ -16,8 +16,9 @@ public class Left extends Command {
      * @param turtleList the list of turtles being brought in to use this command (if needed)
      * @param doubleList the list of doubles to be used for this command (if needed)
      * @param commandList the list of commands being used for this command (if needed)
+     * @param stringList the list of strings being used for this command (if needed)
      */
-    public Left(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList) {
+    public Left(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList) {
         super(doubleList.get(FIRST_INDEX));
         t = turtleList.get(FIRST_INDEX);
         degrees = doubleList.get(FIRST_INDEX);

@@ -10,7 +10,7 @@ public class IfElse extends CommandWithReturningList {
   private boolean conditionResult;
   private List<Command> trueList, falseList, returningList;
 
-  public IfElse(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+  public IfElse(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
     super();
     falseList = commandList.get(FIRST_INDEX);
     trueList = commandList.get(SECOND_INDEX);
