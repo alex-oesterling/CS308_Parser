@@ -26,6 +26,9 @@ public class ColorPalette {
 
     public ColorPalette(Map<Double, String> colorMap){
         this.treeMap = colorMap;
+    }
+
+    public void showPalette(){
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);

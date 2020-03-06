@@ -34,6 +34,9 @@ public class PenProperties {
     public PenProperties(Visualizer visualizer){
         styler = new Styler();
         myVisualzer = visualizer;
+    }
+
+    public void showProperties(){
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);

@@ -26,7 +26,9 @@ public class ShapePalette {
     private VBox vbox;
     private Map<Double, String> map;
 
-    public ShapePalette(){
+    public ShapePalette(){ }
+
+    public void showPalette(){
         Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);

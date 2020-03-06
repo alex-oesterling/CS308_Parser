@@ -1,9 +1,6 @@
 package slogo.view;
 
-import java.util.Enumeration;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.TreeMap;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
@@ -71,8 +68,8 @@ public class UserInterface {
         styler.createLabel(myResources.getString("ChooseLanguage")),
         languageSelect(),
         styler.createButton(myResources.getString("PenProperties"), myVisualizer.createPenProperties()),
-        styler.createButton(myResources.getString("ColorPalette"), myVisualizer.createColorPalette()),
-        styler.createButton(myResources.getString("ShapePalette"), myVisualizer.createShapePalette()),
+        styler.createButton(myResources.getString("ColorPalette"), myVisualizer.showColorPalette()),
+        styler.createButton(myResources.getString("ShapePalette"), myVisualizer.showShapePalette()),
         styler.createButton(myResources.getString("HelpCommand"), e-> new HelpWindow(myVisualizer.getLanguage())));
     return ui;
   }

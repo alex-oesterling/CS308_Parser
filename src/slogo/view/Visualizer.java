@@ -84,9 +84,9 @@ public class Visualizer{
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     styler = new Styler();
     userInterface = new UserInterface(this, myResources);
-
     colorPalette = new ColorPalette(createColorMap());
     shapePalette = new ShapePalette();
+    penProperties = new PenProperties(this);
     myStage = stage;
   }
 
@@ -334,16 +334,16 @@ public class Visualizer{
     userInterface.updatePen(currentTurtle, value);
   }
 
-  public EventHandler createColorPalette(){
-    return e->colorPalette = new ColorPalette(createColorMap());
+  public EventHandler showColorPalette(){
+    return e->colorPalette.showPalette();
   }
 
-  public EventHandler createShapePalette() {
-    return e->shapePalette = new ShapePalette();
+  public EventHandler showShapePalette() {
+    return e->shapePalette.showPalette();
   }
 
   public EventHandler createPenProperties() {
-    return e->penProperties = new PenProperties(this);
+    return e->penProperties.showProperties();
   }
 
   public void setBackgroundColorFromPalette(double value){
