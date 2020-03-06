@@ -12,6 +12,10 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import java.util.ResourceBundle;
 
+/**
+ * This class creates a new window in which holds a list of ways to customize the turtle's pen. By opening this window, the
+ * user is able to change the pen color, the pen width, and decide if the pen should be up or down.
+ */
 public class PenProperties {
 
     public static final String TITLE = "Pen Properties";
@@ -32,6 +36,11 @@ public class PenProperties {
     private Visualizer myVisualzer;
     private Stage stage;
 
+    /**
+     * This constructor sets a new stage and takes in the Visualizer class. It does this as a means of being able to call
+     * the turtleView and update its properties.
+     * @param visualizer
+     */
     public PenProperties(Visualizer visualizer){
         styler = new Styler();
         myVisualzer = visualizer;
@@ -77,6 +86,11 @@ public class PenProperties {
         return colorPicker;
     }
 
+    /**
+     * In an effort to bind the colorpicker and the displayed color with each turtle when there is more than one turtle,
+     * the color picker is returned and used in the visualizer class.
+     * @return the colorpicker
+     */
     public ColorPicker getColorPicker(){return colorPicker;}
 
 }

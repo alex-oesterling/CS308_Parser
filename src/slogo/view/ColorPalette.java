@@ -11,6 +11,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.util.Map;
 
+/**
+ * This class creates a color palette. The color palette is created in a new window and consists of color rectangles and
+ * corresponding doubles as their index. The user is able to use these indices as a means for changing the pen color and
+ * background color. Additionally, the user can change the colors in the color palette.
+ */
 public class ColorPalette {
 
     public static final Paint BACKGROUND = Color.AZURE;
@@ -24,6 +29,11 @@ public class ColorPalette {
 
     private Map<Double, String> treeMap;
 
+    /**
+     * This public class creates a scene in which the color palette is then displayed. It takes in a map with doubles as
+     * the keys and strings as the values. In this way, the backend can update the map.
+     * @param colorMap
+     */
     public ColorPalette(Map<Double, String> colorMap){
         this.treeMap = colorMap;
     }
@@ -56,5 +66,11 @@ public class ColorPalette {
         return vbox;
     }
 
+    /**
+     * This getter method allows the controller to then access the visualizer which in turn changes the color
+     * of either the background or the pen color.
+     * @param value - the chosen value by the user
+     * @return hex string which is then converted into a color in ViewExternal
+     */
     public String getColorMapValue(double value){return treeMap.get(value);}
 }

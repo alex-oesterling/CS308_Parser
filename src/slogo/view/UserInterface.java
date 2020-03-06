@@ -21,8 +21,6 @@ public class UserInterface {
   public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
   public static final int HBOX_SPACING = 10;
 
-
-
   private Styler styler;
   private ResourceBundle myResources;
   private Visualizer myVisualizer;
