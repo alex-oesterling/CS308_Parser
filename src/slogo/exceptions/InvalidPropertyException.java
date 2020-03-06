@@ -1,8 +1,7 @@
 package slogo.exceptions;
 
 
-public class InvalidPropertyException extends RuntimeException {
-    private String message;
+public class InvalidPropertyException extends SuperException {
 
     /**
      * Thrown when there is an error involving variables
@@ -10,15 +9,6 @@ public class InvalidPropertyException extends RuntimeException {
      * @param text text to be displayed
      */
     public InvalidPropertyException(Throwable cause, String text){
-        super(cause);
-        message = text;
-    }
-
-    /**
-     * Gets the message for the error
-     * @return the message
-     */
-    public String getMessage(){
-        return message;
+        super(cause, text);
     }
 }

@@ -1,7 +1,7 @@
 package slogo.exceptions;
 
 
-public class InvalidConstantException extends RuntimeException {
+public class InvalidConstantException extends SuperException {
     private String message;
 
     /**
@@ -10,15 +10,6 @@ public class InvalidConstantException extends RuntimeException {
      * @param text text to be displayed
      */
     public InvalidConstantException(Throwable cause, String text){
-        super(cause);
-        message = text;
-    }
-
-    /**
-     * Gets the message for the error
-     * @return the message
-     */
-    public String getMessage(){
-        return message;
+        super(cause, text);
     }
 }

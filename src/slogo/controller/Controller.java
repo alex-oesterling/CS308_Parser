@@ -434,29 +434,17 @@ public class Controller {
             Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
             Constructor commandConstructor = getCommandConstructor(commandClass);
             return makeCommand(type, commandConstructor);
-
         } catch (ClassNotFoundException e){
-            System.out.println("ClassNotFoundException");
-            e.printStackTrace();
-            //FIXME !!!!!!!!!!!!
+            throw new NoClassException(new Throwable(), errorResources.getString("NoClass"));
         } catch (NoSuchMethodException e){
-            System.out.println("NoSuchMethodException!!");
-            e.printStackTrace();
-            //FIXME part 2
+            throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
         } catch (IllegalAccessException e) {
-            System.out.println("IllegalAccessException");
-            e.printStackTrace();
-            //FIXME
+            throw new IllegalException(new Throwable(), errorResources.getString("Illegal"));
         } catch (InstantiationException e) {
-            System.out.println("InstantiationException");
-            e.printStackTrace();
-            //FIXME
+            throw new InstantException(new Throwable(), errorResources.getString("Instantiation"));
         } catch (InvocationTargetException e) {
-            System.out.println("InvocationTargetException");
-            e.printStackTrace();
-            //FIXME
+            throw new InvocationException(new Throwable(), errorResources.getString("Invocation"));
         }
-        return null;// new Not(1.0); //FIXME !!!!
     }
 
     private String getCommandType(String name){

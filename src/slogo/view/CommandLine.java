@@ -19,10 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import slogo.controller.Controller;
 import javafx.scene.paint.Color;
-import slogo.exceptions.InvalidCommandException;
-import slogo.exceptions.InvalidConstantException;
-import slogo.exceptions.InvalidPropertyException;
-import slogo.exceptions.InvalidVariableException;
+import slogo.exceptions.*;
 
 
 public class CommandLine {
@@ -97,7 +94,8 @@ public class CommandLine {
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
         finishSubmitCommand(recentCommand);
         return;
-      } catch (InvalidConstantException | InvalidVariableException | InvalidPropertyException e){
+      } catch (InvalidConstantException | InvalidVariableException | InvalidPropertyException | IllegalException | InstantException |
+              InvocationException | NoClassException | NoMethodException e){
         Label recentCommand = new Label(e.getMessage());
         finishSubmitCommand(recentCommand);
         return;
