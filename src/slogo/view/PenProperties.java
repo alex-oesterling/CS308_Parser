@@ -30,16 +30,17 @@ public class PenProperties {
     private ResourceBundle myResources;
     private ColorPicker colorPicker;
     private Visualizer myVisualzer;
+    private Stage stage;
 
     public PenProperties(Visualizer visualizer){
         styler = new Styler();
         myVisualzer = visualizer;
+        stage = new Stage();
+        stage.setScene(setScene());
+        stage.setTitle(TITLE);
     }
 
     public void showProperties(){
-        Stage stage = new Stage();
-        stage.setScene(setScene());
-        stage.setTitle(TITLE);
         stage.show();
     }
 
