@@ -70,6 +70,15 @@ public class ToolBar {
     return tools;
   }
 
+  private Node createSlider(){
+    Slider slider = new Slider();
+    slider.setMin(0);
+    slider.setMax(2000);
+    slider.setValue(myVisualizer.getCurrentTurtle().getSpeed());
+    slider.valueProperty().addListener((o, old, neww) -> myVisualizer.getCurrentTurtle().setSpeed(neww.intValue()));
+    return slider;
+  }
+
   private void pickAndSaveFile() {
     XMLWriter writer = new XMLWriter(myVisualizer);
     String filepath = saveFile();
@@ -184,11 +193,8 @@ public class ToolBar {
     Button pause = myStyler.createButton("Pause", e->myVisualizer.getCurrentTurtle().pause());
     Button play = myStyler.createButton("Play", e->myVisualizer.getCurrentTurtle().play());
     Button step = myStyler.createButton("Step", e->myVisualizer.getCurrentTurtle().step());
-    Slider slider = new Slider();
-    slider.setMin(0);
-    slider.setMax(100);
-    
-    controlBox.getChildren().addAll(pause, play, step);
+    Button reset = myStyler.createButton("ResetCommand", e-> myVisualizer.getCurrentTurtle().resetAnimation());
+    controlBox.getChildren().addAll(pause, play, step, reset, createSlider());
     return controlBox;
   }
 }

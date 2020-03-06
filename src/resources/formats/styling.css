@@ -18,4 +18,31 @@
   -fx-background-color: #6699ff;
 }
 
+.menu-bar {
+  -fx-min-height: 50;
+}
+
+.slider {
+  -fx-color: #0000ff;
+  -fx-background-color: #808080;
+  -fx-border-radius: 20;
+  -fx-background-radius: 20;
+  -fx-max-height: 50;
+}
+
+.slider:hover {
+  -thumb-color: #6699ff;
+}
+
+.slider .thumb {
+  fx-color: #0000ff;
+}
+
+.slider .track {
+  -fx-control-inner-background: #6699ff;
+  -fx-background-color: linear-gradient(to right, #969696 0%, #6699ff 100%);
+  -fx-background-insets: 0 0 -1 0, 0, 1;
+  -fx-background-radius: 0.25em, 0.25em, 0.166667em;
+  -fx-padding: 0.25em;
+}
 
