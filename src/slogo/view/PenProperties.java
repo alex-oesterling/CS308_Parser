@@ -34,6 +34,7 @@ public class PenProperties {
     private ResourceBundle myResources;
     private ColorPicker colorPicker;
     private Visualizer myVisualzer;
+    private Stage stage;
 
     /**
      * This constructor sets a new stage and takes in the Visualizer class. It does this as a means of being able to call
@@ -43,12 +44,12 @@ public class PenProperties {
     public PenProperties(Visualizer visualizer){
         styler = new Styler();
         myVisualzer = visualizer;
+        stage = new Stage();
+        stage.setScene(setScene());
+        stage.setTitle(TITLE);
     }
 
     public void showProperties(){
-        Stage stage = new Stage();
-        stage.setScene(setScene());
-        stage.setTitle(TITLE);
         stage.show();
     }
 
