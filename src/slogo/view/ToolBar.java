@@ -193,7 +193,8 @@ public class ToolBar {
     Button pause = myStyler.createButton("Pause", e->myVisualizer.getCurrentTurtle().pause());
     Button play = myStyler.createButton("Play", e->myVisualizer.getCurrentTurtle().play());
     Button step = myStyler.createButton("Step", e->myVisualizer.getCurrentTurtle().step());
-    controlBox.getChildren().addAll(pause, play, step, createSlider());
+    Button reset = myStyler.createButton("ResetCommand", e-> myVisualizer.getCurrentTurtle().resetAnimation());
+    controlBox.getChildren().addAll(pause, play, step, reset, createSlider());
     return controlBox;
   }
 }

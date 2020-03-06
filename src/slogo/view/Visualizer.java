@@ -201,13 +201,13 @@ public class Visualizer{
 
   public TurtleView getCurrentTurtle(){return currentTurtle;}
 
-  public void reset(){
-    clear();
-    myController.resetAll();
-    for(TurtleView turtle : turtleMap.values()) {
-      turtle.resetTurtle();
-    }
-  }
+//  public void reset(){
+//    clear();
+//    myController.resetAll();
+//    for(TurtleView turtle : turtleMap.values()) {
+//      turtle.resetTurtle();
+//    }
+//  }
 
   public void clear(){userDefined.getTurtlePaths().getChildren().clear();}
 
