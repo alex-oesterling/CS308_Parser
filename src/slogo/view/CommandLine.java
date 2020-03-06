@@ -13,22 +13,22 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import slogo.controller.Controller;
 import javafx.scene.paint.Color;
 import slogo.exceptions.InvalidCommandException;
 
-
+/**
+ * This class creates a commandline for the user to type in commands along with the corresponding buttons. Additionally,
+ * it creates a command window where past commands appear as the user has the option to reuse those commands and remember
+ * what they typed.
+ */
 public class CommandLine {
   public static final int TEXTBOX_WIDTH = 200;
   public static final int TEXTBOX_HEIGHT = 100;
   public static final int BUTTON_WIDTH = 50;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
-  public static final String RESOURCES = "resources.";
-  public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
 
   private Visualizer myVisualizer;
   private ResourceBundle myResources;
@@ -37,6 +37,11 @@ public class CommandLine {
   private int historyIndex;
   private VBox historyBox;
 
+  /**
+   * Initializes all important instances of other classes as well as variables which are used throughout the class.
+   * @param visualizer - takes in the visualizer instance
+   * @param newResources - takes in the resources bundle in order to create labels.
+   */
   public CommandLine(Visualizer visualizer, ResourceBundle newResources){
     myResources = newResources;
     myVisualizer = visualizer;
@@ -45,6 +50,11 @@ public class CommandLine {
     historyIndex = -1;
   }
 
+  /**
+   * When the view is created, along with the userinterface and the userdefined class, this command line is added to the view.
+   * There are many components to this node - the text area, the buttons, and the command display.
+   * @return node with command info
+   */
   public Node setupCommandLine(){
     VBox commandLine = new VBox();
     ScrollPane terminal = new ScrollPane();
@@ -86,6 +96,10 @@ public class CommandLine {
     return commandLine;
   }
 
+  /**
+   * Once the button to run the command is clicked, this method calls on the controller which then sends info to the model
+   * in order for the command to be executed.
+   */
   public void submitCommand() {
     if((textBox.getText() != null) && !textBox.getText().isEmpty()){
       try {
@@ -103,10 +117,20 @@ public class CommandLine {
     }
   }
 
+  /**
+   * This method enables the user to click a past command in the command history and place it in the command text area in order
+   * to be executed again.
+   * @param fill - the command that has been clicked
+   * @return executes that command
+   */
   public EventHandler setOnClick(String fill){
     return e->textBox.setText(fill);
   }
 
+  /**
+   * Enables the user to scroll through the history if the list of commands has become long enough.
+   * @param input
+   */
   public void scrollHistory(KeyCode input){
     if (input == KeyCode.UP && historyIndex < history.size()-1) {
       historyIndex++;
@@ -118,6 +142,10 @@ public class CommandLine {
     }
   }
 
+  /**
+   * Adds each command to the history box once it is executed. 
+   * @param syntax
+   */
   public void addHistory(String syntax){
     Label recentCommand = new Label(syntax);
     history.add(recentCommand);
@@ -127,10 +155,19 @@ public class CommandLine {
     historyIndex = -1;
   }
 
+  /**
+   * Loads code and command from an XML file.
+   * @param file - XML file
+   * @throws IOException
+   */
   public void loadCodeFromFile(File file) throws IOException {
     textBox.setText(Files.readString(file.toPath()));
   }
 
+  /**
+   * Returns all the commands currently in the command history to then be used in XML file.
+   * @return
+   */
   public List<String> getHistory(){
     List<String> cmdHistory = new ArrayList<>();
     for(Label l : history){

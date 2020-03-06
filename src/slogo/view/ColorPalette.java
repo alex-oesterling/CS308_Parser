@@ -38,6 +38,10 @@ public class ColorPalette {
         this.treeMap = colorMap;
     }
 
+    /**
+     * Only called when the color palette needs to be shown. In this way, without the color palette showing, the user can
+     * still access the colors and the indices.
+     */
     public void showPalette(){
         Stage stage = new Stage();
         stage.setScene(setScene());

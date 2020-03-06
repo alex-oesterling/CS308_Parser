@@ -11,14 +11,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * This class creates all of the user defined visuals which are then added to the visualizer. This includes all the user interface
+ * buttons as well as all of the turtle interface buttons.
+ */
 public class UserInterface {
   public static final int VBOX_SPACING = 10;
   public static final int COLORPICKER_HEIGHT = 30;
   public static final int LISTVIEW_WIDTH = 100;
   public static final int LISTVIEW_HEIGHT  = 250;
-  public static final String RESOURCES = "resources";
-  public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
-  public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
   public static final int HBOX_SPACING = 10;
 
   private Styler styler;
@@ -28,6 +29,11 @@ public class UserInterface {
   private ComboBox<String> turtleBox;
   private ListView<String> myList;
 
+  /**
+   * Initializes are variables and instances that are used throughout the class.
+   * @param visualizer - takes in the visualizer instance
+   * @param resources - takes in a resource bundle in order to provide labels
+   */
   public UserInterface(Visualizer visualizer, ResourceBundle resources){
     styler = new Styler(resources);
     myResources = resources;
@@ -35,6 +41,9 @@ public class UserInterface {
     myList = new ListView<>();
   }
 
+  /**
+   * @return a node that stores all of the UI to then be added to the visualizer
+   */
   public Node createTotalUI(){
     HBox hbox = new HBox();
     hbox.setSpacing(HBOX_SPACING);
@@ -129,9 +138,17 @@ public class UserInterface {
     return comboBox;
   }
 
+  /**
+   * Binds the background color picker to the color of the background.
+   * @param hexColor - takes in a hex and converts it to a java color
+   */
   public void setBackgroundPicker(String hexColor){
     backgroundColorPicker.setValue(Color.web(hexColor));
   }
 
+  /**
+   * @return the binded listview of strings which holds the turtles info. This is done so that with every new turtle instance,
+   * the listview is unbinded and then rebinded again.
+   */
   public ListView<String> getList(){return myList;}
 }

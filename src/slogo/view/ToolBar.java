@@ -19,9 +19,11 @@ import slogo.SlogoApp;
 import slogo.config.XMLReader;
 import slogo.config.XMLWriter;
 
+/**
+ * Creates a toolbar with several options at the top of the visualizer.
+ */
 public class ToolBar {
-  private static final String RESOURCES = "resources";
-  public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
+
   private static final String XML_FILEPATH = "user.dir";
 
   private Stage myStage;
@@ -29,6 +31,12 @@ public class ToolBar {
   private Visualizer myVisualizer;
   private Styler myStyler;
 
+  /**
+   * Initializes all the other instances of classes needed.
+   * @param stage - the stage of the visualizer
+   * @param visualizer - the visualizer instance itself
+   * @param newResources - a resource bundle in order to label everything
+   */
   public ToolBar(Stage stage, Visualizer visualizer, ResourceBundle newResources){
     myStage = stage;
     myVisualizer = visualizer;
@@ -36,6 +44,11 @@ public class ToolBar {
     myStyler = new Styler(newResources);
   }
 
+  /**
+   * Creats a toolbar node that has several capabilities: a menu with a new window option, an exit option, a restart option,
+   * a load workspace option, a load code option, and a save workspace option.
+   * @return the menu
+   */
   public Node setupToolBar(){
     HBox tools = new HBox();
     MenuBar menuBar = new MenuBar();
@@ -82,10 +95,6 @@ public class ToolBar {
   private void makeNewWindow() {
     SlogoApp newApp = new SlogoApp(new Stage());
   }
-
-
-
-
 
   /**
    * Opens a file navigator dialogue and allows the user to select an .xml file for importing into
@@ -168,9 +177,4 @@ public class ToolBar {
     errorAlert.showAndWait();
   }
 
-  private Node animationControls(){
-    HBox controlBox = new HBox();
-//    Button pause = myStyler.createButton("Pause")
-    return null;
-  }
 }

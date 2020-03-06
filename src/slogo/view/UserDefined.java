@@ -11,6 +11,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * This class creates many components of the visualizer. These components include all of the turtleview, the command history,
+ * and the variable history.
+ */
 public class UserDefined {
 
     public static final int TURTLE_SCREEN_WIDTH = 500;
@@ -18,7 +22,6 @@ public class UserDefined {
     public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
     public static final int VBOX_SPACING = 10;
     public static final int VIEWPANE_PADDING = 10;
-
 
     private Rectangle turtleArea;
     private Color backgroundColor;
@@ -28,6 +31,10 @@ public class UserDefined {
     private VBox varHistory;
     private Styler styler;
 
+    /**
+     * Initializes all the groups and other elements.
+     * @param resources - a resources bundle in order to create all the labels
+     */
     public UserDefined(ResourceBundle resources){
         turtlePaths = new Group();
         turtles = new Group();
@@ -35,6 +42,10 @@ public class UserDefined {
         styler = new Styler(resources);
     }
 
+    /**
+     * Using a vbox, creates the turtle view and adds the command history as well as the variable history.
+     * @return - vbox of the turtle area
+     */
     public VBox showUserDefined(){
         VBox group = new VBox();
         group.setSpacing(VBOX_SPACING);
@@ -86,27 +97,51 @@ public class UserDefined {
         return userCommands;
     }
 
+    /**
+     * sets the fill color of the turtle area whether changes in a color picker or by a command.
+     * @param color
+     */
     public void setFill(Color color){
         turtleArea.setFill(color);
         backgroundColor = color;
     }
 
+    /**
+     * Gets the fill of the turtle area in an effort to bind colorpickers with the color of the turtle area.
+     * @return
+     */
     public Color getFill(){
         return backgroundColor;
     }
 
+    /**
+     * Adds a new command to the history of user defined commands when designated by the user.
+     * @param newCommand
+     */
     public void addCommand(Node newCommand){
         commandHistory.getChildren().add(newCommand);
     }
 
+    /**
+     * Adds a new variable to the history of user defined variables when designated by the user.
+     * @param newVariable
+     */
     public void addVariable(Node newVariable){
         varHistory.getChildren().add(newVariable);
     }
 
+    /**
+     * Gets the group of turtle paths which are then passed into the turtleview.
+     * @return group of turtle paths
+     */
     public Group getTurtlePaths(){
         return turtlePaths;
     }
 
+    /**
+     * Gets the group of turtles which are then passed into the turtle view.
+     * @return group of turtles
+     */
     public Group getTurtles(){
         return turtles;
     }

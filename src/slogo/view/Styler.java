@@ -18,6 +18,11 @@ public class Styler {
         myResources = resources;
     }
 
+    /**
+     * Gets the resource text which is then passed into all other classes.
+     * @param input
+     * @return
+     */
     public String getResourceText(String input){return myResources.getString(input);}
 
     /**

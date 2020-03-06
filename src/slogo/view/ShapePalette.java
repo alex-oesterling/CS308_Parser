@@ -42,6 +42,10 @@ public class ShapePalette {
      */
     public ShapePalette(){ }
 
+    /**
+     * Only called when the shape palette needs to be shown. In this way, without the shape palette showing, the user can
+     * still access the shapes and the indices.
+     */
     public void showPalette(){
         Stage stage = new Stage();
         stage.setScene(setScene());

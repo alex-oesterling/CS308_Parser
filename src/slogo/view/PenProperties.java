@@ -48,6 +48,9 @@ public class PenProperties {
         stage.setTitle(TITLE);
     }
 
+    /**
+     * Shows the properties window when the button is clicked.
+     */
     public void showProperties(){
         stage.show();
     }

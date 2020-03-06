@@ -323,7 +323,7 @@ public class TurtleView{
     }
 
     /**
-     *
+     * Creates a designated size for the commands.
      * @param size
      */
     public void setCommandSize(int size){
