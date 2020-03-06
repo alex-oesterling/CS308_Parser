@@ -10,12 +10,10 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
@@ -25,18 +23,11 @@ public class Visualizer{
 
   public static final int TURTLE_SCREEN_WIDTH = 500;
   public static final int TURTLE_SCREEN_HEIGHT = 500;
-//  public static final int COLORPICKER_HEIGHT = 30;
-//  public static final int LISTVIEW_WIDTH = 100;
-//  public static final int LISTVIEW_HEIGHT  = 250;
   public static final String STYLESHEET = "styling.css";
   public static final String RESOURCES = "resources";
   public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
-//  public static final String COLOR_RESOURCE = "resources.formats";
-//  public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = COLOR_RESOURCE + ".Colors";
   public static final int VIEWPANE_PADDING = 10;
   public static final int VIEWPANE_MARGIN = 0;
-  public static final int VBOX_SPACING = 10;
-  public static final int HBOX_SPACING = 10;
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   public static final String DEFAULT_LANGUAGE = "English";
   public static final double UNSELECTED_OPACITY = .5;
@@ -57,12 +48,8 @@ public class Visualizer{
   private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
-//  private ColorPicker backgroundColorPicker;
-//  private ComboBox<String> turtleBox;
   private ToolBar myToolBar;
-//  private ListView<String> myList;
   private Stage myStage;
-//  private Color backgroundColor;
   private UserDefined userDefined;
   private UserInterface userInterface;
 
@@ -70,7 +57,6 @@ public class Visualizer{
 
   public Visualizer (Stage stage){
     language = "English";
-//    backgroundColor = Color.WHITE;
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
     userDefined = new UserDefined();
     turtleMap = new TreeMap<>();
@@ -79,7 +65,6 @@ public class Visualizer{
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(this, myResources);
-//    myList = new ListView<>();
     myToolBar = new ToolBar(stage, this, myResources);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     styler = new Styler();
@@ -115,108 +100,6 @@ public class Visualizer{
     viewPane.setRight(uInterface);
     return viewPane;
   }
-
-//  private Node createTurtleUI() {
-//    VBox ui = new VBox();
-//    ui.setSpacing(VBOX_SPACING);
-//    ui.getChildren().addAll( styler.createButton(myResources.getString("AddTurtle"), e-> addTurtle()),
-//            makeTurtleSelector(),
-//            styler.createButton(myResources.getString("ChooseTurtle"), e-> getCurrentTurtle().chooseTurtle(getCurrentTurtle().getTurtleImage(new Stage()))),
-//            styler.createButton(myResources.getString("ResetCommand"), e->{
-//                    clear();
-//                    myController.resetAll();
-//                    for(TurtleView turtle : turtleMap.values()) {
-//                      turtle.resetTurtle();
-//                    }
-//            }),
-//            styler.createButton(myResources.getString("MoveTurtle"), e-> new MoveTurtle(myController)),
-//            addTurtleInfo());
-//    return ui;
-//  }
-//
-//  private Node createSettingsUI() {
-//    VBox ui = new VBox();
-//    ui.setSpacing(VBOX_SPACING);
-//    ui.getChildren().addAll(styler.createLabel(myResources.getString("BackgroundColor")),
-//            backgroundColor(),
-//            styler.createLabel(myResources.getString("ChooseLanguage")),
-//            languageSelect(),
-//            styler.createButton(myResources.getString("PenProperties"), e->penProperties = new PenProperties(this)),
-//            styler.createButton(myResources.getString("ColorPalette"), e->colorPalette = new ColorPalette(createColorMap())),
-//            styler.createButton(myResources.getString("ShapePalette"), e->shapePalette = new ShapePalette()),
-//            styler.createButton(myResources.getString("HelpCommand"), e-> new HelpWindow(language)));
-//    return ui;
-//  }
-
-//  private ColorPicker backgroundColor(){
-//    backgroundColorPicker = new ColorPicker();
-//    backgroundColorPicker.setMaxHeight(COLORPICKER_HEIGHT);
-//    backgroundColorPicker.setValue(backgroundColor);
-//    backgroundColorPicker.setOnAction(e -> {
-//      backgroundColor = backgroundColorPicker.getValue();
-//      userDefined.setFill(backgroundColor);
-//    });
-//    return backgroundColorPicker;
-//  }
-//
-//  private HBox addTurtleInfo(){
-//    HBox hbox = new HBox();
-//    VBox vbox = new VBox();
-//    vbox.setSpacing(VBOX_SPACING);
-//    vbox.getChildren().addAll(styler.createLabel(myResources.getString("ID")),
-//            styler.createLabel(myResources.getString("XCord")),
-//            styler.createLabel(myResources.getString("YCord")),
-//            styler.createLabel(myResources.getString("Angle")),
-//            styler.createLabel(myResources.getString("PenColor")),
-//            styler.createLabel(myResources.getString("PenWidth")),
-//            styler.createLabel(myResources.getString("PenDownLabel")));
-//    myList.setPrefSize(LISTVIEW_WIDTH, LISTVIEW_HEIGHT);
-//    hbox.getChildren().addAll(vbox, myList);
-//    return hbox;
-//  }
-//
-//  private ComboBox<String> makeTurtleSelector(){
-//    turtleBox = new ComboBox();
-//    turtleBox.setPromptText("Pick Turtle");
-//    turtleBox.valueProperty().addListener((o, old, neww) -> setTurtle(neww));
-//    turtleBox.itemsProperty().bind(myTurtlesProperty);
-//    turtleBox.getSelectionModel().selectFirst();
-//    return turtleBox;
-//  }
-//
-//  private ComboBox languageSelect(){
-//    String languages[] = { myResources.getString("English"),
-//            myResources.getString("Chinese"),
-//            myResources.getString("French"),
-//            myResources.getString("German"),
-//            myResources.getString("Italian"),
-//            myResources.getString("Portuguese"),
-//            myResources.getString("Spanish"),
-//            myResources.getString("Russian"),
-//            myResources.getString("Urdu")
-//    };
-//    ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
-//    comboBox.setValue(myResources.getString(language));
-//    comboBox.setOnAction(event -> {
-//      for(String key : myResources.keySet()){
-//        if(comboBox.getValue().toString().equals(myResources.getObject(key))){
-//          setLanguage(key);
-//        }
-//      }
-//    });
-//    return comboBox;
-//  }
-
-//  private Map<Double, String> createColorMap(){
-//    ResourceBundle myColorResources = ResourceBundle.getBundle(DEFAULT_COLOR_RESOURCE_PACKAGE);
-//    Enumeration e = myColorResources.getKeys();
-//    TreeMap<Double, String> treeMap = new TreeMap<>();
-//    while (e.hasMoreElements()) {
-//      String keyStr = (String) e.nextElement();
-//      treeMap.put(Double.valueOf(keyStr), myColorResources.getString(keyStr));
-//    }
-//    return treeMap;
-//  }
 
   public void addCommand(String command, String syntax){
     Label recentCommand = new Label(command);
