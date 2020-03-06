@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -11,6 +12,13 @@ import javafx.scene.control.MenuItem;
  * In an effort to reduce duplicate code, this class is called to create labels and buttons.
  */
 public class Styler {
+    private ResourceBundle myResources;
+
+    public Styler(ResourceBundle resources){
+        myResources = resources;
+    }
+
+    public String getResourceText(String input){return myResources.getString(input);}
 
     /**
      * Given a string, creates a label.
@@ -18,7 +26,7 @@ public class Styler {
      * @return
      */
     public Label createLabel(String string){
-        return new Label(string);
+        return new Label(myResources.getString(string));
     }
 
     /**
@@ -28,7 +36,7 @@ public class Styler {
      * @return a Button
      */
     public Button createButton(String string, EventHandler e){
-        Button button = new Button(string);
+        Button button = new Button(myResources.getString(string));
         button.setOnAction(e);
         return button;
     }
@@ -42,7 +50,7 @@ public class Styler {
      */
     public MenuItem makeMenuItem(String property, EventHandler<ActionEvent> handler) {
         MenuItem result = new MenuItem();
-        createLabel(property, result);
+        createMenuLabel(property, result);
         result.setOnAction(handler);
         return result;
     }
@@ -54,7 +62,7 @@ public class Styler {
      */
     public Menu makeMenu(String property) {
         Menu result = new Menu();
-        createLabel(property, result);
+        createMenuLabel(property, result);
         return result;
     }
 
@@ -63,7 +71,7 @@ public class Styler {
      * @param property - the label to be applied to the items, from the .properties file
      * @param result - the menu item to which the label is applied
      */
-    private void createLabel(String property, MenuItem result) {
+    private void createMenuLabel(String property, MenuItem result) {
         String label = myResources.getString(property);
         result.setText(label);
     }

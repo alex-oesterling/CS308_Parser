@@ -24,18 +24,14 @@ public class UserInterface {
   private Styler styler;
   private ResourceBundle myResources;
   private Visualizer myVisualizer;
-  private PenProperties penProperties;
-  private ColorPalette colorPalette;
-  private ShapePalette shapePalette;
   private ColorPicker backgroundColorPicker;
   private ComboBox<String> turtleBox;
   private ListView<String> myList;
 
   public UserInterface(Visualizer visualizer, ResourceBundle resources){
-    styler = new Styler();
+    styler = new Styler(resources);
     myResources = resources;
     myVisualizer = visualizer;
-    shapePalette = new ShapePalette();
     myList = new ListView<>();
   }
 
@@ -49,11 +45,11 @@ public class UserInterface {
   private Node createTurtleUI() {
     VBox ui = new VBox();
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(styler.createButton(myResources.getString("AddTurtle"), e-> myVisualizer.addTurtle()),
+    ui.getChildren().addAll(styler.createButton("AddTurtle", e-> myVisualizer.addTurtle()),
         makeTurtleSelector(),
-        styler.createButton(myResources.getString("ChooseTurtle"), e-> myVisualizer.getCurrentTurtle().chooseTurtle(myVisualizer.getCurrentTurtle().getTurtleImage(new Stage()))),
-        styler.createButton(myResources.getString("ResetCommand"), e-> myVisualizer.reset()),
-        styler.createButton(myResources.getString("MoveTurtle"), e-> new MoveTurtle(myVisualizer)),
+        styler.createButton("ChooseTurtle", e-> myVisualizer.getCurrentTurtle().chooseTurtle(myVisualizer.getCurrentTurtle().getTurtleImage(new Stage()))),
+        styler.createButton("ResetCommand", e-> myVisualizer.reset()),
+        styler.createButton("MoveTurtle", e-> myVisualizer.createMoveWindow()),
         addTurtleInfo());
     return ui;
   }
@@ -61,14 +57,14 @@ public class UserInterface {
   private Node createSettingsUI() {
     VBox ui = new VBox();
     ui.setSpacing(VBOX_SPACING);
-    ui.getChildren().addAll(styler.createLabel(myResources.getString("BackgroundColor")),
+    ui.getChildren().addAll(styler.createLabel("BackgroundColor"),
         backgroundColor(),
-        styler.createLabel(myResources.getString("ChooseLanguage")),
+        styler.createLabel("ChooseLanguage"),
         languageSelect(),
-        styler.createButton(myResources.getString("PenProperties"), myVisualizer.createPenProperties()),
-        styler.createButton(myResources.getString("ColorPalette"), myVisualizer.showColorPalette()),
-        styler.createButton(myResources.getString("ShapePalette"), myVisualizer.showShapePalette()),
-        styler.createButton(myResources.getString("HelpCommand"), e-> new HelpWindow(myVisualizer.getLanguage())));
+        styler.createButton("PenProperties", myVisualizer.createPenProperties()),
+        styler.createButton("ColorPalette", myVisualizer.showColorPalette()),
+        styler.createButton("ShapePalette", myVisualizer.showShapePalette()),
+        styler.createButton("HelpCommand", e-> new HelpWindow(myVisualizer.getLanguage())));
     return ui;
   }
 
@@ -86,13 +82,13 @@ public class UserInterface {
     HBox hbox = new HBox();
     VBox vbox = new VBox();
     vbox.setSpacing(VBOX_SPACING);
-    vbox.getChildren().addAll(styler.createLabel(myResources.getString("ID")),
-        styler.createLabel(myResources.getString("XCord")),
-        styler.createLabel(myResources.getString("YCord")),
-        styler.createLabel(myResources.getString("Angle")),
-        styler.createLabel(myResources.getString("PenColor")),
-        styler.createLabel(myResources.getString("PenWidth")),
-        styler.createLabel(myResources.getString("PenDownLabel")));
+    vbox.getChildren().addAll(styler.createLabel("ID"),
+        styler.createLabel("XCord"),
+        styler.createLabel("YCord"),
+        styler.createLabel("Angle"),
+        styler.createLabel("PenColor"),
+        styler.createLabel("PenWidth"),
+        styler.createLabel("PenDownLabel"));
     myList.setPrefSize(LISTVIEW_WIDTH, LISTVIEW_HEIGHT);
     hbox.getChildren().addAll(vbox, myList);
     return hbox;
@@ -111,18 +107,18 @@ public class UserInterface {
   }
 
   private ComboBox languageSelect(){
-    String languages[] = { myResources.getString("English"),
-        myResources.getString("Chinese"),
-        myResources.getString("French"),
-        myResources.getString("German"),
-        myResources.getString("Italian"),
-        myResources.getString("Portuguese"),
-        myResources.getString("Spanish"),
-        myResources.getString("Russian"),
-        myResources.getString("Urdu")
+    String languages[] = { styler.getResourceText("English"),
+        styler.getResourceText("Chinese"),
+        styler.getResourceText("French"),
+        styler.getResourceText("German"),
+        styler.getResourceText("Italian"),
+        styler.getResourceText("Portuguese"),
+        styler.getResourceText("Spanish"),
+        styler.getResourceText("Russian"),
+        styler.getResourceText("Urdu")
     };
     ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(languages));
-    comboBox.setValue(myResources.getString(myVisualizer.getLanguage()));
+    comboBox.setValue(styler.getResourceText(myVisualizer.getLanguage()));
     comboBox.setOnAction(event -> {
       for(String key : myResources.keySet()){
         if(comboBox.getValue().toString().equals(myResources.getObject(key))){
@@ -131,12 +127,6 @@ public class UserInterface {
       }
     });
     return comboBox;
-  }
-
-  public void updatePen(TurtleView currentTurtle, double value){
-    if(colorPalette!=null){
-      currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
-    }
   }
 
   public void setBackgroundPicker(String hexColor){

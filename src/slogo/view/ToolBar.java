@@ -24,7 +24,6 @@ public class ToolBar {
   public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
   private static final String XML_FILEPATH = "user.dir";
 
-  private ResourceBundle myResources;
   private Stage myStage;
   private CommandLine myTerminal;
   private Visualizer myVisualizer;
@@ -34,23 +33,22 @@ public class ToolBar {
     myStage = stage;
     myVisualizer = visualizer;
     myTerminal = visualizer.getTerminal();
-    myResources = newResources;
-    myStyler = new Styler();
+    myStyler = new Styler(newResources);
   }
 
   public Node setupToolBar(){
     HBox tools = new HBox();
     MenuBar menuBar = new MenuBar();
-    Menu menu = makeMenu("Menu");
-    MenuItem newWindow = makeMenuItem("New", e-> makeNewWindow());
-    MenuItem exit = makeMenuItem("Exit", e-> closeWindow());
-    MenuItem restart = makeMenuItem("Restart", e->{
+    Menu menu = myStyler.makeMenu("Menu");
+    MenuItem newWindow = myStyler.makeMenuItem("New", e-> makeNewWindow());
+    MenuItem exit = myStyler.makeMenuItem("Exit", e-> closeWindow());
+    MenuItem restart = myStyler.makeMenuItem("Restart", e->{
       closeWindow();
       makeNewWindow();
     });
-    MenuItem loadWorkspace = makeMenuItem("LoadWorkspace", e-> new XMLReader(chooseXMLFile(), myStage));
-    MenuItem loadCode = makeMenuItem("LoadCode", e-> tryLoadCodeFromFile());
-    MenuItem saveWorkspace = makeMenuItem("SaveWorkspace", e-> pickAndSaveFile());
+    MenuItem loadWorkspace = myStyler.makeMenuItem("LoadWorkspace", e-> new XMLReader(chooseXMLFile(), myStage));
+    MenuItem loadCode = myStyler.makeMenuItem("LoadCode", e-> tryLoadCodeFromFile());
+    MenuItem saveWorkspace = myStyler.makeMenuItem("SaveWorkspace", e-> pickAndSaveFile());
     menuBar.getMenus().add(menu);
     menu.getItems().addAll(newWindow, saveWorkspace, loadWorkspace, loadCode, restart, exit);
     tools.getChildren().add(menuBar);
@@ -171,6 +169,8 @@ public class ToolBar {
   }
 
   private Node animationControls(){
-
+    HBox controlBox = new HBox();
+//    Button pause = myStyler.createButton("Pause")
+    return null;
   }
 }
