@@ -8,9 +8,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -51,7 +53,7 @@ public class ToolBar {
     MenuItem saveWorkspace = myStyler.makeMenuItem("SaveWorkspace", e-> pickAndSaveFile());
     menuBar.getMenus().add(menu);
     menu.getItems().addAll(newWindow, saveWorkspace, loadWorkspace, loadCode, restart, exit);
-    tools.getChildren().add(menuBar);
+    tools.getChildren().addAll(menuBar, animationControls());
     return tools;
   }
 
@@ -82,10 +84,6 @@ public class ToolBar {
   private void makeNewWindow() {
     SlogoApp newApp = new SlogoApp(new Stage());
   }
-
-
-
-
 
   /**
    * Opens a file navigator dialogue and allows the user to select an .xml file for importing into
@@ -170,7 +168,11 @@ public class ToolBar {
 
   private Node animationControls(){
     HBox controlBox = new HBox();
-//    Button pause = myStyler.createButton("Pause")
-    return null;
+    Button pause = myStyler.createButton("Pause", e->myVisualizer.getCurrentTurtle().pause());
+    Button play = myStyler.createButton("Play", e->myVisualizer.getCurrentTurtle().play());
+    Button step = myStyler.createButton("Step", e->myVisualizer.getCurrentTurtle().step());
+    Slider slider = new Slider();
+    controlBox.getChildren().addAll(pause, play, step);
+    return controlBox;
   }
 }

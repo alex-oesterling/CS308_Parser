@@ -1,9 +1,12 @@
 package slogo.view;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -35,7 +39,7 @@ public class TurtleView{
     public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
-    public static final int TOTAL_DURATION = 500;
+    public static final int TOTAL_DURATION = 5000;
 
     private Group myPaths;
     private Group myTurtles;
@@ -50,6 +54,8 @@ public class TurtleView{
     private String turtleName;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
     private int animationDuration;
+    private Queue<Transition> transitionQueue;
+    private boolean stopped;
 
     public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
@@ -65,6 +71,8 @@ public class TurtleView{
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
         animationDuration = TOTAL_DURATION;
+        transitionQueue = new LinkedList<>();
+        stopped = true;
     }
 
     private ImageView createTurtle(){
@@ -153,21 +161,39 @@ public class TurtleView{
             path.getElements().add(new LineTo(newX, newY));
             PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
             pt.setPath(path);
-            st.getChildren().add(pt);
+            transitionQueue.add(pt);
             myPaths.getChildren().add(path);
         }
         if(orientation != oldHeading) {
             RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
                 myImage);
             rt.setToAngle(orientation);
-            st.getChildren().add(rt);
+            transitionQueue.add(rt);
         }
-        //System.out.println(turtleStats());
     }
 
     public void playAnimation(){
-        st.play();
-        st = new SequentialTransition();
+        if(!transitionQueue.isEmpty()) {
+            stopped = false;
+            st = new SequentialTransition(transitionQueue.remove());
+            st.setOnFinished(e -> playAnimation());
+            st.play();
+        } else {
+            stopped = true;
+            st = new SequentialTransition();
+        }
+
+
+//            st.getChildren().add(transitionQueue.remove());
+//            st.play();
+//            st.setOnFinished(e -> {
+//                if (!transitionQueue.isEmpty()) {
+//                    st.getChildren().add(transitionQueue.remove());
+//                } else {
+//                    st = new SequentialTransition();
+//                }
+//            });
+//        }
     }
 
     public void resetTurtle(){
@@ -253,5 +279,29 @@ public class TurtleView{
         double coordinateX = currentX - TURTLE_SCREEN_WIDTH/2;
         double coordinateY = TURTLE_SCREEN_HEIGHT/2 - currentY;
         return new String[]{turtleName, "" + coordinateX, "" + coordinateY, "" + heading};
+    }
+
+    public void pause(){
+        st.pause();
+    }
+
+    public void play(){
+        if(stopped){
+            playAnimation();
+        } else {
+            st.play();
+        }
+    }
+
+    public void step(){
+        if(!stopped || !transitionQueue.isEmpty()) {
+            if(stopped){
+                st = new SequentialTransition(transitionQueue.remove());
+            }
+            st.setOnFinished(e -> {
+                stopped = true;
+            });
+            st.play();
+        }
     }
 }
