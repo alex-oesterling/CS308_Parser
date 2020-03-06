@@ -1,13 +1,13 @@
 package slogo.controller;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import slogo.exceptions.*;
 import slogo.model.CommandCreator;
-import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
 import slogo.view.ViewExternal;
@@ -86,6 +86,18 @@ public class Controller {
         nameToTurtle.putIfAbsent(t.getName(), t);
         turtle = t;
         commandCreator.setTurtle(t);
+    }
+
+    /**
+     * move the turtle to a given position and orientation
+     * @param xPosition x position to put the turtle at
+     * @param yPosition y position to put the turtle at
+     * @param heading heading to set to
+     */
+    public void setTurtle(double xPosition, double yPosition, double heading){
+        turtle.setX(xPosition);
+        turtle.setY(yPosition);
+        turtle.setHeading(heading);
     }
 
     /**
