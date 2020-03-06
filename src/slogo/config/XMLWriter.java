@@ -66,7 +66,7 @@ public class XMLWriter {
   private Node writePreferences() {
     Element preferences = myDocument.createElement("Preferences");
     preferences.appendChild(createEndNode("Language", myVisualizer.getLanguage()));
-    preferences.appendChild(createEndNode("Background", myVisualizer.getBackground()));
+    preferences.appendChild(createEndNode("Background", myVisualizer.getBackground().toString()));
     return preferences;
   }
 

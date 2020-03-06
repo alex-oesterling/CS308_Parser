@@ -11,6 +11,11 @@ import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
+/**
+ * This class creates a new window with a help menu. In this menu, each possible command that the user can type is listed
+ * in alphabetic order, along with what they need to type in order to execute the command. This help window changes when the
+ * language of SLogo changes too.
+ */
 public class HelpWindow {
 
     public static final String TITLE = "Command Reference Page";
@@ -25,6 +30,11 @@ public class HelpWindow {
     GridPane grid;
     ResourceBundle myResources;
 
+    /**
+     * In order to change the language, this constructor takes in the current language of the simulation. It then creates
+     * a new stage.
+     * @param language
+     */
     public HelpWindow(String language){
         Stage stage = new Stage();
         createGrid(language);
@@ -40,7 +50,7 @@ public class HelpWindow {
         return new Scene(s1, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
     }
 
-    public void createGrid(String language){
+    private void createGrid(String language){
         grid = new GridPane();
         grid.setVgap(GRID_VGAP);
         grid.setHgap(GRID_HGAP);
