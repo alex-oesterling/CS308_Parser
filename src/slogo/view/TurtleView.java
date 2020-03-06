@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.io.IOException;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
@@ -34,6 +35,7 @@ public class TurtleView{
     public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
+    public static final int TOTAL_DURATION = 500;
 
     private Group myPaths;
     private Group myTurtles;
@@ -46,7 +48,6 @@ public class TurtleView{
     private double heading;
     private double pathStrokeWidth;
     private String turtleName;
-    private ObservableList<String> observableList;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
     private int animationDuration;
 
@@ -63,7 +64,7 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
-        animationDuration = 500;
+        animationDuration = TOTAL_DURATION;
     }
 
     private ImageView createTurtle(){
@@ -92,8 +93,8 @@ public class TurtleView{
             set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
         } catch (IllegalArgumentException e){
             return;
-        } catch (Exception e) {
-            retryLoadFile("Please choose a valid image");
+        } catch (IOException e) {
+            retryLoadFile(e.getMessage());
         }
     }
 
@@ -107,7 +108,7 @@ public class TurtleView{
             } catch (NullPointerException e){
                 return;
             } catch (Exception e){
-                displayError(message);
+                displayError(e.getMessage());
                 badFile = true;
             }
         } while (badFile);
@@ -179,7 +180,7 @@ public class TurtleView{
     }
 
     public SimpleObjectProperty<ObservableList<String>> turtleStats(){
-        observableList = FXCollections.observableArrayList();
+        ObservableList<String> observableList = FXCollections.observableArrayList();
         observableList.addAll(turtleName,
                 Double.toString(currentX),
                 Double.toString(currentY),
@@ -245,7 +246,7 @@ public class TurtleView{
 
     public void setCommandSize(int size){
         if(size == 0){return;}
-        animationDuration = 500/size;
+        animationDuration = TOTAL_DURATION /size;
     }
 
     public String[] getData(){

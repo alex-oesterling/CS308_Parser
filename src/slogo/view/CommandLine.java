@@ -145,7 +145,7 @@ public class CommandLine {
   }
 
   public List<String> getHistory(){
-    List<String> cmdHistory = new ArrayList<String>();
+    List<String> cmdHistory = new ArrayList<>();
     for(Label l : history){
       cmdHistory.add(l.getText());
     }
