@@ -143,7 +143,7 @@ public class CommandLine {
   }
 
   /**
-   * Adds each command to the history box once it is executed. 
+   * Adds each command to the history box once it is executed.
    * @param syntax
    */
   public void addHistory(String syntax){
