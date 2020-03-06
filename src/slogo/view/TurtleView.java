@@ -24,6 +24,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+/**
+ * This class creates an instance of a turtle and stores all the relevant turtle information. In this way, we are able to
+ * add multiple instances of turtles and update the turtle information that is stored.
+ */
 public class TurtleView{
     public static final String XML_FILEPATH = "user.dir";
     public static final int TURTLE_WIDTH = 50;
@@ -31,7 +35,6 @@ public class TurtleView{
     public static final int TURTLE_SCREEN_WIDTH = 500;
     public static final int TURTLE_SCREEN_HEIGHT = 500;
     public static final int PATH_STROKE_WIDTH = 3;
-    public static final int TURTLE_RESET_ANGLE = 0;
     public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
@@ -51,6 +54,12 @@ public class TurtleView{
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
     private int animationDuration;
 
+    /**
+     * Creates an instance of all the important variables that need to be referenced from other methods in this class.
+     * @param turtles - a group of all the turtles from the visualizer
+     * @param paths - a group of the paths of the turtles
+     * @param name - the name of the turtle in which this turtleview instance is being created for
+     */
     public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
         myPaths = paths;
@@ -79,6 +88,10 @@ public class TurtleView{
         return turtleImage;
     }
 
+    /**
+     * When a button is clicked in UserInterface to choose a turtle image, a file chooser appears
+     * @param imageFile - the selected file from the file chooser
+     */
     public void chooseTurtle(File imageFile) {
         ImageView turtleImage = new ImageView();
         try {
@@ -121,6 +134,11 @@ public class TurtleView{
         errorAlert.showAndWait();
     }
 
+    /**
+     * Creates a file chooser to choose a new image from the user's files.
+     * @param stage
+     * @return - the file
+     */
     public File getTurtleImage(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Turtle Image");
@@ -130,6 +148,13 @@ public class TurtleView{
         return fileChooser.showOpenDialog(stage);
     }
 
+    /**
+     * Updates the turtle's position, is called in the controller and updates the position whenever a corresponding command
+     * is typed in.
+     * @param newX - new x position
+     * @param newY - new y position
+     * @param orientation - new orientation
+     */
     public void update(double newX, double newY, double orientation){
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
@@ -162,14 +187,19 @@ public class TurtleView{
             rt.setToAngle(orientation);
             st.getChildren().add(rt);
         }
-        //System.out.println(turtleStats());
     }
 
+    /**
+     * Once the turtle's position is updated, the animation is played in order to see the turtle move.
+     */
     public void playAnimation(){
         st.play();
         st = new SequentialTransition();
     }
 
+    /**
+     * This method is called when the reset button is clicked in the UserInterface. It resets the turtle's position on the screen.
+     */
     public void resetTurtle(){
         myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
         myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
@@ -179,6 +209,11 @@ public class TurtleView{
         currentX = TURTLE_SCREEN_WIDTH/2;
     }
 
+    /**
+     * This method creates an object property which is then binded with the turtle's information and displayed on the screen.
+     * In order to do this, all the necessary info is added to an observable list.
+     * @return SimpleObjectProperty of an observable list of strings.
+     */
     public SimpleObjectProperty<ObservableList<String>> turtleStats(){
         ObservableList<String> observableList = FXCollections.observableArrayList();
         observableList.addAll(turtleName,
@@ -193,43 +228,86 @@ public class TurtleView{
         return myTurtle;
     }
 
+    /**
+     * Called by the visualizer to update the pen color when either the colorpicker changes its color or the user writes
+     * a command which changes the color.
+     * @param color
+     */
     public void updatePen(Color color){
         myPenColor = color;
     }
 
+    /**
+     * Called by the visualizer to update the pen status when it is changed dynamically in the pen properties window.
+     * @param status - boolean passed in
+     */
     public void changePenStatus(Boolean status){penStatus = status;}
 
-    public boolean getPenStatus(){return penStatus;}
-
+    /**
+     * Called by the visualizer to update the pen width when it is changed dynamically in the pen properties window.
+     * @param penWidth
+     */
     public void changePenWidth(double penWidth) {pathStrokeWidth = penWidth;}
 
+    /**
+     * Called by controller and then visualizer which reads in a command that determines if the turtle is visible or not.
+     * The controller then returns a double which is passed to this method.
+     * @param value - double value determining if the turtle is visible or not
+     */
     public void updateTurtleView(double value){
         myImage.setVisible(value != 0.0);
     }
 
+    /**
+     * Called by the controller and then the visualizer which reads in a double value from the user commands and then sets the
+     * pen width.
+     * @param value
+     */
     public void setPenSize(double value){
         pathStrokeWidth = value;
     }
 
+    /**
+     * Works in conjunction with the shape palette in which the user specifies the value of the shape they want and then
+     * the image is passed into this method and set to be the turtle.
+     * @param turtle
+     */
     public void setShape(ImageView turtle){
-//        turtle.setTranslateX(currentX - turtle.getBoundsInLocal().getWidth() / 2);
-//        turtle.setTranslateY(currentY - turtle.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().remove(myImage);
         myImage = turtle;
         myTurtles.getChildren().add(myImage);
         set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
     }
 
+    /**
+     * Another pen status update method, however, this one is defined by the user in the command box. The model then returns
+     * a value which distinguishes the pen to either be up or down.
+     * @param value
+     */
     public void updatePenStatus(double value){
         penStatus = (value != 0.0);
     }
 
+    /**
+     *
+     * @return Color - the current pen color
+     */
     public Color getColor(){return myPenColor;}
 
+    /**
+     * Sets the opacity of the turtle. This is called in order to display some turtles to be active while others to be inactive.
+     * @param newValue - the new turtle opacity
+     */
     public void setOpacity(double newValue){
         myImage.setOpacity(newValue);
     }
 
+    /**
+     * Refactored code in order to set the turtles position when a new turtle image is used
+     * @param newX - new x position
+     * @param newY - new y position
+     * @param newHeading - new orientation
+     */
     public void set(double newX, double newY, double newHeading){
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
@@ -244,11 +322,19 @@ public class TurtleView{
         myImage.setRotate(newHeading);
     }
 
+    /**
+     *
+     * @param size
+     */
     public void setCommandSize(int size){
         if(size == 0){return;}
         animationDuration = TOTAL_DURATION /size;
     }
 
+    /**
+     * Retrieves all the turtles data and uses it for the XML file.
+     * @return
+     */
     public String[] getData(){
         double coordinateX = currentX - TURTLE_SCREEN_WIDTH/2;
         double coordinateY = TURTLE_SCREEN_HEIGHT/2 - currentY;

@@ -21,9 +21,9 @@ public class ShapePalette {
     public static final String TITLE = "Shape Palette";
     public static final Paint BACKGROUND = Color.AZURE;
     public static final double[] SHAPE_INDICES = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0,
-                                                    15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0};
+                                                    15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0};
     public static final String[] SHAPE_NAMES = {"turtle1.png", "turtle2.png", "turtle3.png", "turtle4.png", "turtle5.png",
-            "turtle6.png", "turtle7.png", "heart.png", "smile.png", "star.png", "basketball.png", "Coach_k.png", "Alex_OConnell.png", "Cassius_Stanley.png",
+            "turtle6.png", "turtle7.png", "heart.png", "smile.png", "star.png", "rcd_old.png", "basketball.png", "Coach_k.png", "Alex_OConnell.png", "Cassius_Stanley.png",
             "Goldwire_Jordan.png", "Jack_White.png", "Javon_DeLaurier.png", "Joey_Baker.png", "Justin_Robinson.png", "Keenan_Worthington.png",
             "Matt_hurt.png", "Michael_Savarino.png", "Mike_Buckmire.png", "Tre_Jones.png", "Vernon_Carey.png", "Wendell_Moore.png"};
     public static final int SIZE_WIDTH = 150;
