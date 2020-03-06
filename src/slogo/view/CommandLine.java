@@ -20,6 +20,9 @@ import javafx.scene.layout.VBox;
 import slogo.controller.Controller;
 import javafx.scene.paint.Color;
 import slogo.exceptions.InvalidCommandException;
+import slogo.exceptions.InvalidConstantException;
+import slogo.exceptions.InvalidPropertyException;
+import slogo.exceptions.InvalidVariableException;
 
 
 public class CommandLine {
@@ -92,17 +95,26 @@ public class CommandLine {
         myController.sendCommands(textBox.getText());
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
-        recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
-        System.out.println(recentCommand.getTextFill());
-        recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
-        historyBox.getChildren().add(recentCommand);
-        history.add(new Label(textBox.getText()));
-        textBox.clear();
+        finishSubmitCommand(recentCommand);
+        return;
+      } catch (InvalidConstantException | InvalidVariableException | InvalidPropertyException e){
+        Label recentCommand = new Label(e.getMessage());
+        finishSubmitCommand(recentCommand);
         return;
       }
       addHistory(textBox.getText());
     }
   }
+
+  public void finishSubmitCommand(Label recentCommand){
+    recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
+    System.out.println(recentCommand.getTextFill());
+    recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
+    historyBox.getChildren().add(recentCommand);
+    history.add(new Label(textBox.getText()));
+    textBox.clear();
+  }
+
 
   public EventHandler<? super MouseEvent> setOnClick(String fill){
     return e->textBox.setText(fill);

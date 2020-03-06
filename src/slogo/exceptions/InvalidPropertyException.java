@@ -1,7 +1,7 @@
 package slogo.exceptions;
 
 
-public class InvalidVariableException extends RuntimeException {
+public class InvalidPropertyException extends RuntimeException {
     private String message;
 
     /**
@@ -9,7 +9,7 @@ public class InvalidVariableException extends RuntimeException {
      * @param cause cause of error
      * @param text text to be displayed
      */
-    public InvalidVariableException(Throwable cause, String text){
+    public InvalidPropertyException(Throwable cause, String text){
         super(cause);
         message = text;
     }

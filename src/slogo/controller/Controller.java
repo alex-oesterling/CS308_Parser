@@ -6,9 +6,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
-import slogo.exceptions.InvalidCommandException;
-import slogo.exceptions.InvalidTurtleException;
-import slogo.exceptions.InvalidVariableException;
+
+import slogo.exceptions.*;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
@@ -17,6 +16,7 @@ import slogo.fun.RomanNumerals;
 
 public class Controller {
     private static final String LANGUAGES_PACKAGE = "resources.languages.";
+    private static final String ERROR_PACKAGE = "resources.information.ErrorText";
     private static final String INFORMATION_PACKAGE = "resources.information.";
     private static final String COMMAND_PACKAGE = "slogo.model.command.";
     private static final String COMMAND = "Command";
@@ -50,6 +50,7 @@ public class Controller {
     private double IdOfTurtle;
     private Parser commandParser, parametersParser, syntaxParser, listParamsParser, doubleParamsParser;
     private List<Command> currentList;
+    private ResourceBundle errorResources;
 
     /**
      * The constructor for controller class, initializes the view, list of
@@ -59,6 +60,7 @@ public class Controller {
      * @param language the specific language being used (aka english, chinese, etc)
      */
     public Controller(ViewExternal visualizer, String language) {
+        errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
         myView = visualizer;
         mySymbols = new ArrayList<>();
         makeParsers(language);
@@ -249,14 +251,12 @@ public class Controller {
 
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
         //List<Command> commandList = new ArrayList<>();
-       currentList = new ArrayList<>();
+        currentList = new ArrayList<>();
         ListIterator<String> iterator = lines.listIterator();
         String isFirstConstant = lines.get(ZERO);
 
         if (syntax.getSymbol(isFirstConstant).equals(CONSTANT)){
-            System.out.println("Sorry but you can't start your command with a constant");
-            throw new InvalidCommandException(new Throwable(), syntax.getSymbol(isFirstConstant), isFirstConstant);
-            //FIXME Need to add an exception (better one) here
+            throw new InvalidConstantException(new Throwable(), errorResources.getString("StartWithConstant"));
         }
         makeHolderStacks();
         while(iterator.hasNext() && !IS_VARIABLE) {
@@ -275,9 +275,7 @@ public class Controller {
                         doConstantVariable(line, currentList);
                     }
                     else{
-                        System.out.println("This variable does not exist yet");
-                        throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-                        //FIXME Need to add an exception (better one) here
+                        throw new InvalidVariableException(new Throwable(), errorResources.getString("FakeVariable"));
                     }
                 } else if (commandSyntax.equals("ListStart")){
                     doListStartWork();
@@ -338,14 +336,18 @@ public class Controller {
                 String commandSyntax = String.join(" ", copyLines.toArray(new String[0]));
                 myView.addCommand(variable, commandSyntax);
             }
-            else { throw new InvalidVariableException("Variable already exists as a constant variable", new Throwable()); }
+            else {
+                throw new InvalidVariableException(new Throwable(), errorResources.getString("AlreadyConstant"));
+            }
         }
         else if (copyLines.size() == 1 && type.equals("Constant")){
             if (!userCreatedCommandVariables.containsKey(variable)){
                 userCreatedConstantVariables.put(variable, firstCommand);
                 myView.addVariable(variable, firstCommand);
             }
-            else { throw new InvalidVariableException("Variable already exists as a command variable", new Throwable()); }
+            else {
+                throw new InvalidVariableException(new Throwable(), errorResources.getString("AlreadyCommand"));
+            }
         }
     }
 
@@ -385,14 +387,14 @@ public class Controller {
 
         String listParamString = listParamsParser.getSymbol(commandParams);
         if(listParamString.equals(NO_MATCH)){
-            //todo throw new Exception("you didn't edit the properties files properly");
+            throw new InvalidPropertyException(new Throwable(), errorResources.getString("InvalidPropertiesFile"));
         } else {
             listParametersStack.push(Double.parseDouble(listParamString));
         }
 
         String turtleAndDoubleParamsString = doubleParamsParser.getSymbol(commandParams);
         if(turtleAndDoubleParamsString.equals(NO_MATCH)){
-            //todo throw new Exception("you didn't edit the properties files properly");
+            throw new InvalidPropertyException(new Throwable(), errorResources.getString("InvalidPropertiesFile"));
         } else {
             turtleAndDoubleParametersStack.push(Double.parseDouble(turtleAndDoubleParamsString)); //add that value to the params stack
         }

@@ -1,15 +1,15 @@
 package slogo.exceptions;
 
 
-public class InvalidVariableException extends RuntimeException {
+public class InvalidConstantException extends RuntimeException {
     private String message;
 
     /**
-     * Thrown when there is an error involving variables
+     * Thrown when there is an error involving constants
      * @param cause cause of error
      * @param text text to be displayed
      */
-    public InvalidVariableException(Throwable cause, String text){
+    public InvalidConstantException(Throwable cause, String text){
         super(cause);
         message = text;
     }
