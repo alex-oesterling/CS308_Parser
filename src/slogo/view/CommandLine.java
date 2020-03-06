@@ -17,7 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import slogo.exceptions.InvalidCommandException;
+import slogo.exceptions.*;
 
 /**
  * This class creates a commandline for the user to type in commands along with the corresponding buttons. Additionally,
@@ -106,15 +106,25 @@ public class CommandLine {
         myVisualizer.sendCommands(textBox.getText());
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
-        recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
-        recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
-        historyBox.getChildren().add(recentCommand);
-        history.add(new Label(textBox.getText()));
-        textBox.clear();
+        finishSubmitCommand(recentCommand);
+        return;
+      } catch (InvalidConstantException | InvalidVariableException | InvalidPropertyException | IllegalException | InstantException |
+              InvocationException | NoClassException | NoMethodException e){
+        Label recentCommand = new Label(e.getMessage());
+        finishSubmitCommand(recentCommand);
         return;
       }
       addHistory(textBox.getText());
     }
+  }
+
+  public void finishSubmitCommand(Label recentCommand){
+    recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
+    System.out.println(recentCommand.getTextFill());
+    recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
+    historyBox.getChildren().add(recentCommand);
+    history.add(new Label(textBox.getText()));
+    textBox.clear();
   }
 
   /**
