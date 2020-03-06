@@ -9,6 +9,10 @@ public class SlogoApp {
    */
   public static final String TITLE = "i like turtles <3";
 
+  /**
+   * Creates the visualizer and essentially begins the entire program.
+   * @param stage
+   */
   public SlogoApp(Stage stage){
     Visualizer myVisualizer = new Visualizer(stage);
     myVisualizer.addTurtle();
