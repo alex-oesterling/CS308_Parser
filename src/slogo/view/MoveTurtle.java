@@ -10,6 +10,11 @@ import javafx.stage.Stage;
 import slogo.controller.Controller;
 import java.util.ResourceBundle;
 
+/**
+ * This class creates a new window with a list of buttons in which can move the turtle forward, backward, rotate left,
+ * and rotate right. By clicking each button, the turtle moves by 1, in this way if you keep clicking the button, the turtle
+ * will continue to move 1.
+ */
 public class MoveTurtle {
 
     public static final String TITLE = "Move Turtle";
@@ -24,6 +29,10 @@ public class MoveTurtle {
     private Controller myController;
     private Styler styler;
 
+    /**
+     * This constructor takes in the controller as a means of updating the turtle's position every time a button is clicked.
+     * @param controller
+     */
     public MoveTurtle(Controller controller){
         this.myController = controller;
         styler = new Styler();

@@ -12,6 +12,10 @@ import javafx.stage.Stage;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * This class creates a palette of shapes and corresponding doubles as indices. In this way, the user is able to use the
+ * command box to change the the shape of the turtle by using the doubles.
+ */
 public class ShapePalette {
 
     public static final String TITLE = "Shape Palette";
@@ -32,6 +36,10 @@ public class ShapePalette {
     private VBox vbox;
     private Map<Double, String> map;
 
+    /**
+     * Here, a new stage is set. The ShapePalette class creates a new window and displays the palette using a map of doubles
+     * mapped to strings which then correspond to images in the resource file.
+     */
     public ShapePalette(){
         Stage stage = new Stage();
         stage.setScene(setScene());
@@ -71,6 +79,11 @@ public class ShapePalette {
         return turtleImage;
     }
 
+    /**
+     * In order to change the turtle image, this class is called to receive the necessary image and update it in TurtleView.
+     * @param value - the double that the user types in that corresponds to the desired image.
+     * @return - creates a new instance of the image which is then returned.
+     */
     public ImageView getShapeMapValue(double value){
         return addTurtle(map.get(value));
     }
