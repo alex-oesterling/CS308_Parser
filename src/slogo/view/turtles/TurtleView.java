@@ -459,6 +459,6 @@ public class TurtleView{
     }
 
     public void rewindCoords(){
-        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
+        set(prevX, prevY, prevHeading);
     }
 }

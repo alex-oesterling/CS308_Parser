@@ -58,9 +58,10 @@ public class TurtleAnimator {
     if(transitionQueue.isEmpty()){
       myTurtle.updateHistory();
     }
-    Double[] newCoords = convertCoordinates(newX, newY, orientation);
+
+    double[] newCoords = convertCoordinates(newX, newY, orientation);
+    double[] oldCoords = convertCoordinates(myTurtle.getData()[0], myTurtle.getData()[1], myTurtle.getData()[2]);
     myTurtle.updateCurrent(newX, newY, orientation);
-    Double[] oldCoords = convertCoordinates(myTurtle.getData()[0], myTurtle.getData()[1], myTurtle.getData()[2]);
 
     if(newCoords[0] != oldCoords[0] || newCoords[1] != oldCoords[1]) {
       Path path = new Path();
@@ -78,17 +79,19 @@ public class TurtleAnimator {
       transitionQueue.add(pt);
       pathHistory.add(path);
     }
+
     if(newCoords[2] != oldCoords[2]) {
       RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
           myImage);
-      rt.setToAngle(orientation);
+      rt.setFromAngle(oldCoords[2]);
+      rt.setToAngle(newCoords[2]);
       transitionQueue.add(rt);
       pathHistory.add(new Path());
     }
   }
 
-  private Double[] convertCoordinates(double x, double y, double heading){
-    return new Double[]{x+TURTLE_SCREEN_WIDTH/2, y*-1+TURTLE_SCREEN_HEIGHT/2, heading};
+  private double[] convertCoordinates(double x, double y, double heading){
+    return new double[]{x+TURTLE_SCREEN_WIDTH/2, (y*-1)+TURTLE_SCREEN_HEIGHT/2, heading};
   }
 
   /**
