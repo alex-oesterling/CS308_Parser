@@ -50,13 +50,6 @@ public class CommandCreator {
     makeStacks();
   }
 
-//  /**
-//   * Resets the turtle and clears all of the stacks
-//   */
-//  public void resetAll(){
-//    makeNewStacks();
-//  }
-
   /**
    * Allows the user to pick a turtle to do work on
    * @param t turtle to become the current turtle
@@ -355,6 +348,4 @@ public class CommandCreator {
     }
     return extendedList;
   }
-
-
 }
