@@ -1,7 +1,5 @@
 package slogo.view;
 
-import javafx.scene.paint.Color;
-
 public class ViewExternal implements ViewExternalAPI {
   private Visualizer myVisualizer;
 
@@ -12,11 +10,6 @@ public class ViewExternal implements ViewExternalAPI {
   @Override
   public void update(double newX, double newY, double orientation){
     myVisualizer.getCurrentTurtle().update(newX, newY, orientation);
-  }
-
-  @Override
-  public void updatePenColor(Color color) {
-    myVisualizer.getCurrentTurtle().updatePen(color);
   }
 
   @Override
@@ -37,11 +30,6 @@ public class ViewExternal implements ViewExternalAPI {
   @Override
   public void updateShape(double value){
     myVisualizer.setShape(value);
-  }
-
-  @Override
-  public void updateSceneColor() {
-
   }
 
   @Override

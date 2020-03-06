@@ -19,7 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import slogo.controller.Controller;
 import javafx.scene.paint.Color;
-import slogo.exceptions.InvalidCommandException;
+import slogo.exceptions.*;
 
 
 public class CommandLine {
@@ -92,17 +92,27 @@ public class CommandLine {
         myController.sendCommands(textBox.getText());
       } catch (InvalidCommandException e){
         Label recentCommand = new Label("Invalid " + e.getType() + ": " + e.getSyntax() + "\n" + textBox.getText());
-        recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
-        System.out.println(recentCommand.getTextFill());
-        recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
-        historyBox.getChildren().add(recentCommand);
-        history.add(new Label(textBox.getText()));
-        textBox.clear();
+        finishSubmitCommand(recentCommand);
+        return;
+      } catch (InvalidConstantException | InvalidVariableException | InvalidPropertyException | IllegalException | InstantException |
+              InvocationException | NoClassException | NoMethodException e){
+        Label recentCommand = new Label(e.getMessage());
+        finishSubmitCommand(recentCommand);
         return;
       }
       addHistory(textBox.getText());
     }
   }
+
+  public void finishSubmitCommand(Label recentCommand){
+    recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
+    System.out.println(recentCommand.getTextFill());
+    recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
+    historyBox.getChildren().add(recentCommand);
+    history.add(new Label(textBox.getText()));
+    textBox.clear();
+  }
+
 
   public EventHandler<? super MouseEvent> setOnClick(String fill){
     return e->textBox.setText(fill);
@@ -133,7 +143,7 @@ public class CommandLine {
   }
 
   public List<String> getHistory(){
-    List<String> cmdHistory = new ArrayList<String>();
+    List<String> cmdHistory = new ArrayList<>();
     for(Label l : history){
       cmdHistory.add(l.getText());
     }

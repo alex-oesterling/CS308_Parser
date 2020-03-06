@@ -2,6 +2,8 @@ package slogo.model.command;
 
 import slogo.model.Turtle;
 
+import java.util.List;
+
 public class SetHeading extends Command {
 
     private Turtle t;
@@ -10,13 +12,14 @@ public class SetHeading extends Command {
     /**
      * Set Heading constructor, takes in the value and turns the turtle to that
      * specific value
-     * @param body the turtle being used and what will turn to value
-     * @param value the value/angle that the value will turn to
+     * @param turtleList the list of turtles being brought in to use this command (if needed)
+     * @param doubleList the list of doubles to be used for this command (if needed)
+     * @param commandList the list of commands being used for this command (if needed)
      */
-    public SetHeading(Turtle body, Double value){
+    public SetHeading(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
         super();
-        t = body;
-        heading = value;
+        t = turtleList.get(FIRST_INDEX);
+        heading = doubleList.get(FIRST_INDEX);
     }
 
     /**

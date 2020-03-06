@@ -8,12 +8,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
-
 import java.util.ResourceBundle;
 
 public class MoveTurtle {
 
-    public final String TITLE = "Move Turtle";
+    public static final String TITLE = "Move Turtle";
     public static final Paint BACKGROUND = Color.web("#808080");
     private static final String RESOURCES = "resources";
     public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
@@ -24,9 +23,6 @@ public class MoveTurtle {
 
     private Controller myController;
     private Styler styler;
-    private ResourceBundle myResources;
-    private Group root;
-    private Scene myScene;
 
     public MoveTurtle(Controller controller){
         this.myController = controller;
@@ -38,9 +34,9 @@ public class MoveTurtle {
     }
 
     private Scene setScene(){
-        myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
-        root = new Group();
-        myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
+        ResourceBundle myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + "English");
+        Group root = new Group();
+        Scene myScene = new Scene(root, SIZE_WIDTH, SIZE_HEIGHT, BACKGROUND);
         myScene.getStylesheets()
                 .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
                         .toExternalForm());
