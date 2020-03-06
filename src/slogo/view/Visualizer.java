@@ -231,9 +231,6 @@ public class Visualizer{
     return e->penProperties.showProperties();
   }
 
-  public EventHandler createMoveWindow(){
-    return e-> new MoveTurtle(this, myResources);
-  }
 
   public void setBackgroundColorFromPalette(double value){
       setBackgroundColor(colorPalette.getColorMapValue(value));

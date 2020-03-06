@@ -42,7 +42,6 @@ public class TurtleView{
     public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
-    public static final int TOTAL_DURATION = 5000;
 
     private Group myPaths;
     private Group myTurtles;
@@ -57,6 +56,7 @@ public class TurtleView{
     private String turtleName;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
     private int animationDuration;
+    private int totalDuration;
     private Queue<Transition> transitionQueue;
     private boolean stopped;
 
@@ -79,7 +79,8 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
-        animationDuration = TOTAL_DURATION;
+        totalDuration = 500
+        animationDuration = totalDuration;
         transitionQueue = new LinkedList<>();
         stopped = true;
     }
@@ -390,5 +391,9 @@ public class TurtleView{
             });
             st.play();
         }
+    }
+
+    public void setSpeed(int value){
+        totalDuration = value;
     }
 }

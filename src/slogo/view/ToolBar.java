@@ -70,6 +70,13 @@ public class ToolBar {
     return tools;
   }
 
+  private Node createSlider(){
+    Slider slider = new Slider();
+    slider.setMin(0);
+    slider.setMax(2000);
+    slider.valueProperty().addListener((o, old, neww) -> myVisualizer.getCurrentTurtle().setSpeed(neww.intValue()));
+  }
+
   private void pickAndSaveFile() {
     XMLWriter writer = new XMLWriter(myVisualizer);
     String filepath = saveFile();

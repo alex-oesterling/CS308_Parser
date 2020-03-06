@@ -18,4 +18,7 @@
   -fx-background-color: #6699ff;
 }
 
+.menu-bar {
+  -fx-min-height: 50;
+}
 
