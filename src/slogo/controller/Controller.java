@@ -462,6 +462,7 @@ public class Controller {
         for(Command c : l){
             extendedList.addAll(c.getCommandList());
         }
+        myView.setCommandSize(extendedList.size());
         return extendedList;
     }
 
