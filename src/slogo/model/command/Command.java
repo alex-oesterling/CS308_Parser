@@ -9,6 +9,8 @@ abstract public class Command {
 
   protected static final int FIRST_INDEX = 0;
   protected static final int SECOND_INDEX = 1;
+  protected static final int THIRD_INDEX = 2;
+  protected static final int FOURTH_INDEX = 3;
   private static final double DEFAULT_COMMAND_RESULT = 0;
   private double result;
 

@@ -1,14 +1,14 @@
 package slogo.exceptions;
 
 
-public class InvalidVariableException extends SuperException {
+public class NoClassException extends SuperException {
 
     /**
      * Thrown when there is an error involving variables
      * @param cause cause of error
      * @param text text to be displayed
      */
-    public InvalidVariableException(Throwable cause, String text){
+    public NoClassException(Throwable cause, String text){
         super(cause, text);
     }
 }
