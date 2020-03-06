@@ -18,6 +18,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import slogo.exceptions.InvalidTurtleException;
+import slogo.view.graphics.ColorPalette;
+import slogo.view.graphics.CommandLine;
+import slogo.view.graphics.PenProperties;
+import slogo.view.graphics.ShapePalette;
+import slogo.view.graphics.ToolBar;
+import slogo.view.graphics.UserDefined;
+import slogo.view.graphics.UserInterface;
+import slogo.view.turtles.TurtleView;
 
 /**
  * The main class of the view. This class is called as soon as the program is run and effectively calls all the other classes
@@ -51,7 +59,7 @@ public class Visualizer{
   private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
-  private ToolBar myToolBar;
+  private slogo.view.graphics.ToolBar myToolBar;
   private Stage myStage;
   private UserDefined userDefined;
   private UserInterface userInterface;
@@ -72,7 +80,7 @@ public class Visualizer{
     viewExternal = new ViewExternal(this);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
     commandLine = new CommandLine(this, myResources);
-    myToolBar = new ToolBar(stage, this, myResources);
+    myToolBar = new slogo.view.graphics.ToolBar(stage, this, myResources);
     myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     userInterface = new UserInterface(this, myResources);
     colorPalette = new ColorPalette(createColorMap());

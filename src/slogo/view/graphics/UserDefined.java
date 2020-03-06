@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import java.util.ResourceBundle;
 import javafx.scene.Group;
@@ -10,6 +10,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import slogo.view.Styler;
 
 /**
  * This class creates many components of the visualizer. These components include all of the turtleview, the command history,

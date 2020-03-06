@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -10,6 +10,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
+import slogo.view.graphics.HelpWindow;
+import slogo.view.graphics.MoveTurtle;
 
 /**
  * This class creates all of the user defined visuals which are then added to the visualizer. This includes all the user interface

@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import slogo.exceptions.*;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
 
 /**
  * This class creates a commandline for the user to type in commands along with the corresponding buttons. Additionally,

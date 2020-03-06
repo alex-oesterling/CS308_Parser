@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.turtles;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,8 +47,8 @@ public class TurtleView{
     private static final String ERROR_DIALOG = "Please Choose Another File";
 
     private Group myPaths;
-    private Queue<Path> pathHistory;
-    private List<Path> backupPathHistory;
+//    private Queue<Path> pathHistory;
+//    private List<Path> backupPathHistory;
     private Group myTurtles;
     private boolean penStatus;
     private ImageView myImage;
@@ -63,11 +63,12 @@ public class TurtleView{
     private double pathStrokeWidth;
     private String turtleName;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
-    private int animationDuration;
-    private int totalDuration;
-    private Queue<Transition> transitionQueue;
-    private Queue<Transition> backupTransitionQueue;
+//    private int animationDuration;
+//    private int totalDuration;
+//    private Queue<Transition> transitionQueue;
+//    private Queue<Transition> backupTransitionQueue;
     private boolean stopped;
+    private TurtleAnimator turtleAnimator;
 
     /**
      * Creates an instance of all the important variables that need to be referenced from other methods in this class.
@@ -78,8 +79,8 @@ public class TurtleView{
     public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
         myPaths = paths;
-        pathHistory = new LinkedList<>();
-        backupPathHistory = new LinkedList<>();
+//        pathHistory = new LinkedList<>();
+//        backupPathHistory = new LinkedList<>();
         turtleName = name;
         myTurtles = turtles;
         myImage = createTurtle();
@@ -93,11 +94,12 @@ public class TurtleView{
         prevX = currentX;
         prevY = currentY;
         prevHeading = heading;
-        totalDuration = 500;
-        animationDuration = totalDuration;
-        transitionQueue = new LinkedList<>();
-        backupTransitionQueue = new LinkedList<>();
+//        totalDuration = 500;
+//        animationDuration = totalDuration;
+//        transitionQueue = new LinkedList<>();
+//        backupTransitionQueue = new LinkedList<>();
         stopped = true;
+        turtleAnimator = new TurtleAnimator(this, myImage, myPaths);
     }
 
     private ImageView createTurtle(){
@@ -105,7 +107,7 @@ public class TurtleView{
         ImageView turtleImage = new ImageView(string);
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
-        st = new SequentialTransition();
+//        st = new SequentialTransition();
         turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
         turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().add(turtleImage);
@@ -172,88 +174,88 @@ public class TurtleView{
         return fileChooser.showOpenDialog(stage);
     }
 
-    /**
-     * Updates the turtle's position, is called in the controller and updates the position whenever a corresponding command
-     * is typed in.
-     * @param newX - new x position
-     * @param newY - new y position
-     * @param orientation - new orientation
-     */
-    public void update(double newX, double newY, double orientation){
-        if(transitionQueue.isEmpty()){
-            prevX = currentX;
-            prevY = currentY;
-            prevHeading = heading;
-        }
-        newY = -newY;
-        newX += TURTLE_SCREEN_WIDTH/2;
-        newY += TURTLE_SCREEN_HEIGHT/2;
-        double oldX = currentX;
-        double oldY = currentY;
-        double oldHeading = heading;
-        currentX = newX;
-        currentY = newY;
-        heading = orientation;
-        if(newX != oldX || newY != oldY) {
-            Path path = new Path();
-            if(penStatus){
-                path.setOpacity(PATH_OPACITY);
-                path.setStrokeWidth(pathStrokeWidth);
-            } else {
-                path.setOpacity(PATH_NO_OPACITY);
-            }
-            path.setStroke(myPenColor);
-            path.getElements().add(new MoveTo(oldX, oldY));
-            path.getElements().add(new LineTo(newX, newY));
-            PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
-            pt.setPath(path);
-            transitionQueue.add(pt);
-            pathHistory.add(path);
-        }
-        if(orientation != oldHeading) {
-            RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
-                myImage);
-            rt.setToAngle(orientation);
-            transitionQueue.add(rt);
-            pathHistory.add(new Path());
-        }
-    }
-
-    /**
-     * Once the turtle's position is updated, the animation is played in order to see the turtle move.
-     */
-    public void playAnimation(){
-        backupTransitionQueue = new LinkedList<>(transitionQueue);
-        backupPathHistory = new LinkedList<>(pathHistory);
-        animateRecurse();
-    }
-
-    private void animateRecurse() {
-        if(animationDuration == 0) {
-            while(!transitionQueue.isEmpty()){
-                st.getChildren().add(transitionQueue.remove());
-                myPaths.getChildren().add(pathHistory.remove());
-                st.play();
-            }
-        } if(!transitionQueue.isEmpty()) {
-            stopped = false;
-            st = new SequentialTransition(transitionQueue.remove());
-            st.setOnFinished(e -> {
-                animateRecurse();
-                myPaths.getChildren().add(pathHistory.remove());
-            });
-            st.play();
-        } else {
-            stopped = true;
-            st = new SequentialTransition();
-            set(myImage.getTranslateX()-TURTLE_SCREEN_WIDTH/2+myImage.getBoundsInLocal().getWidth()/2,
-                TURTLE_SCREEN_HEIGHT/2-myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
-                myImage.getRotate());
-//            if(!myPaths.getChildren().contains(pathHistory)) {
-//                myPaths.getChildren().add(pathHistory);
+//    /**
+//     * Updates the turtle's position, is called in the controller and updates the position whenever a corresponding command
+//     * is typed in.
+//     * @param newX - new x position
+//     * @param newY - new y position
+//     * @param orientation - new orientation
+//     */
+    public void update(double newX, double newY, double orientation){turtleAnimator.update(newX, newY, orientation);}
+//        if(transitionQueue.isEmpty()){
+//            prevX = currentX;
+//            prevY = currentY;
+//            prevHeading = heading;
+//        }
+//        newY = -newY;
+//        newX += TURTLE_SCREEN_WIDTH/2;
+//        newY += TURTLE_SCREEN_HEIGHT/2;
+//        double oldX = currentX;
+//        double oldY = currentY;
+//        double oldHeading = heading;
+//        currentX = newX;
+//        currentY = newY;
+//        heading = orientation;
+//        if(newX != oldX || newY != oldY) {
+//            Path path = new Path();
+//            if(penStatus){
+//                path.setOpacity(PATH_OPACITY);
+//                path.setStrokeWidth(pathStrokeWidth);
+//            } else {
+//                path.setOpacity(PATH_NO_OPACITY);
 //            }
-        }
-    }
+//            path.setStroke(myPenColor);
+//            path.getElements().add(new MoveTo(oldX, oldY));
+//            path.getElements().add(new LineTo(newX, newY));
+//            PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
+//            pt.setPath(path);
+//            transitionQueue.add(pt);
+//            pathHistory.add(path);
+//        }
+//        if(orientation != oldHeading) {
+//            RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
+//                myImage);
+//            rt.setToAngle(orientation);
+//            transitionQueue.add(rt);
+//            pathHistory.add(new Path());
+//        }
+//    }
+
+//    /**
+//     * Once the turtle's position is updated, the animation is played in order to see the turtle move.
+//     */
+    public void playAnimation(){turtleAnimator.playAnimation();}
+//        backupTransitionQueue = new LinkedList<>(transitionQueue);
+//        backupPathHistory = new LinkedList<>(pathHistory);
+//        animateRecurse();
+//    }
+//
+//    private void animateRecurse() {
+//        if(animationDuration == 0) {
+//            while(!transitionQueue.isEmpty()){
+//                st.getChildren().add(transitionQueue.remove());
+//                myPaths.getChildren().add(pathHistory.remove());
+//                st.play();
+//            }
+//        } if(!transitionQueue.isEmpty()) {
+//            stopped = false;
+//            st = new SequentialTransition(transitionQueue.remove());
+//            st.setOnFinished(e -> {
+//                animateRecurse();
+//                myPaths.getChildren().add(pathHistory.remove());
+//            });
+//            st.play();
+//        } else {
+//            stopped = true;
+//            st = new SequentialTransition();
+//            set(myImage.getTranslateX()-TURTLE_SCREEN_WIDTH/2+myImage.getBoundsInLocal().getWidth()/2,
+//                TURTLE_SCREEN_HEIGHT/2-myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
+//                myImage.getRotate());
+////            if(!myPaths.getChildren().contains(pathHistory)) {
+////                myPaths.getChildren().add(pathHistory);
+////            }
+//        }
+//    }
 
 //    /**
 //     * This method is called when the reset button is clicked in the UserInterface. It resets the turtle's position on the screen.
@@ -282,7 +284,6 @@ public class TurtleView{
                 Double.toString(pathStrokeWidth),
                 Boolean.toString(penStatus));
         myTurtle.setValue(observableList);
-
         return myTurtle;
     }
 
@@ -358,6 +359,10 @@ public class TurtleView{
      */
     public Color getColor(){return myPenColor;}
 
+    public double getLineWidth(){return pathStrokeWidth;}
+
+    public boolean penDown(){return penStatus;}
+
     /**
      * Sets the opacity of the turtle. This is called in order to display some turtles to be active while others to be inactive.
      * @param newValue - the new turtle opacity
@@ -373,86 +378,87 @@ public class TurtleView{
      * @param newHeading - new orientation
      */
     public void set(double newX, double newY, double newHeading){
-        newY = -newY;
-        newX += TURTLE_SCREEN_WIDTH/2;
-        newY += TURTLE_SCREEN_HEIGHT/2;
-
-        currentX = newX;
-        currentY = newY;
-        heading = newHeading;
+        updateCurrent(newX, newY, newHeading);
 
         myImage.setTranslateX(newX-myImage.getBoundsInLocal().getWidth()/2);
         myImage.setTranslateY(newY-myImage.getBoundsInLocal().getHeight()/2);
         myImage.setRotate(newHeading);
     }
 
-    /**
-     * Creates a designated size for the commands.
-     * @param size
-     */
-    public void setCommandSize(int size){
-        if(size == 0){
-            return;
-        }
-        animationDuration = totalDuration / size;
-    }
+    public void setCommandSize(int size){turtleAnimator.setCommandSize(size);}
 
     /**
      * Retrieves all the turtles data and uses it for the XML file.
      * @return
      */
-    public String[] getData(){
+    public Double[] getData(){
         double coordinateX = currentX - TURTLE_SCREEN_WIDTH/2;
         double coordinateY = TURTLE_SCREEN_HEIGHT/2 - currentY;
-        return new String[]{turtleName, "" + coordinateX, "" + coordinateY, "" + heading};
+        return new Double[]{coordinateX, coordinateY, heading};
     }
 
-    public void pause(){
-        st.pause();
+    public String getName(){
+        return turtleName;
     }
 
-    public void play(){
-        if(stopped){
-            animateRecurse();
-        } else {
-            st.play();
-        }
+    public void pause(){turtleAnimator.pause();}
+//        st.pause();
+//    }
+//
+    public void play(){turtleAnimator.play();}
+//        if(stopped){
+//            animateRecurse();
+//        } else {
+//            st.play();
+//        }
+//    }
+//
+    public void step(){turtleAnimator.step();}
+//        if(!stopped || !transitionQueue.isEmpty()) {
+//            if(stopped) {
+//                st = new SequentialTransition(transitionQueue.remove());
+//            }
+//            st.setOnFinished(e-> {
+//                myPaths.getChildren().add(pathHistory.remove());
+//                stopped = true;
+//            });
+//            st.play();
+//        }
+//    }
+//
+    public void resetAnimation(){turtleAnimator.resetAnimation();}
+//        rewindPosition();
+//        transitionQueue = new LinkedList<>(backupTransitionQueue);
+//        pathHistory = new LinkedList<>(backupPathHistory);
+//    }
+//
+    public void undo(){ turtleAnimator.undo(); }
+//
+//    private void rewindPosition() {
+//        stopped=true;
+//        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
+//        st = new SequentialTransition();
+//        myPaths.getChildren().removeAll(backupPathHistory);
+//    }
+
+    public void setSpeed(int value){turtleAnimator.setSpeed(value);}
+
+    public void updateHistory(){
+        prevX = currentX;
+        prevY = currentY;
+        prevHeading = heading;
     }
 
-    public void step(){
-        if(!stopped || !transitionQueue.isEmpty()) {
-            if(stopped) {
-                st = new SequentialTransition(transitionQueue.remove());
-            }
-            st.setOnFinished(e-> {
-                myPaths.getChildren().add(pathHistory.remove());
-                stopped = true;
-            });
-            st.play();
-        }
+    public void updateCurrent(double newX, double newY, double orientation){
+        newY = -newY;
+        newX += TURTLE_SCREEN_WIDTH/2;
+        newY += TURTLE_SCREEN_HEIGHT/2;
+        currentX = newX;
+        currentY = newY;
+        heading = orientation;
     }
 
-    public void resetAnimation(){
-        rewindPosition();
-        transitionQueue = new LinkedList<>(backupTransitionQueue);
-        pathHistory = new LinkedList<>(backupPathHistory);
-    }
-
-    public void undo(){
-        rewindPosition();
-        transitionQueue = new LinkedList<>();
-        myPaths.getChildren().removeAll(backupPathHistory);
-        pathHistory = new LinkedList<>();
-    }
-
-    private void rewindPosition() {
-        stopped=true;
+    public void rewindCoords(){
         set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
-        st = new SequentialTransition();
-        myPaths.getChildren().removeAll(backupPathHistory);
-    }
-
-    public void setSpeed(int value){
-        totalDuration = value;
     }
 }

@@ -13,5 +13,5 @@ public interface ViewExternalAPI {
   void addCommand(String commandSyntax, String syntax);
   void addVariable(String newVariable, String newValue);
   void setCommandSize(int size);
-//  void setColorPallete(double id, String color);
+  void setColorPallete(double id, double red, double green, double blue);
 }

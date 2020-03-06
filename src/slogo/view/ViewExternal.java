@@ -68,4 +68,9 @@ public class ViewExternal implements ViewExternalAPI {
     myVisualizer.getCurrentTurtle().setCommandSize(size);
   }
 
+  @Override
+  public void setColorPallete(double id, double red, double green, double blue) {
+
+  }
+
 }

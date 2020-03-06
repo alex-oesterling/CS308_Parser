@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -9,6 +9,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import java.util.ResourceBundle;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
 
 /**
  * This class creates a new window with a list of buttons in which can move the turtle forward, backward, rotate left,

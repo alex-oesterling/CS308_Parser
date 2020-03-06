@@ -1,10 +1,8 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -20,6 +18,9 @@ import javafx.stage.Stage;
 import slogo.SlogoApp;
 import slogo.config.XMLReader;
 import slogo.config.XMLWriter;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
+import slogo.view.graphics.CommandLine;
 
 /**
  * Creates a toolbar with several options at the top of the visualizer.

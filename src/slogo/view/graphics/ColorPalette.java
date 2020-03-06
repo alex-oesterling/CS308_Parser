@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

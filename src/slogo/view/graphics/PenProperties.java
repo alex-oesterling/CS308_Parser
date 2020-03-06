@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import java.util.ResourceBundle;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
 
 /**
  * This class creates a new window in which holds a list of ways to customize the turtle's pen. By opening this window, the
