@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 import slogo.exceptions.*;
-import slogo.model.CommandList;
+import slogo.model.CommandCreator;
 import slogo.model.Parser;
 import slogo.model.Turtle;
 import slogo.model.command.*;
@@ -33,7 +33,7 @@ public class Controller {
     private static boolean IS_VARIABLE = false;
 
     private List<Entry<String, Pattern>> mySymbols;
-    private CommandList commandCreator;
+    private CommandCreator commandCreator;
     private Stack<String> commandStack;
     private Stack<Double> argumentStack;
     private Stack<Integer> doubleParametersStack, listParametersStack;
@@ -61,7 +61,7 @@ public class Controller {
      * @param language the specific language being used (aka english, chinese, etc)
      */
     public Controller(ViewExternal visualizer, String language) {
-        commandCreator = new CommandList(this, language);
+        commandCreator = new CommandCreator(this, language);
         errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
         myView = visualizer;
         mySymbols = new ArrayList<>();

@@ -1,7 +1,9 @@
 package slogo.view;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
@@ -42,7 +44,6 @@ public class TurtleView{
     public static final double PATH_OPACITY = .75;
     public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
-    public static final int TOTAL_DURATION = 5000;
 
     private Group myPaths;
     private Group myTurtles;
@@ -53,11 +54,16 @@ public class TurtleView{
     private double currentY;
     private SequentialTransition st;
     private double heading;
+    private double prevX;
+    private double prevY;
+    private double prevHeading;
     private double pathStrokeWidth;
     private String turtleName;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
     private int animationDuration;
+    private int totalDuration;
     private Queue<Transition> transitionQueue;
+    private Queue<Transition> backupTransitionQueue;
     private boolean stopped;
 
     /**
@@ -79,7 +85,11 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
-        animationDuration = TOTAL_DURATION;
+        prevX = currentX;
+        prevY = currentY;
+        prevHeading = heading;
+        totalDuration = 500;
+        animationDuration = totalDuration;
         transitionQueue = new LinkedList<>();
         stopped = true;
     }
@@ -164,6 +174,11 @@ public class TurtleView{
      * @param orientation - new orientation
      */
     public void update(double newX, double newY, double orientation){
+        if(transitionQueue.isEmpty()){
+            prevX = currentX;
+            prevY = currentY;
+            prevHeading = heading;
+        }
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
         newY += TURTLE_SCREEN_HEIGHT/2;
@@ -201,40 +216,41 @@ public class TurtleView{
      * Once the turtle's position is updated, the animation is played in order to see the turtle move.
      */
     public void playAnimation(){
-        if(!transitionQueue.isEmpty()) {
+        backupTransitionQueue = new LinkedList<>(transitionQueue);
+        animateRecurse();
+    }
+
+    private void animateRecurse() {
+        if(animationDuration == 0) {
+            while(!transitionQueue.isEmpty()){
+                st.getChildren().add(transitionQueue.remove());
+                st.play();
+            }
+        } else if(!transitionQueue.isEmpty()) {
             stopped = false;
             st = new SequentialTransition(transitionQueue.remove());
-            st.setOnFinished(e -> playAnimation());
+            st.setOnFinished(e -> animateRecurse());
             st.play();
         } else {
             stopped = true;
             st = new SequentialTransition();
+            set(myImage.getTranslateX()-TURTLE_SCREEN_WIDTH/2+myImage.getBoundsInLocal().getWidth()/2,
+                TURTLE_SCREEN_HEIGHT/2-myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
+                myImage.getRotate());
         }
-
-
-//            st.getChildren().add(transitionQueue.remove());
-//            st.play();
-//            st.setOnFinished(e -> {
-//                if (!transitionQueue.isEmpty()) {
-//                    st.getChildren().add(transitionQueue.remove());
-//                } else {
-//                    st = new SequentialTransition();
-//                }
-//            });
-//        }
     }
 
-    /**
-     * This method is called when the reset button is clicked in the UserInterface. It resets the turtle's position on the screen.
-     */
-    public void resetTurtle(){
-        myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
-        myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
-        myImage.setRotate(0);
-        heading = 0;
-        currentY = TURTLE_SCREEN_HEIGHT/2;
-        currentX = TURTLE_SCREEN_WIDTH/2;
-    }
+//    /**
+//     * This method is called when the reset button is clicked in the UserInterface. It resets the turtle's position on the screen.
+//     */
+//    public void resetTurtle(){
+//        myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
+//        myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
+//        myImage.setRotate(0);
+//        heading = 0;
+//        currentY = TURTLE_SCREEN_HEIGHT/2;
+//        currentX = TURTLE_SCREEN_WIDTH/2;
+//    }
 
     /**
      * This method creates an object property which is then binded with the turtle's information and displayed on the screen.
@@ -274,7 +290,13 @@ public class TurtleView{
      * Called by the visualizer to update the pen width when it is changed dynamically in the pen properties window.
      * @param penWidth
      */
-    public void changePenWidth(double penWidth) {pathStrokeWidth = penWidth;}
+    public void changePenWidth(double penWidth) {
+        try {
+            pathStrokeWidth = penWidth;
+        } catch (NumberFormatException e){
+            return;
+        }
+    }
 
     /**
      * Called by controller and then visualizer which reads in a command that determines if the turtle is visible or not.
@@ -354,8 +376,10 @@ public class TurtleView{
      * @param size
      */
     public void setCommandSize(int size){
-        if(size == 0){return;}
-        animationDuration = TOTAL_DURATION /size;
+        if(size == 0){
+            return;
+        }
+        animationDuration = totalDuration / size;
     }
 
     /**
@@ -374,7 +398,7 @@ public class TurtleView{
 
     public void play(){
         if(stopped){
-            playAnimation();
+            animateRecurse();
         } else {
             st.play();
         }
@@ -390,5 +414,20 @@ public class TurtleView{
             });
             st.play();
         }
+    }
+
+    public void resetAnimation(){
+        stopped=true;
+        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
+        transitionQueue = new LinkedList<>(backupTransitionQueue);
+        st = new SequentialTransition();
+    }
+
+    public void setSpeed(int value){
+        totalDuration = value;
+    }
+
+    public int getSpeed(){
+        return totalDuration;
     }
 }

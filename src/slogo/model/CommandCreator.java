@@ -9,7 +9,7 @@ import slogo.controller.Controller;
 import slogo.exceptions.*;
 import slogo.model.command.*;
 
-public class CommandList {
+public class CommandCreator {
   private static final String LANGUAGES_PACKAGE = "resources.languages.";
   private static final String ERROR_PACKAGE = "resources.information.ErrorText";
   private static final String INFORMATION_PACKAGE = "resources.information.";
@@ -43,7 +43,7 @@ public class CommandList {
    * all of the stacks used, and the parsers for each different stack
    * @param language the specific language being used (aka english, chinese, etc)
    */
-  public CommandList(Controller controller, String language) {
+  public CommandCreator(Controller controller, String language) {
     control = controller;
     errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
     makeParsers(language);

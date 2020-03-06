@@ -57,8 +57,7 @@ public class UserInterface {
     ui.getChildren().addAll(styler.createButton("AddTurtle", e-> myVisualizer.addTurtle()),
         makeTurtleSelector(),
         styler.createButton("ChooseTurtle", e-> myVisualizer.getCurrentTurtle().chooseTurtle(myVisualizer.getCurrentTurtle().getTurtleImage(new Stage()))),
-        styler.createButton("ResetCommand", e-> myVisualizer.reset()),
-        styler.createButton("MoveTurtle", e-> myVisualizer.createMoveWindow()),
+        styler.createButton("MoveTurtle", e-> new MoveTurtle(myVisualizer, myResources)),
         addTurtleInfo());
     return ui;
   }
