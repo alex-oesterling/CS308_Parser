@@ -35,7 +35,8 @@ public class Controller {
 
     private List<Entry<String, Pattern>> mySymbols;
     private Stack<String> commandStack;
-    private Stack<Double> argumentStack, turtleAndDoubleParametersStack, listParametersStack;
+    private Stack<Double> argumentStack;
+    private Stack<Integer> doubleParametersStack, listParametersStack;
     private Stack<List<Command>> listStack;
     private Stack<Stack> commandStackHolder, argumentStackHolder, parametersStackHolder, listParametersStackHolder, listStackHolder;
     private Stack<List<Command>> currentListHolder = new Stack<>();
@@ -49,7 +50,7 @@ public class Controller {
     private ViewExternal myView;
     private double IdOfTurtle;
     private Parser commandParser, parametersParser, syntaxParser, listParamsParser, doubleParamsParser;
-    private List<Command> currentList;
+    private List<Command> currentList, extendedList;
 
     /**
      * The constructor for controller class, initializes the view, list of
@@ -67,8 +68,7 @@ public class Controller {
     }
 
     private void makeParsers(String language){
-        commandParser = new Parser(LANGUAGES_PACKAGE);
-        commandParser.addPatterns(language);
+        addLanguage(language);
 
         syntaxParser = new Parser(LANGUAGES_PACKAGE);
         syntaxParser.addPatterns("Syntax");
@@ -93,13 +93,13 @@ public class Controller {
 
     private void makeStacks() {
         makeNewStacks();
-        listParametersStack = new Stack<>();
+        listParametersStack = new Stack<>(); //todo figure out why we separated this one out
     }
 
     private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
         commandStack = new Stack<>();
         argumentStack = new Stack<>();
-        turtleAndDoubleParametersStack = new Stack<>();
+        doubleParametersStack = new Stack<>();
         listStack = new Stack<>();
     }
 
@@ -115,18 +115,20 @@ public class Controller {
     private void holdStacks(){
         commandStackHolder.push(commandStack);
         argumentStackHolder.push(argumentStack);
-        parametersStackHolder.push(turtleAndDoubleParametersStack);
+        parametersStackHolder.push(doubleParametersStack);
         listParametersStackHolder.push(listParametersStack);
         listStackHolder.push(listStack);
         makeNewStacks();
         listStack =  listStackHolder.pop();
+        currentListHolder.push(currentList);
     }
 
     private void stopHoldingStacks(){
         commandStack = commandStackHolder.pop();
         argumentStack = argumentStackHolder.pop();
-        turtleAndDoubleParametersStack = parametersStackHolder.pop();
+        doubleParametersStack = parametersStackHolder.pop();
         listParametersStack = listParametersStackHolder.pop();
+        currentList = currentListHolder.pop();
     }
 
     /**
@@ -144,20 +146,16 @@ public class Controller {
      * this newly created turtle; turtle with a default "name" that is its hashcode
      */
     public void addTurtle(){
-        IdOfTurtle ++;
-        Turtle t = new Turtle(IdOfTurtle);
-        if(nameCount.containsKey(t.getName())){
-            Integer generation = nameCount.get(t.getName());
-            nameCount.put(t.getName(), nameCount.get(t.getName())+1);
+        IdOfTurtle++;
+        turtle = new Turtle(IdOfTurtle);
+        if(nameCount.containsKey(turtle.getName())){
+            Integer generation = nameCount.get(turtle.getName());
+            nameCount.put(turtle.getName(), nameCount.get(turtle.getName())+1);
             RomanNumerals rn = new RomanNumerals();
-            t.setName(t.getName() + " " + rn.intToNumeral(generation));
+            turtle.setName(turtle.getName() + " " + rn.intToNumeral(generation));
         }
-        nameCount.putIfAbsent(t.getName(), SECOND_GEN);
-        if(nameToTurtle.containsKey(t.getName())){
-            throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
-        }
-        nameToTurtle.putIfAbsent(t.getName(), t);
-        turtle = t;
+        nameCount.putIfAbsent(turtle.getName(), SECOND_GEN);
+        nameToTurtle.putIfAbsent(turtle.getName(), turtle);
     }
 
     /**
@@ -168,7 +166,7 @@ public class Controller {
      * @param startingHeading where the turtle will be facing
      */
     public void addTurtle(String name, double startingX, double startingY, double startingHeading){
-        IdOfTurtle ++;
+        IdOfTurtle++;
         Turtle t = new Turtle(name, startingX, startingY, startingHeading, IdOfTurtle);
         if(nameToTurtle.containsKey(t.getName())){
             throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
@@ -237,8 +235,7 @@ public class Controller {
      * @param commands the commands the user typed in
      */
     public void sendCommands(String commands){
-        myCommands = commands;
-        parseText(syntaxParser, commandParser, parametersParser, asList(myCommands.split(WHITESPACE)));
+        parseText(syntaxParser, commandParser, parametersParser, asList(commands.split(WHITESPACE)));
     }
 
     private List<String> asList(String[] array){
@@ -248,8 +245,7 @@ public class Controller {
     }
 
     private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
-        //List<Command> commandList = new ArrayList<>();
-       currentList = new ArrayList<>();
+        currentList = new ArrayList<>();
         ListIterator<String> iterator = lines.listIterator();
         String isFirstConstant = lines.get(ZERO);
 
@@ -270,11 +266,9 @@ public class Controller {
                 } else if (commandSyntax.equals(VARIABLE)){
                     if(userCreatedCommandVariables.containsKey(line)){
                         doCommandVariable(line, syntax, lang, params, currentList);
-                    }
-                    else if (userCreatedConstantVariables.containsKey(line)){
+                    } else if (userCreatedConstantVariables.containsKey(line)){
                         doConstantVariable(line, currentList);
-                    }
-                    else{
+                    } else {
                         System.out.println("This variable does not exist yet");
                         throw new InvalidCommandException(new Throwable(), commandSyntax, line);
                         //FIXME Need to add an exception (better one) here
@@ -287,28 +281,23 @@ public class Controller {
             }
         }
         IS_VARIABLE = false;
-        while(commandStack.size()>0 ){
+        while(!commandStack.isEmpty()){
             tryToMakeCommands(currentList);
         }
-        currentList = fillCommands(currentList);
-        executeCommandList(currentList);
-        return currentList;
+        executeCommandList(createExtendedList(currentList));
+        return createExtendedList(currentList);
     }
 
     private void doListStartWork(){
-        List<Command> tempList = new ArrayList<>();
         holdStacks();
-
-        currentListHolder.push(currentList);
-        currentList = tempList;
+        currentList = new ArrayList<>();
     }
 
     private void doListEndWork(){
-        if(currentList.size() != 0) {
-            listStack.push(currentList); //FIXME this is the bad part ---> error lies here
+        if(!currentList.isEmpty()) {
+            listStack.push(currentList);
         }
         stopHoldingStacks();
-        currentList = currentListHolder.pop();
         tryToMakeCommands(currentList);
     }
 
@@ -337,77 +326,68 @@ public class Controller {
                 userCreatedCommandVariables.put(variable, copyLines);
                 String commandSyntax = String.join(" ", copyLines.toArray(new String[0]));
                 myView.addCommand(variable, commandSyntax);
-            }
-            else { throw new InvalidVariableException("Variable already exists as a constant variable", new Throwable()); }
-        }
-        else if (copyLines.size() == 1 && type.equals("Constant")){
+            } else { throw new InvalidVariableException("Variable already exists as a constant variable", new Throwable()); }
+        } else if (copyLines.size() == 1 && type.equals("Constant")){
             if (!userCreatedCommandVariables.containsKey(variable)){
                 userCreatedConstantVariables.put(variable, firstCommand);
                 myView.addVariable(variable, firstCommand);
-            }
-            else { throw new InvalidVariableException("Variable already exists as a command variable", new Throwable()); }
+            } else { throw new InvalidVariableException("Variable already exists as a command variable", new Throwable()); }
         }
     }
 
     private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
         commandStack.push(commandName); //add string to stack
-        String commandParams = params.getSymbol(commandName); //get Parameters string, such as "OneDouble" or "TurtleOneDouble"
-
-        pushParamsNeeded(commandParams); //convert that string to a double
-
+        pushParamsNeeded(params.getSymbol(commandName)); //get Parameters string, and convert that string to a double
         return tryToMakeCommands(commandList);
     }
 
     private void doCommandVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
         List<String> variableDoesWhat = userCreatedCommandVariables.get(line);
+
         for (String s : variableDoesWhat){
             String comSyntax = syntax.getSymbol(s);
-            if (comSyntax.equals(COMMAND)){ doCommandWork(params, lang, syntax, commandList, s, comSyntax, variableDoesWhat); }
-            else if (comSyntax.equals(CONSTANT)){ doConstantWork(s, commandList); }
+            if (comSyntax.equals(COMMAND)){
+                doCommandWork(params, lang, syntax, commandList, s, comSyntax, variableDoesWhat);
+            } else if (comSyntax.equals(CONSTANT)){
+                doConstantWork(s, commandList);
+            }
         }
     }
 
     private void doConstantVariable(String line, List commandList){
-        String constant = userCreatedConstantVariables.get(line);
-        doConstantWork(constant, commandList);
+        doConstantWork(userCreatedConstantVariables.get(line), commandList);
     }
 
-    private void doConstantWork(String line, List<Command> commandList){
-        Double argumentValue = Double.parseDouble(line);
-        argumentStack.push(argumentValue);
+    private void doConstantWork(String constant, List<Command> commandList){
+        argumentStack.push(Double.parseDouble(constant));
         tryToMakeCommands(commandList);
     }
 
-    private void pushParamsNeeded(String commandParams){ //TODO clean up
-        //System.out.println("l: "+listParamsParser.getSymbol(commandParams));
-        //System.out.println(commandParams);
-        //System.out.println("d: "+numberOfParamsParser.getSymbol(commandParams));
-
+    private void pushParamsNeeded(String commandParams){
         String listParamString = listParamsParser.getSymbol(commandParams);
         if(listParamString.equals(NO_MATCH)){
             //todo throw new Exception("you didn't edit the properties files properly");
         } else {
-            listParametersStack.push(Double.parseDouble(listParamString));
+            listParametersStack.push(Integer.parseInt(listParamString));
         }
 
-        String turtleAndDoubleParamsString = doubleParamsParser.getSymbol(commandParams);
-        if(turtleAndDoubleParamsString.equals(NO_MATCH)){
+        String doubleParamsString = doubleParamsParser.getSymbol(commandParams);
+        if(doubleParamsString.equals(NO_MATCH)){
             //todo throw new Exception("you didn't edit the properties files properly");
         } else {
-            turtleAndDoubleParametersStack.push(Double.parseDouble(turtleAndDoubleParamsString)); //add that value to the params stack
+            doubleParametersStack.push(Integer.parseInt(doubleParamsString)); //add that value to the params stack
         }
     }
 
     private List<Command> tryToMakeCommands(List<Command> commandList){
-        if(checkArgumentStack()&& checkListStack()){
+        if(checkArgumentStack() && checkListStack()){
             commandList.add(weHaveEnoughArgumentsToMakeACommand(commandList));
         }
         return commandList;
     }
 
     private boolean checkArgumentStack(){
-        return !turtleAndDoubleParametersStack.isEmpty() && argumentStack.size() >= turtleAndDoubleParametersStack
-            .peek();
+        return !doubleParametersStack.isEmpty() && argumentStack.size() >= doubleParametersStack.peek();
     }
 
     private boolean checkListStack(){
@@ -415,24 +395,20 @@ public class Controller {
     }
 
     private Command weHaveEnoughArgumentsToMakeACommand(List<Command> commands){
-        double numberOfParams = turtleAndDoubleParametersStack.pop(); //to be used in creating the command
+        Command newCommand = getCommand(commandStack.pop());
 
-        String name = commandStack.pop();
-        Command newCommand = getCommand(name);
-        if(commandStack.size()!=0){
+        if(!commandStack.isEmpty()){
             argumentStack.push(newCommand.getResult());
             tryToMakeCommands(commands); //slightly recursive :D
         }
+
         return newCommand;
     }
 
     private Command getCommand(String commandName){
-        String type = getCommandType(commandName);
         try{
-            Class commandClass = Class.forName(COMMAND_PACKAGE+commandName);
-            Constructor commandConstructor = getCommandConstructor(commandClass);
-            return makeCommand(type, commandConstructor);
-
+            Class commandClass = Class.forName(COMMAND_PACKAGE + commandName);
+            return makeCommand(commandConstructor(commandClass));
         } catch (ClassNotFoundException e){
             System.out.println("ClassNotFoundException");
             e.printStackTrace();
@@ -457,51 +433,45 @@ public class Controller {
         return null;// new Not(1.0); //FIXME !!!!
     }
 
-    private String getCommandType(String name){
+    private String commandParamsType(String name){
         //todo no match throw error
         return parametersParser.getSymbol(name);
     }
 
-    private Constructor getCommandConstructor(Class command) throws NoSuchMethodException {
+    private Constructor commandConstructor(Class command) throws NoSuchMethodException {
         return command.getConstructor(List.class, List.class, List.class);
     }
 
-    private Command makeCommand(String commandType, Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    private Command makeCommand(Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         List<Turtle> turtleListToGive = new ArrayList<>();
-
         turtleListToGive.add(turtle/*activeTurtles*/); //fixme
-        List<Double> doubleListToGive = getDoubleListToGive(commandType);
-        List<List<Command>> listStackListToGive = getListStackListToGive(commandType);
 
-        return (Command) constructor.newInstance(turtleListToGive,doubleListToGive,listStackListToGive);
+        return (Command) constructor.newInstance(turtleListToGive, doubleListToGive(), commandListToGive());
     }
 
-    private List<Double> getDoubleListToGive(String commandType){
-        //todo check for NO MATCH
+    private List<Double> doubleListToGive(){
         List<Double> doubles = new ArrayList<>();
-        Integer doubleParamCount = Integer.parseInt(doubleParamsParser.getSymbol(commandType));
-        for(int k=0; k<doubleParamCount; k++){
+        int numberOfDoublesNeeded = doubleParametersStack.pop();
+        for(int k=0; k < numberOfDoublesNeeded; k++){
             doubles.add(argumentStack.pop());
         }
         return doubles;
     }
 
-    private List<List<Command>> getListStackListToGive(String commandType){
-        //todo check for NO MATCH
+    private List<List<Command>> commandListToGive(){
         List<List<Command>> lists = new ArrayList<>();
-        Integer listParamCount = Integer.parseInt(listParamsParser.getSymbol(commandType));
-        for(int k=0; k<listParamCount; k++){
+        int numberOfListsNeeded = listParametersStack.pop();
+        for(int k=0; k < numberOfListsNeeded; k++){
             lists.add(listStack.pop());
         }
         return lists;
     }
 
-    private List<Command> fillCommands(List<Command> l){
-        List<Command> extendedList = new ArrayList<>();
+    private List<Command> createExtendedList(List<Command> l){
+        extendedList = new ArrayList<>();
         for(Command c : l){
             extendedList.addAll(c.getCommandList());
         }
-        myView.setCommandSize(extendedList.size());
         return extendedList;
     }
 
