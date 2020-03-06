@@ -77,7 +77,7 @@ public class CommandLine {
     VBox buttonBox = new VBox();
     Button run = myStyler.createButton("RunCommand", e->submitCommand());
     run.setMinWidth(BUTTON_WIDTH);
-    buttonBox.getChildren().add(run);
+    run.setMaxHeight(TEXTBOX_HEIGHT/3);
 
     Button clear = myStyler.createButton("ClearCommand", e->{
       textBox.clear();
@@ -86,8 +86,14 @@ public class CommandLine {
       historyBox.getChildren().clear();
     });
     clear.setMinWidth(BUTTON_WIDTH);
-    buttonBox.getChildren().add(clear);
+    clear.setMaxHeight(TEXTBOX_HEIGHT/3);
 
+
+    Button undo = myStyler.createButton("Undo", e-> myVisualizer.getCurrentTurtle().undo());
+    undo.setMaxHeight(TEXTBOX_HEIGHT/3);
+
+
+    buttonBox.getChildren().addAll(run,clear,undo);
     userControls.getChildren().add(buttonBox);
     commandLine.setVgrow(terminal, Priority.ALWAYS);
     commandLine.getChildren().add(terminal);

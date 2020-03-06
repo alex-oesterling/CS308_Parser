@@ -165,6 +165,7 @@ public class Visualizer{
         myController.updateCommandVariable(variableName, number.toString());
       } catch (NumberFormatException e){
         number = Double.parseDouble(value.getText());
+
       }
     }
   }
@@ -209,6 +210,7 @@ public class Visualizer{
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e){
       e.displayError("Please fix XML to contain unique turtles:");
+      System.out.println("YEET");
       return;
     }
     TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName());

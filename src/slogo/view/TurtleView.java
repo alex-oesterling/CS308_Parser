@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -46,6 +47,8 @@ public class TurtleView{
     private static final String ERROR_DIALOG = "Please Choose Another File";
 
     private Group myPaths;
+    private Queue<Path> pathHistory;
+    private List<Path> backupPathHistory;
     private Group myTurtles;
     private boolean penStatus;
     private ImageView myImage;
@@ -75,6 +78,8 @@ public class TurtleView{
     public TurtleView(Group turtles, Group paths, String name){
         penStatus = true;
         myPaths = paths;
+        pathHistory = new LinkedList<>();
+        backupPathHistory = new LinkedList<>();
         turtleName = name;
         myTurtles = turtles;
         myImage = createTurtle();
@@ -91,6 +96,7 @@ public class TurtleView{
         totalDuration = 500;
         animationDuration = totalDuration;
         transitionQueue = new LinkedList<>();
+        backupTransitionQueue = new LinkedList<>();
         stopped = true;
     }
 
@@ -202,13 +208,14 @@ public class TurtleView{
             PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
             pt.setPath(path);
             transitionQueue.add(pt);
-            myPaths.getChildren().add(path);
+            pathHistory.add(path);
         }
         if(orientation != oldHeading) {
             RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
                 myImage);
             rt.setToAngle(orientation);
             transitionQueue.add(rt);
+            pathHistory.add(new Path());
         }
     }
 
@@ -217,6 +224,7 @@ public class TurtleView{
      */
     public void playAnimation(){
         backupTransitionQueue = new LinkedList<>(transitionQueue);
+        backupPathHistory = new LinkedList<>(pathHistory);
         animateRecurse();
     }
 
@@ -224,12 +232,16 @@ public class TurtleView{
         if(animationDuration == 0) {
             while(!transitionQueue.isEmpty()){
                 st.getChildren().add(transitionQueue.remove());
+                myPaths.getChildren().add(pathHistory.remove());
                 st.play();
             }
-        } else if(!transitionQueue.isEmpty()) {
+        } if(!transitionQueue.isEmpty()) {
             stopped = false;
             st = new SequentialTransition(transitionQueue.remove());
-            st.setOnFinished(e -> animateRecurse());
+            st.setOnFinished(e -> {
+                animateRecurse();
+                myPaths.getChildren().add(pathHistory.remove());
+            });
             st.play();
         } else {
             stopped = true;
@@ -237,6 +249,9 @@ public class TurtleView{
             set(myImage.getTranslateX()-TURTLE_SCREEN_WIDTH/2+myImage.getBoundsInLocal().getWidth()/2,
                 TURTLE_SCREEN_HEIGHT/2-myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
                 myImage.getRotate());
+//            if(!myPaths.getChildren().contains(pathHistory)) {
+//                myPaths.getChildren().add(pathHistory);
+//            }
         }
     }
 
@@ -406,10 +421,11 @@ public class TurtleView{
 
     public void step(){
         if(!stopped || !transitionQueue.isEmpty()) {
-            if(stopped){
+            if(stopped) {
                 st = new SequentialTransition(transitionQueue.remove());
             }
-            st.setOnFinished(e -> {
+            st.setOnFinished(e-> {
+                myPaths.getChildren().add(pathHistory.remove());
                 stopped = true;
             });
             st.play();
@@ -417,17 +433,26 @@ public class TurtleView{
     }
 
     public void resetAnimation(){
+        rewindPosition();
+        transitionQueue = new LinkedList<>(backupTransitionQueue);
+        pathHistory = new LinkedList<>(backupPathHistory);
+    }
+
+    public void undo(){
+        rewindPosition();
+        transitionQueue = new LinkedList<>();
+        myPaths.getChildren().removeAll(backupPathHistory);
+        pathHistory = new LinkedList<>();
+    }
+
+    private void rewindPosition() {
         stopped=true;
         set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
-        transitionQueue = new LinkedList<>(backupTransitionQueue);
         st = new SequentialTransition();
+        myPaths.getChildren().removeAll(backupPathHistory);
     }
 
     public void setSpeed(int value){
         totalDuration = value;
-    }
-
-    public int getSpeed(){
-        return totalDuration;
     }
 }

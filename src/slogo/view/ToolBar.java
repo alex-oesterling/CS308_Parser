@@ -74,7 +74,7 @@ public class ToolBar {
     Slider slider = new Slider();
     slider.setMin(0);
     slider.setMax(2000);
-    slider.setValue(myVisualizer.getCurrentTurtle().getSpeed());
+    slider.setValue(500);
     slider.valueProperty().addListener((o, old, neww) -> myVisualizer.getCurrentTurtle().setSpeed(neww.intValue()));
     return slider;
   }
