@@ -257,6 +257,7 @@ public class Controller {
     myView.updateStatus();
   }
 
+
   private void makeMethod(Command c, String methodName){
     try {
       Method method = Controller.class.getDeclaredMethod(methodName);

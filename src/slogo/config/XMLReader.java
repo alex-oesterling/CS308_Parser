@@ -3,9 +3,9 @@ package slogo.config;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,6 +58,7 @@ public class XMLReader {
     readCommandHistory();
     readUserVariables();
     readUserCommands();
+    readColorPalette();
   }
 
   private String getElementValue(Element element, String node){
@@ -87,7 +88,7 @@ public class XMLReader {
     NodeList turtles = myDoc.getElementsByTagName("Turtles");
     Node turtleNode = turtles.item(0);
 
-    if(turtleNode.getNodeType() == Node.ELEMENT_NODE){
+    if(turtleNode != null && turtleNode.getNodeType() == Node.ELEMENT_NODE){
       Element turtleElement = (Element) turtleNode;
       addTurtles(turtleElement);
     }
@@ -112,7 +113,7 @@ public class XMLReader {
     NodeList commands = myDoc.getElementsByTagName("CommandHistory");
     Node commandNode = commands.item(0);
 
-    if(commandNode.getNodeType() == Node.ELEMENT_NODE){
+    if(commandNode != null && commandNode.getNodeType() == Node.ELEMENT_NODE){
       Element commandElement = (Element) commandNode;
       populateCommands(commandElement);
     }
@@ -154,7 +155,7 @@ public class XMLReader {
     NodeList userVars = myDoc.getElementsByTagName("UserVariables");
     Node varNode = userVars.item(0);
 
-    if(varNode.getNodeType() == Node.ELEMENT_NODE){
+    if(varNode != null && varNode.getNodeType() == Node.ELEMENT_NODE){
       Element varElement = (Element) varNode;
       populateUserVariables(varElement);
     }
@@ -177,7 +178,7 @@ public class XMLReader {
     NodeList userCmds = myDoc.getElementsByTagName("UserCommands");
     Node cmdNode = userCmds.item(0);
 
-    if(cmdNode.getNodeType() == Node.ELEMENT_NODE){
+    if(cmdNode != null && cmdNode.getNodeType() == Node.ELEMENT_NODE){
       Element cmdElement = (Element) cmdNode;
       populateUserCommands(cmdElement);
     }
@@ -192,6 +193,29 @@ public class XMLReader {
       if(cmd.getNodeType() == Node.ELEMENT_NODE){
         Element variable = (Element) cmd;
         myVisualizer.addCommand(variable.getAttribute("name"), variable.getAttribute("syntax"));
+      }
+    }
+  }
+
+  private void readColorPalette(){
+    NodeList colors = myDoc.getElementsByTagName("ColorPalette");
+    Node colorNode = colors.item(0);
+
+    if(colorNode!= null && colorNode.getNodeType() == Node.ELEMENT_NODE){
+      Element colorElement = (Element) colorNode;
+      overwritePalette(colorElement);
+    }
+  }
+
+  private void overwritePalette(Element colorElement){
+    NodeList colorList = myDoc.getElementsByTagName("Color");
+
+    for(int i = 0; i < colorList.getLength(); i++){
+      Node color = colorList.item(i);
+
+      if(color.getNodeType() == Node.ELEMENT_NODE){
+        Element paletteElement = (Element) color;
+        myVisualizer.updateColorMap(Double.parseDouble(paletteElement.getAttribute("index")), Color.web(paletteElement.getAttribute("color")).toString());
       }
     }
   }

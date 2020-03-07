@@ -1,5 +1,6 @@
 package slogo.view.graphics;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -9,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import slogo.view.Styler;
 
@@ -30,6 +32,7 @@ public class UserDefined {
     private VBox commandHistory;
     private VBox varHistory;
     private Styler styler;
+    private List<Path> pathList;
 
     /**
      * Initializes all the groups and other elements.
@@ -145,4 +148,9 @@ public class UserDefined {
     public Group getTurtles(){
         return turtles;
     }
+
+    /**
+     * @return - A list of Path objects for writing into the XML.
+     */
+    public List<Path> getPathList(){return pathList;}
 }
