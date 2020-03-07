@@ -6,6 +6,7 @@ import java.util.List;
 
 public class SetBackground extends Command {
 
+  private static final String UPDATE = "updateBackgroundColor";
   private Double color;
   private Turtle t;
 
@@ -43,5 +44,14 @@ public class SetBackground extends Command {
   public Double execute() {
     t.setBackground(color);
     return this.getResult();
+  }
+
+  /**
+   * Returns the  string for method reflection
+   * @return the set background color string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 public class SetShape extends Command {
 
+  private static final String UPDATE = "updateShape";
   private Double shape;
   private Turtle t;
 
@@ -43,5 +44,14 @@ public class SetShape extends Command {
   public Double execute() {
     t.setShape(shape);
     return this.getResult();
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the update shape string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }

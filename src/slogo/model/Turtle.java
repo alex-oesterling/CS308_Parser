@@ -15,7 +15,6 @@ public class Turtle{
   private static final int DEFAULT_SIZE_PIXELS = 3;
   private static final int POSITIVE = 1;
   private static final int NEGATIVE = -1;
-//  private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
@@ -27,8 +26,7 @@ public class Turtle{
   //Fixme take out importing of the visualizer class
   private static final double VIEW_BOUNDS_X = Visualizer.TURTLE_SCREEN_WIDTH;
   private static final double VIEW_BOUNDS_Y = Visualizer.TURTLE_SCREEN_HEIGHT;
-  private static final List<String> DEFAULT_TURTLE_NAMES = List.of("Alex", "Dana", "Hannah", "Robert", "Tyler"); //in alphabetical order; NOT DISCRIMINATING AGAINST ANY ONE PERSON!!!
-
+  private static final List<String> DEFAULT_TURTLE_NAMES = List.of("Alex", "Dana", "Hannah", "Robert", "Tyler");
   private double xPosition;
   private double yPosition;
   private double homeX;
@@ -199,9 +197,7 @@ public class Turtle{
     heading = makeHeadingValid(heading);
   }
 
-  private double makeHeadingValid(double headingToChange) { //FIXME commented out by Alex Oesterling to handle turtle rotating correctly -- Just so basic looks nice
-//    headingToChange %= QUAD4_ENDS;                                      //make it a value between -360 and 360
-//    if(headingToChange < QUAD1_BEGINS){ headingToChange += QUAD4_ENDS; }        //make it a value between 0 and 360
+  private double makeHeadingValid(double headingToChange) {
     return headingToChange;
   }
 
