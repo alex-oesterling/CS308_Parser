@@ -87,10 +87,11 @@ public class XMLWriter {
     for(String s : myVisualizer.getTurtles().keySet()){
       TurtleView currentTurtle = myVisualizer.getTurtles().get(s);
       Double[] attributeValues = currentTurtle.getData();
-      String[] attributeStrings = new String[attributeValues.length];
+      String[] attributeStrings = new String[attributes.length];
       for(int i = 0; i < attributeValues.length; i++){
-        attributeStrings[i] = attributeValues[i].toString();
+        attributeStrings[i+1] = attributeValues[i].toString();
       }
+      attributeStrings[0] = myVisualizer.getTurtles().get(s).getName();
       turtles.appendChild(createAttributeNode("Turtle", attributes, attributeStrings));
     }
     return turtles;
@@ -129,16 +130,20 @@ public class XMLWriter {
     return node;
   }
 
+  private Node writeColorPalette(){
+    Element colors = myDocument.createElement("ColorPalette");
+    Map<Double, String> colorMap = myVisualizer.getColorMap();
+    for(Double d : colorMap.keySet()){
+      colors.appendChild(createAttributeNode("Color", new String[]{"index", "color"}, new String[]{d.toString(), colorMap.get(d)}));
+    }
+    return colors;
+  }
+
   private Node createAttributeNode(String name, String[] attributes, String[] attributeValues){
     Element node = myDocument.createElement(name);
     for(int i = 0; i < attributes.length; i++) {
       node.setAttribute(attributes[i], attributeValues[i]);
     }
     return node;
-  }
-
-  private Node writeColorPalette(){
-    Element colors = myDocument.createElement("ColorPalette");
-//    Map<Double, String>
   }
 }

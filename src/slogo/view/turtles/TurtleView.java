@@ -280,7 +280,7 @@ public class TurtleView{
         myImage.setTranslateY(currentY-myImage.getBoundsInLocal().getHeight()/2);
         myImage.setRotate(heading);
 
-        myController.setTurtle(newX, newY, newHeading);
+        myController.orientTurtle(newX, newY, newHeading);
     }
 
     /**

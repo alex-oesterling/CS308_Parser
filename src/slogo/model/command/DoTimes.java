@@ -15,7 +15,7 @@ public class DoTimes extends CommandWithReturningList{
    * @param //reps
    * @param commandList
    */
-  public DoTimes(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+  public DoTimes(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
     times = doubleList.get(FIRST_INDEX);
     commands = commandList.get(FIRST_INDEX);
   }

@@ -1,12 +1,10 @@
 package slogo.model;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import slogo.view.Visualizer;
 
 public class Turtle{
 
+  //todo deal with making private
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
   private static final double DEFAULT_HEADING = 0;
@@ -16,7 +14,6 @@ public class Turtle{
   private static final int DEFAULT_SIZE_PIXELS = 3;
   private static final int POSITIVE = 1;
   private static final int NEGATIVE = -1;
-  private static final int QUAD1_BEGINS = 0;
   private static final int QUAD2_BEGINS = 90;
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
@@ -25,11 +22,9 @@ public class Turtle{
   private static final double INVISIBLE = 0;
   private static final double DRAWING = 1.0;
   private static final double NOT_DRAWING = 0.0;
-  //Fixme take out importing of the visualizer class
-  private static final double VIEW_BOUNDS_X = 500;
-  private static final double VIEW_BOUNDS_Y = 500;
-  private static final List<String> DEFAULT_TURTLE_NAMES = List.of("Alex", "Dana", "Hannah", "Robert", "Tyler"); //in alphabetical order; NOT DISCRIMINATING AGAINST ANY ONE PERSON!!!
-
+  private static double VIEW_BOUNDS_X;
+  private static double VIEW_BOUNDS_Y;
+  private static final List<String> DEFAULT_TURTLE_NAMES = List.of("Alex", "Dana", "Hannah", "Robert", "Tyler");
   private double xPosition;
   private double yPosition;
   private double homeX;
@@ -41,15 +36,17 @@ public class Turtle{
   private double bgIndex;
   private double shapeIndex;
   private double sizePixels;
-  private double Id;
+  private double id;
   private Double turtleCount;
   private String name;
 
-  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle){
-    Id = IdOfTurtle;
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle, int screenWidth, int screenHeight){
+    id = IdOfTurtle;
+    turtleCount = IdOfTurtle;
+    VIEW_BOUNDS_X = screenWidth;
+    VIEW_BOUNDS_Y = screenHeight;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
-    turtleCount=IdOfTurtle;
   }
 
   /**
@@ -58,11 +55,13 @@ public class Turtle{
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
-  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle){
-    Id = IdOfTurtle;
+  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle, int screenWidth, int screenHeight){
+    id = IdOfTurtle;
+    turtleCount = IdOfTurtle;
+    VIEW_BOUNDS_X = screenWidth;
+    VIEW_BOUNDS_Y = screenHeight;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
-    turtleCount=IdOfTurtle;
   }
 
   /**
@@ -70,16 +69,16 @@ public class Turtle{
    * but with a specific name
    * @param turtleName string to set name to
    */
-  public Turtle(String turtleName, Double IdOfTurtle){
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
+  public Turtle(String turtleName, Double IdOfTurtle, int screenWidth, int screenHeight){
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle, screenWidth, screenHeight);
     name = turtleName;
   }
 
   /**
    * Default Turtle constructor
    */
-  public Turtle(Double IdOfTurtle){
-    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
+  public Turtle(Double IdOfTurtle, int screenWidth, int screenHeight){
+    this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle, screenWidth, screenHeight);
   }
 
   /**
@@ -116,13 +115,11 @@ public class Turtle{
     if(heading>QUAD2_BEGINS && heading<QUAD3_BEGINS){
       theta = QUAD3_BEGINS - heading;
       ySign = NEGATIVE;
-    }
-    else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){
+    } else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){
       theta = heading - QUAD3_BEGINS;
       xSign = NEGATIVE;
       ySign = NEGATIVE;
-    }
-    else if(heading>QUAD4_BEGINS){
+    } else if(heading>QUAD4_BEGINS){
       theta = QUAD4_ENDS - heading;
       xSign = NEGATIVE;
     }
@@ -203,9 +200,7 @@ public class Turtle{
     heading = makeHeadingValid(heading);
   }
 
-  private double makeHeadingValid(double headingToChange) { //FIXME commented out by Alex Oesterling to handle turtle rotating correctly -- Just so basic looks nice
-//    headingToChange %= QUAD4_ENDS;                                      //make it a value between -360 and 360
-//    if(headingToChange < QUAD1_BEGINS){ headingToChange += QUAD4_ENDS; }        //make it a value between 0 and 360
+  private double makeHeadingValid(double headingToChange) {
     return headingToChange;
   }
 
@@ -272,7 +267,7 @@ public class Turtle{
    * @return the ID of the turtle
    */
   public double getId(){
-    return Id;
+    return id;
   }
 
   /**
@@ -328,8 +323,11 @@ public class Turtle{
    * @param penStatus true if penDown (drawing), false if penUp (not drawing)
    */
   public void setDrawing(double penStatus){
-    if(penStatus!=0.0){ turtleIsDrawing = DRAWING; }
-    else { turtleIsDrawing = NOT_DRAWING; }
+    if(penStatus!=0.0){
+      turtleIsDrawing = DRAWING;
+    } else {
+      turtleIsDrawing = NOT_DRAWING;
+    }
   }
 
   /**
@@ -337,8 +335,11 @@ public class Turtle{
    * @param visibility true if the turtle can be seen, false otherwise
    */
   public void setVisibility(double visibility){
-    if(visibility!=0.0){ turtleIsVisible = VISIBLE; }
-    else { turtleIsVisible = INVISIBLE; }
+    if(visibility!=0.0){
+      turtleIsVisible = VISIBLE;
+    } else {
+      turtleIsVisible = INVISIBLE;
+    }
   }
 
   /**
