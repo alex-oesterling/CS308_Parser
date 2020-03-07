@@ -159,7 +159,6 @@ public class Turtle{
    */
   public double turn(double deltaTheta){
     heading+=deltaTheta;
-    heading = makeHeadingValid(heading);
     return deltaTheta;
   }
   /**
@@ -188,7 +187,7 @@ public class Turtle{
     if(xPos > 0 && yPos < 0){ theta += QUAD2_BEGINS; }           //in quadrant ii
     else if (xPos < 0 && yPos < 0){ theta += QUAD3_BEGINS; }     //in quadrant iii
     else if(xPos < 0 && yPos > 0){ theta += QUAD4_BEGINS; }      //in quadrant iv
-    return makeHeadingValid(theta);
+    return theta;
   }
 
   private double convertToDegrees(double theta){
@@ -204,7 +203,6 @@ public class Turtle{
   public double getDeltaTheta(double theta, double comparisonHeading){
     double oldHeading = heading;
     comparisonHeading = theta;
-    comparisonHeading = makeHeadingValid(comparisonHeading);
     return Math.min(Math.abs(oldHeading-comparisonHeading), QUAD4_ENDS-oldHeading+comparisonHeading);
   }
 
@@ -214,11 +212,6 @@ public class Turtle{
    */
   public void setHeading(double degreesCWFromNorth){
     heading = degreesCWFromNorth;
-    heading = makeHeadingValid(heading);
-  }
-
-  private double makeHeadingValid(double headingToChange) {
-    return headingToChange;
   }
 
   /**
