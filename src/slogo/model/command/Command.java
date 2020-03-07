@@ -47,16 +47,21 @@ abstract public class Command {
     return UPDATE;
   }
 
+  /**
+   * Make a list with just this command in it
+   * @return the command list of just this command
+   */
   public List<Command> getCommandList(){
-    //make a list that has just this command in it
     List<Command> ret = new ArrayList<>();
     ret.add(this);
     return ret;
   }
 
+  /**
+   * Executes the command
+   * @return the double result
+   */
   public Double execute(){
     return getResult();
   }
-
-  //TODO add throwCommandParametersError()
 }
