@@ -199,7 +199,7 @@ public class Visualizer{
     } catch (InvalidTurtleException e){
       e.displayError("Please add unique turtle:");
     }
-    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName());
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), myController);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
@@ -221,7 +221,7 @@ public class Visualizer{
       System.out.println("YEET");
       return;
     }
-    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName());
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), myController);
     tempTurtle.set(startingX, startingY, heading);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());

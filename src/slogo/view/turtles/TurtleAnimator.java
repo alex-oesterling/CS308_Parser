@@ -33,6 +33,7 @@ public class TurtleAnimator {
   private int animationDuration;
   private int totalDuration;
   private boolean stopped;
+  private boolean resetted;
 
   public TurtleAnimator(TurtleView turtle, Node image, Group paths){
     myTurtle = turtle;
@@ -46,6 +47,7 @@ public class TurtleAnimator {
     stopped = true;
     myImage = image;
     myPaths = paths;
+    resetted=false;
   }
   /**
    * Updates the turtle's position, is called in the controller and updates the position whenever a corresponding command
@@ -55,10 +57,10 @@ public class TurtleAnimator {
    * @param orientation - new orientation
    */
   public void update(double newX, double newY, double orientation){
+//    if(resetted){transitionQueue=new LinkedList<>();}
     if(transitionQueue.isEmpty()){
       myTurtle.updateHistory();
     }
-
     double[] newCoords = convertCoordinates(newX, newY, orientation);
     double[] oldCoords = convertCoordinates(myTurtle.getData()[0], myTurtle.getData()[1], myTurtle.getData()[2]);
     myTurtle.updateCurrent(newX, newY, orientation);
@@ -155,23 +157,24 @@ public class TurtleAnimator {
   }
 
   public void resetAnimation(){
-    rewindPosition();
+    stopped=true;
+    st = new SequentialTransition();
+
+    myTurtle.rewindCoords();
+    myPaths.getChildren().removeAll(backupPathHistory);
     transitionQueue = new LinkedList<>(backupTransitionQueue);
     pathHistory = new LinkedList<>(backupPathHistory);
+    resetted=true;
   }
 
   public void undo(){
-    rewindPosition();
+    stopped=true;
+    st = new SequentialTransition();
+
+    myTurtle.undoAnimation();
     transitionQueue = new LinkedList<>();
     myPaths.getChildren().removeAll(backupPathHistory);
     pathHistory = new LinkedList<>();
-  }
-
-  private void rewindPosition() {
-    stopped=true;
-    myTurtle.rewindCoords();
-    st = new SequentialTransition();
-    myPaths.getChildren().removeAll(backupPathHistory);
   }
 
   /**

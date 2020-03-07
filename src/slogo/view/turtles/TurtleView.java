@@ -30,6 +30,7 @@ import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import slogo.controller.Controller;
 
 /**
  * This class creates an instance of a turtle and stores all the relevant turtle information. In this way, we are able to
@@ -69,6 +70,7 @@ public class TurtleView{
 //    private Queue<Transition> backupTransitionQueue;
     private boolean stopped;
     private TurtleAnimator turtleAnimator;
+    private Controller myController;
 
     /**
      * Creates an instance of all the important variables that need to be referenced from other methods in this class.
@@ -76,7 +78,7 @@ public class TurtleView{
      * @param paths - a group of the paths of the turtles
      * @param name - the name of the turtle in which this turtleview instance is being created for
      */
-    public TurtleView(Group turtles, Group paths, String name){
+    public TurtleView(Group turtles, Group paths, String name, Controller controller){
         penStatus = true;
         myPaths = paths;
 //        pathHistory = new LinkedList<>();
@@ -100,6 +102,7 @@ public class TurtleView{
 //        backupTransitionQueue = new LinkedList<>();
         stopped = true;
         turtleAnimator = new TurtleAnimator(this, myImage, myPaths);
+        myController = controller;
     }
 
     private ImageView createTurtle(){
@@ -379,10 +382,13 @@ public class TurtleView{
      */
     public void set(double newX, double newY, double newHeading){
         updateCurrent(newX, newY, newHeading);
+        System.out.println(newX + " " + newY + " " + newHeading);
 
-        myImage.setTranslateX(newX-myImage.getBoundsInLocal().getWidth()/2);
-        myImage.setTranslateY(newY-myImage.getBoundsInLocal().getHeight()/2);
-        myImage.setRotate(newHeading);
+        myImage.setTranslateX(currentX-myImage.getBoundsInLocal().getWidth()/2);
+        myImage.setTranslateY(currentY-myImage.getBoundsInLocal().getHeight()/2);
+        myImage.setRotate(heading);
+
+        myController.setTurtle(newX, newY, newHeading);
     }
 
     public void setCommandSize(int size){turtleAnimator.setCommandSize(size);}
@@ -459,6 +465,14 @@ public class TurtleView{
     }
 
     public void rewindCoords(){
-        set(prevX, prevY, prevHeading);
+        System.out.println(prevX + "" + prevY);
+//        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
+        myImage.setTranslateX(prevX-myImage.getBoundsInLocal().getWidth()/2);
+        myImage.setTranslateY(prevY-myImage.getBoundsInLocal().getHeight()/2);
+        myImage.setRotate(prevHeading);
+    }
+
+    public void undoAnimation(){
+        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
     }
 }
