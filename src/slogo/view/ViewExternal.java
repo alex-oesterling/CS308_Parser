@@ -71,7 +71,7 @@ public class ViewExternal implements ViewExternalAPI {
 
   @Override
   public void setColorPallete(double id, double red, double green, double blue) {
-
+    myVisualizer.updateColorMap(id, red, green, blue);
   }
 
   @Override

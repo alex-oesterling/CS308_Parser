@@ -182,4 +182,6 @@ public class TurtleAnimator {
   public void setSpeed(int value){
     totalDuration = value;
   }
+
+  public void setShape(Node image){myImage = image;}
 }
