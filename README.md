@@ -77,7 +77,6 @@ Interesting data files:
 Known Bugs:
 - Turtles command doesn't return the amount of turtles but the id number, even when declared as Double
 instead of double
-- User move controls for rotating cause turtle to "teleport" to a position ~0, 50 when clicked rapidly
 
 Extra credit:
 
