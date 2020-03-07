@@ -20,8 +20,6 @@ import slogo.view.paths.MoveToElement;
 public class TurtleAnimator {
   private static final double PATH_OPACITY = .75;
   private static final double PATH_NO_OPACITY = 0.0;
-  private static final int TURTLE_SCREEN_WIDTH = 500;
-  private static final int TURTLE_SCREEN_HEIGHT = 500;
 
   private Queue<Path> pathHistory;
   private List<Path> backupPathHistory;
@@ -45,7 +43,7 @@ public class TurtleAnimator {
     totalDuration = 500;
     animationDuration = totalDuration;
     stopped = true;
-    myImage = image;
+    setShape(image);
     myPaths = paths;
   }
   /**
@@ -59,8 +57,8 @@ public class TurtleAnimator {
     if(transitionQueue.isEmpty()){
       myTurtle.updateHistory();
     }
-    double[] newCoords = convertCoordinates(newX, newY, orientation);
-    double[] oldCoords = convertCoordinates(myTurtle.getData()[0], myTurtle.getData()[1], myTurtle.getData()[2]);
+    double[] newCoords = myTurtle.convertCoordinatesToView(newX, newY, orientation);
+    double[] oldCoords = myTurtle.convertCoordinatesToView(myTurtle.getData()[0], myTurtle.getData()[1], myTurtle.getData()[2]);
     myTurtle.updateCurrent(newX, newY, orientation);
 
     if(newCoords[0] != oldCoords[0] || newCoords[1] != oldCoords[1]) {
@@ -90,10 +88,6 @@ public class TurtleAnimator {
     }
   }
 
-  private double[] convertCoordinates(double x, double y, double heading){
-    return new double[]{x+TURTLE_SCREEN_WIDTH/2, (y*-1)+TURTLE_SCREEN_HEIGHT/2, heading};
-  }
-
   /**
    * Once the turtle's position is updated, the animation is played in order to see the turtle move.
    */
@@ -121,9 +115,10 @@ public class TurtleAnimator {
     } else {
       stopped = true;
       st = new SequentialTransition();
-      myTurtle.updateCurrent(myImage.getTranslateX()-TURTLE_SCREEN_WIDTH/2+myImage.getBoundsInLocal().getWidth()/2,
-          TURTLE_SCREEN_HEIGHT/2-myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
+      double[] modelCoords = myTurtle.convertCoordinatesToModel(myImage.getTranslateX()+myImage.getBoundsInLocal().getWidth()/2,
+          myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
           myImage.getRotate());
+      myTurtle.updateCurrent(modelCoords[0], modelCoords[1], modelCoords[2]);
     }
   }
 
