@@ -22,8 +22,8 @@ public class SetPosition extends Command {
   public SetPosition(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList) {
     super();
     t = turtleList.get(FIRST_INDEX);
-    xPos = doubleList.get(FIRST_INDEX);
-    yPos = doubleList.get(SECOND_INDEX);
+    xPos = doubleList.get(SECOND_INDEX);
+    yPos = doubleList.get(FIRST_INDEX);
   }
 
   /**

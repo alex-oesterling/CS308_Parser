@@ -168,7 +168,7 @@ public class XMLReader {
 
       if(var.getNodeType() == Node.ELEMENT_NODE){
         Element variable = (Element) var;
-        myVisualizer.addVariable(variable.getAttribute("name"), variable.getAttribute("value"));
+        myVisualizer.addVariable(variable.getAttribute("name"), Double.parseDouble(variable.getAttribute("value")));
       }
     }
   }

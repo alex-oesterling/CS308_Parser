@@ -54,7 +54,7 @@ public class Visualizer{
   private Map<String, TurtleView> turtleMap;
   private ResourceBundle myResources;
   private String language = "English";
-  private Map<String, String> varMap;
+  private Map<String, Double> varMap;
   private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
@@ -136,7 +136,7 @@ public class Visualizer{
 
   private Node makeUserDefined(String key, String value, EventHandler event, Label mutable){
     Label keyLabel = new Label(key);
-    mutable.setText(value); //modify based on what model wants it to do
+    mutable.setText(value.toString()); //modify based on what model wants it to do
     HBox keyAndValue = new HBox();
     keyAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
     final Pane spacer = new Pane();
@@ -152,14 +152,14 @@ public class Visualizer{
    * @param variable
    * @param value
    */
-  public void addVariable(String variable, String value){
+  public void addVariable(String variable, Double value){
     Label valueLabel = new Label();
-    Node variableAndValue = makeUserDefined(variable, value, e->updateVariable(variable, valueLabel), valueLabel);
+    Node variableAndValue = makeUserDefined(variable, value.toString(), e->updateVariable(variable, valueLabel), valueLabel);
     varMap.put(variable, value);
     userDefined.addVariable(variableAndValue);
     myController.addUserVariable(variable, value);
   }
-
+  private static final int ONE = 1;
   private void updateVariable(String variableName, Label value){
     TextInputDialog updateVariable = new TextInputDialog();
     updateVariable.setTitle("Update Variable");
@@ -171,9 +171,9 @@ public class Visualizer{
       Double number = null;
       try {
         number = Double.valueOf(result.get());
-        varMap.put(variableName, number.toString());
+        varMap.put(variableName, number);
         value.setText(result.get());
-        myController.updateCommandVariable(variableName, number.toString());
+        myController.updateConstantVariable(variableName, number);
       } catch (NumberFormatException e) {
         number = Double.parseDouble(value.getText());
       }
@@ -374,7 +374,7 @@ public class Visualizer{
   /**
    * @return the user defined variables for the XML file
    */
-  public Map<String, String> getUserVariables() {
+  public Map<String, Double> getUserVariables() {
     return varMap;
   }
 
