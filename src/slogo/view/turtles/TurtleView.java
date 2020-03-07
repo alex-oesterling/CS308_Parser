@@ -272,7 +272,6 @@ public class TurtleView{
      */
     public void set(double newX, double newY, double newHeading){
         updateCurrent(newX, newY, newHeading);
-        System.out.println(newX + " " + newY + " " + newHeading);
 
         myImage.setTranslateX(currentX-myImage.getBoundsInLocal().getWidth()/2);
         myImage.setTranslateY(currentY-myImage.getBoundsInLocal().getHeight()/2);

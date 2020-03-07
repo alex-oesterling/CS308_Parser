@@ -128,7 +128,6 @@ public class CommandLine {
 
   public void finishSubmitCommand(Label recentCommand){
     recentCommand.setTextFill(Color.RED); //FIXME sometimes the label just isnt appearing red
-    System.out.println(recentCommand.getTextFill());
     recentCommand.setOnMouseClicked(setOnClick(textBox.getText()));
     historyBox.getChildren().add(recentCommand);
     history.add(new Label(textBox.getText()));
