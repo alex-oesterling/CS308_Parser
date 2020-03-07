@@ -1,8 +1,5 @@
 package slogo.view.turtles;
 
-import static slogo.view.turtles.TurtleView.TURTLE_SCREEN_HEIGHT;
-import static slogo.view.turtles.TurtleView.TURTLE_SCREEN_WIDTH;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;

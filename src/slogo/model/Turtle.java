@@ -26,8 +26,8 @@ public class Turtle{
   private static final double DRAWING = 1.0;
   private static final double NOT_DRAWING = 0.0;
   //Fixme take out importing of the visualizer class
-  private static final double VIEW_BOUNDS_X = Visualizer.TURTLE_SCREEN_WIDTH;
-  private static final double VIEW_BOUNDS_Y = Visualizer.TURTLE_SCREEN_HEIGHT;
+  private static final double VIEW_BOUNDS_X = 500;
+  private static final double VIEW_BOUNDS_Y = 500;
   private static final List<String> DEFAULT_TURTLE_NAMES = List.of("Alex", "Dana", "Hannah", "Robert", "Tyler"); //in alphabetical order; NOT DISCRIMINATING AGAINST ANY ONE PERSON!!!
 
   private double xPosition;
