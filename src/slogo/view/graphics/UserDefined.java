@@ -17,12 +17,11 @@ import slogo.view.Styler;
  * and the variable history.
  */
 public class UserDefined {
-
-    public static final int TURTLE_SCREEN_WIDTH = 500;
-    public static final int TURTLE_SCREEN_HEIGHT = 500;
-    public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
-    public static final int VBOX_SPACING = 10;
-    public static final int VIEWPANE_PADDING = 10;
+    private static final int TURTLE_SCREEN_WIDTH = 500;
+    private static final int TURTLE_SCREEN_HEIGHT = 500;
+    private static final int TURTLE_SCREEN_STROKEWIDTH = 3;
+    private static final int VBOX_SPACING = 10;
+    private static final int VIEWPANE_PADDING = 10;
 
     private Rectangle turtleArea;
     private Color backgroundColor;

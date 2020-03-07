@@ -18,14 +18,13 @@ import slogo.view.Visualizer;
  * will continue to move 1.
  */
 public class MoveTurtle {
-
-    public static final String TITLE = "Move Turtle";
-    public static final Paint BACKGROUND = Color.web("#808080");
+    private static final String TITLE = "Move Turtle";
+    private static final Paint BACKGROUND = Color.web("#808080");
     private static final String RESOURCES = "resources";
-    public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+    private static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
     private static final String STYLESHEET = "styling.css";
-    public static final int SIZE_WIDTH = 210;
-    public static final int SIZE_HEIGHT = 105;
+    private static final int SIZE_WIDTH = 210;
+    private static final int SIZE_HEIGHT = 105;
 
     private Visualizer myVisualizer;
     private Styler styler;

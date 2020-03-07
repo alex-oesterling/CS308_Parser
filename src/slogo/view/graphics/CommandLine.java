@@ -27,10 +27,10 @@ import slogo.view.Visualizer;
  * what they typed.
  */
 public class CommandLine {
-  public static final int TEXTBOX_WIDTH = 200;
-  public static final int TEXTBOX_HEIGHT = 100;
-  public static final int BUTTON_WIDTH = 50;
-  public static final int TURTLE_SCREEN_HEIGHT = 500;
+  private static final int TEXTBOX_WIDTH = 200;
+  private static final int TEXTBOX_HEIGHT = 100;
+  private static final int BUTTON_WIDTH = 50;
+  private static final int TURTLE_SCREEN_HEIGHT = 500;
 
   private Visualizer myVisualizer;
   private TextArea textBox;

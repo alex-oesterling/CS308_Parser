@@ -20,13 +20,11 @@ import slogo.config.XMLReader;
 import slogo.config.XMLWriter;
 import slogo.view.Styler;
 import slogo.view.Visualizer;
-import slogo.view.graphics.CommandLine;
 
 /**
  * Creates a toolbar with several options at the top of the visualizer.
  */
 public class ToolBar {
-
   private static final String XML_FILEPATH = "user.dir";
 
   private Stage myStage;

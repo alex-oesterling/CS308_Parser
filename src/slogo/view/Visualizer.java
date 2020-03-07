@@ -32,19 +32,18 @@ import slogo.view.turtles.TurtleView;
  * that make up the entire SLogo project. This class connects all the parts of the project.
  */
 public class Visualizer{
-
-  public static final int TURTLE_SCREEN_WIDTH = 500;
-  public static final int TURTLE_SCREEN_HEIGHT = 500;
-  public static final String STYLESHEET = "styling.css";
-  public static final String RESOURCES = "resources";
-  public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
-  public static final int VIEWPANE_PADDING = 10;
-  public static final int VIEWPANE_MARGIN = 0;
-  public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
-  public static final String DEFAULT_LANGUAGE = "English";
-  public static final double UNSELECTED_OPACITY = .5;
-  public static final int SELECTED_OPACITY = 1;
-  public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
+  private static final int TURTLE_SCREEN_WIDTH = 500;
+  private static final int TURTLE_SCREEN_HEIGHT = 500;
+  private static final String STYLESHEET = "styling.css";
+  private static final String RESOURCES = "resources";
+  private static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+  private static final int VIEWPANE_PADDING = 10;
+  private static final int VIEWPANE_MARGIN = 0;
+  private static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
+  private static final String DEFAULT_LANGUAGE = "English";
+  private static final double UNSELECTED_OPACITY = .5;
+  private static final int SELECTED_OPACITY = 1;
+  private static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
 
   private Controller myController;
   private ViewExternal viewExternal;
@@ -147,13 +146,6 @@ public class Visualizer{
    * @param value
    */
   public void addVariable(String variable, String value){
-//    Label recentCommand = new Label(variable);
-//    Label valueLabel = new Label(value);
-//    HBox variableAndValue = new HBox();
-//    variableAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
-//    final Pane spacer = new Pane();
-//    variableAndValue.setHgrow(spacer, Priority.ALWAYS);
-//    variableAndValue.getChildren().addAll(recentCommand, spacer, valueLabel);
     Label valueLabel = new Label();
     Node variableAndValue = makeUserDefined(variable, value, e->updateVariable(variable, valueLabel), valueLabel);
     varMap.put(variable, value);
@@ -192,8 +184,8 @@ public class Visualizer{
   }
 
   /**
-   * Allows the user to create many simulations at once. It can do this by uploading an XML file or just creating a new
-   * instance of the SlogoApp all together.
+   * Allows the user to add another turtle to a single turtle area / turtle group. The user is then able to control the
+   * turtles at different times.
    */
   public void addTurtle(){
     try {
@@ -208,7 +200,8 @@ public class Visualizer{
   }
 
   /**
-   * Allows the user to add another turtle to a single turtle area / turtle group. The user is then able to control the
+   * Allows the user to add another turtle with specified coordinates and a name
+   * to a single turtle area / turtle group. The user is then able to control the
    * turtles at different times.
    * @param name - name or ID of new turtle used as an identifier
    * @param startingX - starting x position
@@ -329,8 +322,6 @@ public class Visualizer{
     myStage.setScene(setupScene());
   }
 
-  //FIXME why do we have so many colorpicker methods? can we combine any in any way
-
   /**
    * Sets the background based on a hex value and is used to set the background color from an XML file.
    * @param hexColor - string to be converted into java color
@@ -395,4 +386,14 @@ public class Visualizer{
    * @return the turtles property which is binded to the turtlebox to update the values
    */
   public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty(){return myTurtlesProperty;}
+
+  /**
+   * @return the width of the canvas the turtle can move in
+   */
+  public int getArenaWidth(){return TURTLE_SCREEN_WIDTH;}
+
+  /**
+   * @return the height of the canvas the turtle can move in
+   */
+  public int getArenaHeight(){return TURTLE_SCREEN_HEIGHT;}
 }

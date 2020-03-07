@@ -14,4 +14,6 @@ public interface ViewExternalAPI {
   void addVariable(String newVariable, String newValue);
   void setCommandSize(int size);
   void setColorPallete(double id, double red, double green, double blue);
+  int getArenaWidth();
+  int getArenaHeight();
 }

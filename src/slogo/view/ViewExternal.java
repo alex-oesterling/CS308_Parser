@@ -1,6 +1,7 @@
 package slogo.view;
 
 public class ViewExternal implements ViewExternalAPI {
+
   private Visualizer myVisualizer;
 
   public ViewExternal(Visualizer view){
@@ -73,4 +74,9 @@ public class ViewExternal implements ViewExternalAPI {
 
   }
 
+  @Override
+  public int getArenaWidth() {return myVisualizer.getArenaWidth(); }
+
+  @Override
+  public int getArenaHeight() {return myVisualizer.getArenaHeight(); }
 }

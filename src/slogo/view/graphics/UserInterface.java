@@ -20,11 +20,11 @@ import slogo.view.graphics.MoveTurtle;
  * buttons as well as all of the turtle interface buttons.
  */
 public class UserInterface {
-  public static final int VBOX_SPACING = 10;
-  public static final int COLORPICKER_HEIGHT = 30;
-  public static final int LISTVIEW_WIDTH = 100;
-  public static final int LISTVIEW_HEIGHT  = 250;
-  public static final int HBOX_SPACING = 10;
+  private static final int VBOX_SPACING = 10;
+  private static final int COLORPICKER_HEIGHT = 30;
+  private static final int LISTVIEW_WIDTH = 100;
+  private static final int LISTVIEW_HEIGHT  = 250;
+  private static final int HBOX_SPACING = 10;
 
   private Styler styler;
   private ResourceBundle myResources;

@@ -18,9 +18,10 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
 public class TurtleAnimator {
-  public static final double PATH_OPACITY = .75;
-  public static final double PATH_NO_OPACITY = 0.0;
-
+  private static final double PATH_OPACITY = .75;
+  private static final double PATH_NO_OPACITY = 0.0;
+  private static final int TURTLE_SCREEN_WIDTH = 500;
+  private static final int TURTLE_SCREEN_HEIGHT = 500;
 
   private Queue<Path> pathHistory;
   private List<Path> backupPathHistory;
@@ -33,7 +34,6 @@ public class TurtleAnimator {
   private int animationDuration;
   private int totalDuration;
   private boolean stopped;
-  private boolean resetted;
 
   public TurtleAnimator(TurtleView turtle, Node image, Group paths){
     myTurtle = turtle;
@@ -47,7 +47,6 @@ public class TurtleAnimator {
     stopped = true;
     myImage = image;
     myPaths = paths;
-    resetted=false;
   }
   /**
    * Updates the turtle's position, is called in the controller and updates the position whenever a corresponding command
@@ -160,7 +159,6 @@ public class TurtleAnimator {
     myPaths.getChildren().removeAll(backupPathHistory);
     transitionQueue = new LinkedList<>(backupTransitionQueue);
     pathHistory = new LinkedList<>(backupPathHistory);
-    resetted=true;
   }
 
   public void undo(){

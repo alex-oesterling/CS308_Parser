@@ -37,12 +37,12 @@ import slogo.controller.Controller;
  * add multiple instances of turtles and update the turtle information that is stored.
  */
 public class TurtleView{
-    public static final String XML_FILEPATH = "user.dir";
-    public static final int TURTLE_WIDTH = 50;
-    public static final int TURTLE_HEIGHT = 40;
-    public static final int TURTLE_SCREEN_WIDTH = 500;
-    public static final int TURTLE_SCREEN_HEIGHT = 500;
-    public static final int PATH_STROKE_WIDTH = 3;
+    private static final String XML_FILEPATH = "user.dir";
+    private static final int TURTLE_WIDTH = 50;
+    private static final int TURTLE_HEIGHT = 40;
+    private static final int TURTLE_SCREEN_WIDTH = 500;
+    private static final int TURTLE_SCREEN_HEIGHT = 500;
+    private static final int PATH_STROKE_WIDTH = 3;
     private static final String ERROR_DIALOG = "Please Choose Another File";
 
     private Group myPaths;
@@ -52,7 +52,6 @@ public class TurtleView{
     private Color myPenColor;
     private double currentX;
     private double currentY;
-    private SequentialTransition st;
     private double heading;
     private double prevX;
     private double prevY;
@@ -63,6 +62,7 @@ public class TurtleView{
     private boolean stopped;
     private TurtleAnimator turtleAnimator;
     private Controller myController;
+    private SequentialTransition st;
 
     /**
      * Creates an instance of all the important variables that need to be referenced from other methods in this class.
