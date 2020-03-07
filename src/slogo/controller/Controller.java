@@ -265,7 +265,6 @@ public class Controller {
         myView.updateShape(c.getResult());
       } else if (c instanceof SetPenSize) {
         myView.updatePenSize(c.getResult());
-      } else if (c instanceof ID){
       }
       else {
         myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
