@@ -6,6 +6,7 @@ import slogo.view.Visualizer;
 
 public class Turtle{
 
+  //todo deal with making private
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
   private static final double DEFAULT_HEADING = 0;
@@ -23,9 +24,8 @@ public class Turtle{
   private static final double INVISIBLE = 0;
   private static final double DRAWING = 1.0;
   private static final double NOT_DRAWING = 0.0;
-  //Fixme take out importing of the visualizer class
-  private static final double VIEW_BOUNDS_X = Visualizer.TURTLE_SCREEN_WIDTH;
-  private static final double VIEW_BOUNDS_Y = Visualizer.TURTLE_SCREEN_HEIGHT;
+  private static final double VIEW_BOUNDS_X = 500;//Visualizer.TURTLE_SCREEN_WIDTH;
+  private static final double VIEW_BOUNDS_Y = 500;// Visualizer.TURTLE_SCREEN_HEIGHT;
   private static final List<String> DEFAULT_TURTLE_NAMES = List.of("Alex", "Dana", "Hannah", "Robert", "Tyler");
   private double xPosition;
   private double yPosition;
@@ -38,13 +38,15 @@ public class Turtle{
   private double bgIndex;
   private double shapeIndex;
   private double sizePixels;
-  private double Id;
+  private double id;
+  private Double turtleCount;
   private String name;
 
-  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
-    Id = IdOfTurtle;
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle){
+    id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
+    turtleCount=IdOfTurtle;
   }
 
   /**
@@ -53,10 +55,11 @@ public class Turtle{
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
-  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
-    Id = IdOfTurtle;
+  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle){
+    id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
+    turtleCount=IdOfTurtle;
   }
 
   /**
@@ -64,7 +67,7 @@ public class Turtle{
    * but with a specific name
    * @param turtleName string to set name to
    */
-  public Turtle(String turtleName, double IdOfTurtle){
+  public Turtle(String turtleName, Double IdOfTurtle){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
     name = turtleName;
   }
@@ -72,7 +75,7 @@ public class Turtle{
   /**
    * Default Turtle constructor
    */
-  public Turtle(double IdOfTurtle){
+  public Turtle(Double IdOfTurtle){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
   }
 
@@ -264,7 +267,7 @@ public class Turtle{
    * @return the ID of the turtle
    */
   public double getId(){
-    return Id;
+    return id;
   }
 
   /**
@@ -279,8 +282,9 @@ public class Turtle{
    * Get's the turtle count
    * @return amount of turtles created thus far
    */
-  public double getTurtleCount(){
-    return 9;
+
+  public Double getTurtleCount(){
+    return turtleCount.doubleValue();
   }
 
   /**

@@ -3,6 +3,7 @@ package slogo.config;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
@@ -17,7 +18,6 @@ import org.xml.sax.SAXException;
 import slogo.view.Visualizer;
 
 public class XMLReader {
-
   private static final String TXT_FILEPATH = "data/templates/";
   private File myFile;
   private Document myDoc;
@@ -41,10 +41,12 @@ public class XMLReader {
     try {
       builder = factory.newDocumentBuilder();
     } catch (ParserConfigurationException e) {
+      displayAndLogError("Failed to build document parser", e);
     }
     try {
       myDoc = builder.parse(myFile);
     } catch (SAXException | IOException e) {
+      displayAndLogError("Failed to read document correctly", e);
     }
     myDoc.getDocumentElement().normalize();
   }
@@ -136,12 +138,16 @@ public class XMLReader {
         myVisualizer.getTerminal().addHistory(Files
             .readString(new File(TXT_FILEPATH + fileElement.getAttribute("filename")).toPath()));
       } catch (IOException e) {
-        Alert errorAlert = new Alert(AlertType.ERROR);
-        errorAlert.setHeaderText("Command history text file does not exist");
-        errorAlert.setContentText("Please specify a valid text file in your XML");
-        errorAlert.showAndWait();
+        displayAndLogError("Command history text file failed to load", e);
       }
     }
+  }
+
+  private void displayAndLogError(String header, Exception e) {
+    Alert errorAlert = new Alert(AlertType.ERROR);
+    errorAlert.setHeaderText(header);
+    errorAlert.setContentText(e.getMessage());
+    errorAlert.showAndWait();
   }
 
   private void readUserVariables(){

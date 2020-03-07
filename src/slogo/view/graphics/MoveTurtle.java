@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -9,6 +9,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import java.util.ResourceBundle;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
 
 /**
  * This class creates a new window with a list of buttons in which can move the turtle forward, backward, rotate left,
@@ -16,14 +18,13 @@ import java.util.ResourceBundle;
  * will continue to move 1.
  */
 public class MoveTurtle {
-
-    public static final String TITLE = "Move Turtle";
-    public static final Paint BACKGROUND = Color.web("#808080");
+    private static final String TITLE = "Move Turtle";
+    private static final Paint BACKGROUND = Color.web("#808080");
     private static final String RESOURCES = "resources";
-    public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+    private static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
     private static final String STYLESHEET = "styling.css";
-    public static final int SIZE_WIDTH = 210;
-    public static final int SIZE_HEIGHT = 105;
+    private static final int SIZE_WIDTH = 210;
+    private static final int SIZE_HEIGHT = 105;
 
     private Visualizer myVisualizer;
     private Styler styler;

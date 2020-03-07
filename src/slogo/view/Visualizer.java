@@ -18,26 +18,34 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import slogo.exceptions.InvalidTurtleException;
+import slogo.view.graphics.ColorPalette;
+import slogo.view.graphics.CommandLine;
+import slogo.view.graphics.PenProperties;
+import slogo.view.graphics.ShapePalette;
+import slogo.view.graphics.ToolBar;
+import slogo.view.graphics.UserDefined;
+import slogo.view.graphics.UserInterface;
+import slogo.view.turtles.TurtleView;
 
 /**
  * The main class of the view. This class is called as soon as the program is run and effectively
  * calls all the other classes that make up the entire SLogo project. This class connects all the
  * parts of the project.
  */
-public class Visualizer {
 
-  public static final int TURTLE_SCREEN_WIDTH = 500;
-  public static final int TURTLE_SCREEN_HEIGHT = 500;
-  public static final String STYLESHEET = "styling.css";
-  public static final String RESOURCES = "resources";
-  public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
-  public static final int VIEWPANE_PADDING = 10;
-  public static final int VIEWPANE_MARGIN = 0;
-  public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
-  public static final String DEFAULT_LANGUAGE = "English";
-  public static final double UNSELECTED_OPACITY = .5;
-  public static final int SELECTED_OPACITY = 1;
-  public static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
+public class Visualizer{
+  private static final int TURTLE_SCREEN_WIDTH = 500;
+  private static final int TURTLE_SCREEN_HEIGHT = 500;
+  private static final String STYLESHEET = "styling.css";
+  private static final String RESOURCES = "resources";
+  private static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+  private static final int VIEWPANE_PADDING = 10;
+  private static final int VIEWPANE_MARGIN = 0;
+  private static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
+  private static final String DEFAULT_LANGUAGE = "English";
+  private static final double UNSELECTED_OPACITY = .5;
+  private static final int SELECTED_OPACITY = 1;
+  private static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
 
   private Controller myController;
   private ViewExternal viewExternal;
@@ -47,12 +55,13 @@ public class Visualizer {
   private ShapePalette shapePalette;
   private Map<String, TurtleView> turtleMap;
   private ResourceBundle myResources;
-  private String language;
+  private String language = "English";
   private Map<String, String> varMap;
   private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
-  private ToolBar myToolBar;
+//  private Map<String, TurtleView> activeTurtles;
+  private slogo.view.graphics.ToolBar myToolBar;
   private Stage myStage;
   private UserDefined userDefined;
   private UserInterface userInterface;
@@ -65,23 +74,24 @@ public class Visualizer {
    *
    * @param stage - takes in the stage from the SlogoApp class
    */
-  public Visualizer(Stage stage) {
-    language = "English";
+
+  public Visualizer (Stage stage){
+    myStage = stage;
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
-    userDefined = new UserDefined(myResources);
+    myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     turtleMap = new TreeMap<>();
+//    activeTurtles = new TreeMap<>();
     varMap = new TreeMap<>();
     cmdMap = new TreeMap<>();
     viewExternal = new ViewExternal(this);
-    myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
+    userDefined = new UserDefined(myResources);
     commandLine = new CommandLine(this, myResources);
     myToolBar = new ToolBar(stage, this, myResources);
-    myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     userInterface = new UserInterface(this, myResources);
     colorPalette = new ColorPalette(createColorMap());
     shapePalette = new ShapePalette();
     penProperties = new PenProperties(this, myResources);
-    myStage = stage;
+    myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
   }
 
   /**
@@ -100,16 +110,13 @@ public class Visualizer {
 
   private BorderPane createView() {
     BorderPane viewPane = new BorderPane();
-    viewPane.setPadding(
-        new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
-
+    viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
     Node toolBar = myToolBar.setupToolBar();
     Node turtleView = userDefined.showUserDefined();
     Node cLine = commandLine.setupCommandLine();
     Node uInterface = userInterface.createTotalUI();
 
-    viewPane.setMargin(cLine,
-        new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
+    viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setTop(toolBar);
     viewPane.setLeft(turtleView);
     viewPane.setCenter(cLine);
@@ -124,20 +131,25 @@ public class Visualizer {
    * @param command
    * @param syntax
    */
-  public void addCommand(String command, String syntax) {
-    Label recentCommand = new Label(command);
-    Label syntaxLabel = new Label(syntax); //modify based on what model wants it to do
-    HBox commandAndSyntax = new HBox();
-    commandAndSyntax.setOnMouseClicked(commandLine.setOnClick(command));
-    commandAndSyntax.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
-    final Pane spacer = new Pane();
-    commandAndSyntax.setHgrow(spacer, Priority.ALWAYS);
-    commandAndSyntax.getChildren().addAll(recentCommand, spacer, syntaxLabel);
+
+  public void addCommand(String command, String syntax){
+    Node commandAndSyntax = makeUserDefined(command, syntax, commandLine.setOnClick(command), new Label());
     cmdMap.put(command, syntax);
     userDefined.addCommand(commandAndSyntax);
     myController.addUserCommand(command, syntax);
   }
 
+  private Node makeUserDefined(String key, String value, EventHandler event, Label mutable){
+    Label keyLabel = new Label(key);
+    mutable.setText(value); //modify based on what model wants it to do
+    HBox keyAndValue = new HBox();
+    keyAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
+    final Pane spacer = new Pane();
+    keyAndValue.setHgrow(spacer, Priority.ALWAYS);
+    keyAndValue.getChildren().addAll(keyLabel, spacer, mutable);
+    keyAndValue.setOnMouseClicked(event);
+    return keyAndValue;
+  }
   /**
    * Adds a variable to the user defined history once a variable is added. Additionally is used in
    * saving the XML file.
@@ -145,22 +157,15 @@ public class Visualizer {
    * @param variable
    * @param value
    */
-  public void addVariable(String variable, String value) {
-    Label recentCommand = new Label(variable);
-    Label valueLabel = new Label(value);
-    HBox variableAndValue = new HBox();
-    variableAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
-    final Pane spacer = new Pane();
-    variableAndValue.setHgrow(spacer, Priority.ALWAYS);
-    variableAndValue.getChildren().addAll(recentCommand, spacer, valueLabel);
+  public void addVariable(String variable, String value){
+    Label valueLabel = new Label();
+    Node variableAndValue = makeUserDefined(variable, value, e->updateVariable(variable, valueLabel), valueLabel);
     varMap.put(variable, value);
-    variableAndValue.setOnMouseClicked(e -> updateVariable(variable, valueLabel));
     userDefined.addVariable(variableAndValue);
     myController.addUserVariable(variable, value);
   }
 
-  //FIXME variable types :right now all it handles is doubles and poorly at that
-  private void updateVariable(String variableName, Label value) {
+  private void updateVariable(String variableName, Label value){
     TextInputDialog updateVariable = new TextInputDialog();
     updateVariable.setTitle("Update Variable");
     updateVariable
@@ -192,8 +197,8 @@ public class Visualizer {
   }
 
   /**
-   * Allows the user to create many simulations at once. It can do this by uploading an XML file or
-   * just creating a new instance of the SlogoApp all together.
+   * Allows the user to add another turtle to a single turtle area / turtle group. The user is then able to control the
+   * turtles at different times.
    */
   public void addTurtle() {
     try {
@@ -201,18 +206,17 @@ public class Visualizer {
     } catch (InvalidTurtleException e) {
       e.displayError("Please add unique turtle:");
     }
-    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(),
-        myController.getTurtleName());
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), myController);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
   }
 
   /**
-   * Allows the user to add another turtle to a single turtle area / turtle group. The user is then
-   * able to control the turtles at different times.
-   *
-   * @param name      - name or ID of new turtle used as an identifier
+   * Allows the user to add another turtle with specified coordinates and a name
+   * to a single turtle area / turtle group. The user is then able to control the
+   * turtles at different times.
+   * @param name - name or ID of new turtle used as an identifier
    * @param startingX - starting x position
    * @param startingY - starting y position
    * @param heading   - starting orientation
@@ -222,10 +226,10 @@ public class Visualizer {
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e) {
       e.displayError("Please fix XML to contain unique turtles:");
+      System.out.println("YEET");
       return;
     }
-    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(),
-        myController.getTurtleName());
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), myController);
     tempTurtle.set(startingX, startingY, heading);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
@@ -262,14 +266,6 @@ public class Visualizer {
   public TurtleView getCurrentTurtle() {
     return currentTurtle;
   }
-
-//  public void reset(){
-//    clear();
-//    myController.resetAll();
-//    for(TurtleView turtle : turtleMap.values()) {
-//      turtle.resetTurtle();
-//    }
-//  }
 
   /**
    * Clears all the turtle paths on the screen.
@@ -323,8 +319,8 @@ public class Visualizer {
    *
    * @param value - defined by the user in their command
    */
-  public void setPenSize(double value) {
-    currentTurtle.setPenSize(value);
+  public void setPenSize(double value){
+    currentTurtle.changePenWidth(value);
   }
 
   /**
@@ -352,8 +348,6 @@ public class Visualizer {
     userInterface = new UserInterface(this, myResources);
     myStage.setScene(setupScene());
   }
-
-  //FIXME why do we have so many colorpicker methods? can we combine any in any way
 
   /**
    * Sets the background based on a hex value and is used to set the background color from an XML
@@ -428,7 +422,21 @@ public class Visualizer {
   /**
    * @return the turtles property which is binded to the turtlebox to update the values
    */
-  public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty() {
+  public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty(){
     return myTurtlesProperty;
+  }
+
+  /**
+   * @return the width of the canvas the turtle can move in
+   */
+  public int getArenaWidth(){
+    return TURTLE_SCREEN_WIDTH;
+  }
+
+  /**
+   * @return the height of the canvas the turtle can move in
+   */
+  public int getArenaHeight(){
+    return TURTLE_SCREEN_HEIGHT;
   }
 }

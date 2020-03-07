@@ -11,7 +11,7 @@
   -fx-border-radius: 10;
   -fx-background-radius: 10;
   -fx-padding: 8;
-  -fx-min-height: 50;
+  -fx-pref-height: 50;
 }
 
 .button:hover {

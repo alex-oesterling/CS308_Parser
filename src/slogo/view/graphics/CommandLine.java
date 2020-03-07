@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import slogo.exceptions.*;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
 
 /**
  * This class creates a commandline for the user to type in commands along with the corresponding buttons. Additionally,
@@ -25,10 +27,10 @@ import slogo.exceptions.*;
  * what they typed.
  */
 public class CommandLine {
-  public static final int TEXTBOX_WIDTH = 200;
-  public static final int TEXTBOX_HEIGHT = 100;
-  public static final int BUTTON_WIDTH = 50;
-  public static final int TURTLE_SCREEN_HEIGHT = 500;
+  private static final int TEXTBOX_WIDTH = 200;
+  private static final int TEXTBOX_HEIGHT = 100;
+  private static final int BUTTON_WIDTH = 50;
+  private static final int TURTLE_SCREEN_HEIGHT = 500;
 
   private Visualizer myVisualizer;
   private TextArea textBox;
@@ -77,7 +79,7 @@ public class CommandLine {
     VBox buttonBox = new VBox();
     Button run = myStyler.createButton("RunCommand", e->submitCommand());
     run.setMinWidth(BUTTON_WIDTH);
-    buttonBox.getChildren().add(run);
+    run.setMaxHeight(TEXTBOX_HEIGHT/3);
 
     Button clear = myStyler.createButton("ClearCommand", e->{
       textBox.clear();
@@ -86,8 +88,14 @@ public class CommandLine {
       historyBox.getChildren().clear();
     });
     clear.setMinWidth(BUTTON_WIDTH);
-    buttonBox.getChildren().add(clear);
+    clear.setMaxHeight(TEXTBOX_HEIGHT/3);
 
+
+    Button undo = myStyler.createButton("Undo", e-> myVisualizer.getCurrentTurtle().undo());
+    undo.setMaxHeight(TEXTBOX_HEIGHT/3);
+
+
+    buttonBox.getChildren().addAll(run,clear,undo);
     userControls.getChildren().add(buttonBox);
     commandLine.setVgrow(terminal, Priority.ALWAYS);
     commandLine.getChildren().add(terminal);

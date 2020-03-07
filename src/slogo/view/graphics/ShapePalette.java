@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -17,21 +17,20 @@ import java.util.TreeMap;
  * command box to change the the shape of the turtle by using the doubles.
  */
 public class ShapePalette {
-
-    public static final String TITLE = "Shape Palette";
-    public static final Paint BACKGROUND = Color.AZURE;
-    public static final double[] SHAPE_INDICES = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0,
+    private static final String TITLE = "Shape Palette";
+    private static final Paint BACKGROUND = Color.AZURE;
+    private static final double[] SHAPE_INDICES = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0,
                                                     15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0};
-    public static final String[] SHAPE_NAMES = {"turtle1.png", "turtle2.png", "turtle3.png", "turtle4.png", "turtle5.png",
+    private static final String[] SHAPE_NAMES = {"turtle1.png", "turtle2.png", "turtle3.png", "turtle4.png", "turtle5.png",
             "turtle6.png", "turtle7.png", "heart.png", "smile.png", "star.png", "rcd_old.png", "basketball.png", "Coach_k.png", "Alex_OConnell.png", "Cassius_Stanley.png",
             "Goldwire_Jordan.png", "Jack_White.png", "Javon_DeLaurier.png", "Joey_Baker.png", "Justin_Robinson.png", "Keenan_Worthington.png",
             "Matt_hurt.png", "Michael_Savarino.png", "Mike_Buckmire.png", "Tre_Jones.png", "Vernon_Carey.png", "Wendell_Moore.png"};
-    public static final int SIZE_WIDTH = 150;
-    public static final int SIZE_HEIGHT = 500;
-    public static final int VBOX_SPACING = 10;
-    public static final int HBOX_SPACING = 10;
-    public static final int TURTLE_WIDTH = 40;
-    public static final int TURTLE_HEIGHT = 40;
+    private static final int SIZE_WIDTH = 150;
+    private static final int SIZE_HEIGHT = 500;
+    private static final int VBOX_SPACING = 10;
+    private static final int HBOX_SPACING = 10;
+    private static final int TURTLE_WIDTH = 40;
+    private static final int TURTLE_HEIGHT = 40;
 
     private VBox vbox;
     private Map<Double, String> map;
@@ -40,7 +39,9 @@ public class ShapePalette {
      * Here, a new stage is set. The ShapePalette class creates a new window and displays the palette using a map of doubles
      * mapped to strings which then correspond to images in the resource file.
      */
-    public ShapePalette(){ }
+    public ShapePalette(){
+        createGrid();
+    }
 
     /**
      * Only called when the shape palette needs to be shown. In this way, without the shape palette showing, the user can
@@ -54,7 +55,6 @@ public class ShapePalette {
     }
 
     private Scene setScene(){
-        createGrid();
         ScrollPane s1 = new ScrollPane();
         s1.setPrefSize(SIZE_WIDTH, SIZE_HEIGHT);
         s1.setContent(vbox);
