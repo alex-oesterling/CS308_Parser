@@ -222,25 +222,6 @@ public class CommandCreator {
     return tryToMakeCommands(commandList);
   }
 
-  //fixme add in controller
-//  private void doCommandVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
-//    List<String> variableDoesWhat = control.getUserCreatedCommandVariables(line)/*userCreatedCommandVariables.get(line)*/;
-//
-//    for (String s : variableDoesWhat){
-//      String comSyntax = syntax.getSymbol(s);
-//      if (comSyntax.equals(COMMAND)){
-//        doCommandWork(params, lang, syntax, commandList, s, comSyntax, variableDoesWhat);
-//      } else if (comSyntax.equals(CONSTANT)){
-//        doConstantWork(s, commandList);
-//      }
-//    }
-//  }
-
-  //fixme add in controller
-//  private void doConstantVariable(String line, List commandList){
-//    doConstantWork(control.getUserCreatedConstantVariables(line), commandList);
-//  }
-
   private void doConstantWork(Double constant, List<Command> commandList){
     argumentStack.push(constant);
     tryToMakeCommands(commandList);
@@ -323,7 +304,7 @@ public class CommandCreator {
 
   private Command makeCommand(Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
     List<Turtle> turtleListToGive = new ArrayList<>();
-    turtleListToGive.add(turtle/*activeTurtles*/); //fixme
+    turtleListToGive.add(turtle);
 
     return (Command) constructor.newInstance(turtleListToGive, doubleListToGive(), commandListToGive(), stringListToGive());
   }

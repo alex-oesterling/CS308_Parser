@@ -178,28 +178,6 @@ public class Controller {
     executeCommandList(modelExternal.getCommandsOf(commands));
   }
 
-  //todo finish comment
-
-  /**
-   * get the user created constant or variable in a line from the map
-   *
-   * @param line
-   * @return
-   */
-  public Double getUserCreatedConstantVariables(String line) {
-    return userCreatedConstantVariables.get(line);
-  }
-
-  //todo finish comment
-
-  /**
-   * @param line
-   * @return
-   */
-  public List<String> getUserCreatedCommandVariables(String line) {
-    return userCreatedCommandVariables.get(line);
-  }
-
   private void executeCommandList(List<Command> l) {
     myView.setCommandSize(l.size());
     for (Command c : l) {
