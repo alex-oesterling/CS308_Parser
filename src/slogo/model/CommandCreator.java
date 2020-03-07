@@ -63,6 +63,12 @@ public class CommandCreator {
     turtle = t;
   }
 
+  public void orientTurtle(double x, double y, double heading){
+    turtle.setX(x);
+    turtle.setY(y);
+    turtle.setHeading(heading);
+  }
+
   /**
    * Change to a new language of input
    * @param language input language: English, Spanish, Urdu, etc.
