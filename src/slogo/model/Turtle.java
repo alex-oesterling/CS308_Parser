@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Turtle{
 
+  //todo deal with making private
   public static final int DEFAULT_STARTING_X = 0;
   public static final int DEFAULT_STARTING_Y = 0;
   private static final double DEFAULT_HEADING = 0;
@@ -35,12 +36,12 @@ public class Turtle{
   private double bgIndex;
   private double shapeIndex;
   private double sizePixels;
-  private double Id;
+  private double id;
   private Double turtleCount;
   private String name;
 
   public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle, int screenWidth, int screenHeight){
-    Id = IdOfTurtle;
+    id = IdOfTurtle;
     turtleCount = IdOfTurtle;
     VIEW_BOUNDS_X = screenWidth;
     VIEW_BOUNDS_Y = screenHeight;
@@ -55,7 +56,7 @@ public class Turtle{
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
   public Turtle(double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle, int screenWidth, int screenHeight){
-    Id = IdOfTurtle;
+    id = IdOfTurtle;
     turtleCount = IdOfTurtle;
     VIEW_BOUNDS_X = screenWidth;
     VIEW_BOUNDS_Y = screenHeight;
@@ -114,13 +115,11 @@ public class Turtle{
     if(heading>QUAD2_BEGINS && heading<QUAD3_BEGINS){
       theta = QUAD3_BEGINS - heading;
       ySign = NEGATIVE;
-    }
-    else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){
+    } else if(heading>QUAD3_BEGINS && heading<QUAD4_BEGINS){
       theta = heading - QUAD3_BEGINS;
       xSign = NEGATIVE;
       ySign = NEGATIVE;
-    }
-    else if(heading>QUAD4_BEGINS){
+    } else if(heading>QUAD4_BEGINS){
       theta = QUAD4_ENDS - heading;
       xSign = NEGATIVE;
     }
@@ -268,7 +267,7 @@ public class Turtle{
    * @return the ID of the turtle
    */
   public double getId(){
-    return Id;
+    return id;
   }
 
   /**

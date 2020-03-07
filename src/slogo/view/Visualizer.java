@@ -112,6 +112,7 @@ public class Visualizer{
     Node turtleView = userDefined.showUserDefined();
     Node cLine = commandLine.setupCommandLine();
     Node uInterface = userInterface.createTotalUI();
+
     viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setTop(toolBar);
     viewPane.setLeft(turtleView);
@@ -123,7 +124,6 @@ public class Visualizer{
   /**
    * Adds a command to the user defined history once a command is added. Additionally is used in
    * saving the XML file.
-   *
    * @param command
    * @param syntax
    */
@@ -302,7 +302,9 @@ public class Visualizer{
    *
    * @param value - defined by the user in their command
    */
-  public void setPenSize(double value){currentTurtle.changePenWidth(value);}
+  public void setPenSize(double value){
+    currentTurtle.changePenWidth(value);
+  }
 
   /**
    * Sets the turtle shape based on a value that the user types into the command text area, this
@@ -403,17 +405,23 @@ public class Visualizer{
   /**
    * @return the turtles property which is binded to the turtlebox to update the values
    */
-  public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty(){return myTurtlesProperty;}
+  public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty(){
+    return myTurtlesProperty;
+  }
 
   /**
    * @return the width of the canvas the turtle can move in
    */
-  public int getArenaWidth(){return TURTLE_SCREEN_WIDTH;}
+  public int getArenaWidth(){
+    return TURTLE_SCREEN_WIDTH;
+  }
 
   /**
    * @return the height of the canvas the turtle can move in
    */
-  public int getArenaHeight(){return TURTLE_SCREEN_HEIGHT;}
+  public int getArenaHeight() {
+    return TURTLE_SCREEN_HEIGHT;
+  }
 
   /**
    * Updates an indicated entry in the colormap to a new specified value based on 3 RGB inputs

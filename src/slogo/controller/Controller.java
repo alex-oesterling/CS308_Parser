@@ -1,5 +1,7 @@
 package slogo.controller;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class Controller {
   private static final String ERROR_PACKAGE = "resources.information.ErrorText";
   private static final int ZERO = 0;
   private static final Integer SECOND_GEN = 2;
+  private static final double STARTING_ID = 0;
 
   private ModelExternal modelExternal;
   private Map<String, List> userCreatedCommandVariables;
@@ -27,7 +30,8 @@ public class Controller {
   private Map<String, Integer> nameCount;
   private Turtle turtle;
   private ViewExternal myView;
-  private Double IdOfTurtle;
+  private double idOfTurtle;
+  private Command currentCommand;
   private ResourceBundle errorResources;
 
   /**
@@ -42,7 +46,7 @@ public class Controller {
     modelExternal = new ModelExternal(this, language);
     errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
     myView = visualizer;
-    IdOfTurtle = 0.0;
+    idOfTurtle = STARTING_ID;
 
     makeMaps();
   }
@@ -60,8 +64,8 @@ public class Controller {
    * turtle with a default "name" that is its hashcode
    */
   public void addTurtle() {
-    IdOfTurtle++;
-    turtle = new Turtle(IdOfTurtle, myView.getArenaWidth(), myView.getArenaHeight());
+    idOfTurtle++;
+    turtle = new Turtle(idOfTurtle, myView.getArenaWidth(), myView.getArenaHeight());
     if (nameCount.containsKey(turtle.getName())) {
       Integer generation = nameCount.get(turtle.getName());
       nameCount.put(turtle.getName(), nameCount.get(turtle.getName()) + 1);
@@ -82,8 +86,8 @@ public class Controller {
    * @param startingHeading where the turtle will be facing
    */
   public void addTurtle(String name, double startingX, double startingY, double startingHeading) {
-    IdOfTurtle++;
-    Turtle t = new Turtle(name, startingX, startingY, startingHeading, IdOfTurtle, myView.getArenaWidth(), myView.getArenaHeight());
+    idOfTurtle++;
+    Turtle t = new Turtle(name, startingX, startingY, startingHeading, idOfTurtle, myView.getArenaWidth(), myView.getArenaHeight());
     if (nameToTurtle.containsKey(t.getName())) {
       throw new InvalidTurtleException("Turtle already exists",
           new Throwable()); //shouldn't ever get to this
@@ -244,32 +248,73 @@ public class Controller {
 
   private void executeCommandList(List<Command> l) {
     for (Command c : l) {
-      System.out.println(c);
-      System.out.println(c.getResult());
-      c.execute();
-      if (c instanceof ClearScreen) {
-        myView.updatePenStatus(0);
-        myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
-        myView.clear();
-        myView.updatePenStatus(1);
-      } else if (c instanceof HideTurtle
-          || c instanceof ShowTurtle) { //FIXME get rid of instance of. maybe commands can have a string that returns a view method to call and then we use reflection for making the method with one parameter (getResult())...
-        myView.updateTurtleView(c.getResult());
-      } else if (c instanceof PenDown || c instanceof PenUp) {
-        myView.updatePenStatus(c.getResult());
-      } else if (c instanceof SetBackground) {
-        myView.updateBackgroundColor(c.getResult());
-      } else if (c instanceof SetPenColor) {
-        myView.updateCommandPenColor(c.getResult());
-      } else if (c instanceof SetShape) {
-        myView.updateShape(c.getResult());
-      } else if (c instanceof SetPenSize) {
-        myView.updatePenSize(c.getResult());
-      }
-      else {
-        myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
-      }
+      currentCommand = c;
+      System.out.println(currentCommand);
+      System.out.println(currentCommand.getResult());
+      currentCommand.execute();
+      makeMethod(currentCommand, currentCommand.getViewInteractionString().split(" ")[ZERO]);
     }
     myView.updateStatus();
+  }
+
+  private void makeMethod(Command c, String methodName){
+    try {
+      Method method = Controller.class.getDeclaredMethod(methodName);
+      method.invoke(Controller.this);
+    } catch (NoSuchMethodException e) {
+      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+    } catch (IllegalAccessException e) {
+      //todo change this
+      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+    } catch (InvocationTargetException e) {
+      //todo change this
+      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+    }
+  }
+
+  private void addUserConstantToMap(Command c) {
+    String variableName = c.getViewInteractionString().split(" ")[1];//todo remove hard code 1
+    //todo handle putting into maps
+  }
+
+  private void addUserCommandToMap(Command c){
+    String variableName = c.getViewInteractionString().split(" ")[1];//todo remove hard code 1
+    //todo handle putting into maps
+
+  }
+
+  private void update(){
+    myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
+  }
+
+  private void updatePenSize(){
+    myView.updatePenSize(currentCommand.getResult());
+  }
+
+  private void updateShape(){
+    myView.updateShape(currentCommand.getResult());
+  }
+
+  private void updateCommandPenColor(){
+    myView.updateCommandPenColor(currentCommand.getResult());
+  }
+
+  private void updateBackgroundColor() {
+    myView.updateBackgroundColor(currentCommand.getResult());
+  }
+
+  private void updatePenStatus() {
+    myView.updatePenStatus(currentCommand.getResult());
+  }
+
+  private void updateTurtleView(){
+    myView.updateTurtleView(currentCommand.getResult());
+  }
+
+  private void clear() {
+    myView.updatePenStatus(0);
+    myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
+    myView.clear();
+    myView.updatePenStatus(1);
   }
 }

@@ -7,7 +7,7 @@ public class MakeVariable extends Command {
 
   private static final String USER_CONSTANT = "addUserConstantToMap";
   private static final String USER_COMMAND = "addUserCommandToMap";
-  private static final String SEPARATION = "|";
+  private static final String SEPARATION = " ";
   private static boolean isConstant = false;
   private double constant;
   private List<Command> command;
