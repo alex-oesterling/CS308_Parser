@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -462,4 +463,10 @@ public class Visualizer{
   public List<Path> getPaths(){
     return userDefined.getPathList();
   }
+
+  /**
+   * @return - A group of paths that is rendered in the scene so the XML
+   * can draw paths when loading a new scene
+   */
+  public Group getTurtlePaths(){return userDefined.getTurtlePaths();}
 }

@@ -9,10 +9,10 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
+import slogo.view.paths.LinePathElement;
+import slogo.view.paths.MoveToElement;
 
 /**
  *
@@ -72,8 +72,8 @@ public class TurtleAnimator {
         path.setOpacity(PATH_NO_OPACITY);
       }
       path.setStroke(myTurtle.getColor());
-      path.getElements().add(new MoveTo(oldCoords[0], oldCoords[1]));
-      path.getElements().add(new LineTo(newCoords[0], newCoords[1]));
+      path.getElements().add(new MoveToElement(oldCoords[0], oldCoords[1]));
+      path.getElements().add(new LinePathElement(newCoords[0], newCoords[1]));
       PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
       pt.setPath(path);
       transitionQueue.add(pt);

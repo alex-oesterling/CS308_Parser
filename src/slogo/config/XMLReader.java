@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,6 +17,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import slogo.view.Visualizer;
+import slogo.view.paths.LinePathElement;
+import slogo.view.paths.MoveToElement;
 
 public class XMLReader {
   private static final String TXT_FILEPATH = "data/templates/";
@@ -59,6 +62,7 @@ public class XMLReader {
     readUserVariables();
     readUserCommands();
     readColorPalette();
+    readPaths();
   }
 
   private String getElementValue(Element element, String node){
@@ -90,12 +94,12 @@ public class XMLReader {
 
     if(turtleNode != null && turtleNode.getNodeType() == Node.ELEMENT_NODE){
       Element turtleElement = (Element) turtleNode;
-      addTurtles(turtleElement);
+      addTurtles();
     }
   }
 
-  private void addTurtles(Element turtlesElement) {
-    NodeList turtleList = turtlesElement.getElementsByTagName("Turtle");
+  private void addTurtles() {
+    NodeList turtleList = myDoc.getElementsByTagName("Turtle");
     for(int i = 0; i < turtleList.getLength(); i++){
       Node turtle = turtleList.item(i);
       if(turtle.getNodeType() == Node.ELEMENT_NODE){
@@ -115,12 +119,12 @@ public class XMLReader {
 
     if(commandNode != null && commandNode.getNodeType() == Node.ELEMENT_NODE){
       Element commandElement = (Element) commandNode;
-      populateCommands(commandElement);
+      populateCommands();
     }
   }
 
-  private void populateCommands(Element commandElement) {
-    NodeList commandHistory = commandElement.getElementsByTagName("Command");
+  private void populateCommands() {
+    NodeList commandHistory = myDoc.getElementsByTagName("Command");
 
     for(int i = 0; i<commandHistory.getLength(); i++){
       Node cmd = commandHistory.item(i);
@@ -131,7 +135,7 @@ public class XMLReader {
       }
     }
 
-    NodeList commandFiles = commandElement.getElementsByTagName("File");
+    NodeList commandFiles = myDoc.getElementsByTagName("File");
     Node file = commandFiles.item(0);
     if (file != null && file.getNodeType() == Node.ELEMENT_NODE) {
       Element fileElement = (Element) file;
@@ -157,12 +161,12 @@ public class XMLReader {
 
     if(varNode != null && varNode.getNodeType() == Node.ELEMENT_NODE){
       Element varElement = (Element) varNode;
-      populateUserVariables(varElement);
+      populateUserVariables();
     }
   }
 
-  private void populateUserVariables(Element varElement) {
-    NodeList variableList = varElement.getElementsByTagName("Variable");
+  private void populateUserVariables() {
+    NodeList variableList = myDoc.getElementsByTagName("Variable");
 
     for(int i = 0; i < variableList.getLength(); i++){
       Node var = variableList.item(i);
@@ -180,12 +184,12 @@ public class XMLReader {
 
     if(cmdNode != null && cmdNode.getNodeType() == Node.ELEMENT_NODE){
       Element cmdElement = (Element) cmdNode;
-      populateUserCommands(cmdElement);
+      populateUserCommands();
     }
   }
 
-  private void populateUserCommands(Element cmdElement) {
-    NodeList commandList = cmdElement.getElementsByTagName("Command");
+  private void populateUserCommands() {
+    NodeList commandList = myDoc.getElementsByTagName("Command");
 
     for(int i = 0; i < commandList.getLength(); i++){
       Node cmd = commandList.item(i);
@@ -203,11 +207,11 @@ public class XMLReader {
 
     if(colorNode!= null && colorNode.getNodeType() == Node.ELEMENT_NODE){
       Element colorElement = (Element) colorNode;
-      overwritePalette(colorElement);
+      overwritePalette();
     }
   }
 
-  private void overwritePalette(Element colorElement){
+  private void overwritePalette(){
     NodeList colorList = myDoc.getElementsByTagName("Color");
 
     for(int i = 0; i < colorList.getLength(); i++){
@@ -216,6 +220,36 @@ public class XMLReader {
       if(color.getNodeType() == Node.ELEMENT_NODE){
         Element paletteElement = (Element) color;
         myVisualizer.updateColorMap(Double.parseDouble(paletteElement.getAttribute("index")), Color.web(paletteElement.getAttribute("color")).toString());
+      }
+    }
+  }
+
+  private void readPaths(){
+    NodeList paths = myDoc.getElementsByTagName("Paths");
+    Node pathNode = paths.item(0);
+
+    if(pathNode!=null && pathNode.getNodeType() == Node.ELEMENT_NODE){
+      Element pathsElement = (Element) pathNode;
+      drawPaths();
+    }
+  }
+
+  private void drawPaths() {
+    NodeList pathList = myDoc.getElementsByTagName("Path");
+
+    for(int i = 0; i < pathList.getLength(); i++){
+      Node pathNode = pathList.item(i);
+
+      if(pathNode.getNodeType() == Node.ELEMENT_NODE){
+        Element pathElement = (Element) pathNode;
+        Path path = new Path();
+        path.getElements().add(new MoveToElement(Double.parseDouble(pathElement.getAttribute("x0")), Double.parseDouble(pathElement.getAttribute("y0"))));
+        path.getElements().add(new LinePathElement(Double.parseDouble(pathElement.getAttribute("x1")), Double.parseDouble(pathElement.getAttribute("y1"))));
+        path.setStroke(Color.web(pathElement.getAttribute("color")));
+        path.setStrokeWidth(Double.parseDouble(pathElement.getAttribute("stroke")));
+        path.setOpacity(Double.parseDouble(pathElement.getAttribute("opacity")));
+        myVisualizer.getPaths().add(path);
+        myVisualizer.getTurtlePaths().getChildren().add(path);
       }
     }
   }

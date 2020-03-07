@@ -1,5 +1,6 @@
 package slogo.view.graphics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.scene.Group;
@@ -43,6 +44,7 @@ public class UserDefined {
         turtles = new Group();
         backgroundColor = Color.WHITE;
         styler = new Styler(resources);
+        pathList = new ArrayList<>();
     }
 
     /**

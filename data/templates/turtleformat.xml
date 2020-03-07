@@ -24,6 +24,6 @@
     <Color index="3" color="black"/>
   </ColorPalette>
   <Paths>
-    <Path type=""/>
+    <Path x0="10" y0="10" x1="20" y1="20" stroke="1" color="black" opacity="1"/>
   </Paths>
 </SLogo>
