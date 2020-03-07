@@ -234,6 +234,8 @@ public class Controller {
 
   private void executeCommandList(List<Command> l) {
     for (Command c : l) {
+      System.out.println(c);
+      System.out.println(c.getResult());
       c.execute();
       if (c instanceof ClearScreen) {
         myView.updatePenStatus(0);
