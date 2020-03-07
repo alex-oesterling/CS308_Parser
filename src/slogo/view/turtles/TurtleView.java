@@ -43,13 +43,9 @@ public class TurtleView{
     public static final int TURTLE_SCREEN_WIDTH = 500;
     public static final int TURTLE_SCREEN_HEIGHT = 500;
     public static final int PATH_STROKE_WIDTH = 3;
-    public static final double PATH_OPACITY = .75;
-    public static final double PATH_NO_OPACITY = 0.0;
     private static final String ERROR_DIALOG = "Please Choose Another File";
 
     private Group myPaths;
-//    private Queue<Path> pathHistory;
-//    private List<Path> backupPathHistory;
     private Group myTurtles;
     private boolean penStatus;
     private ImageView myImage;
@@ -64,10 +60,6 @@ public class TurtleView{
     private double pathStrokeWidth;
     private String turtleName;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
-//    private int animationDuration;
-//    private int totalDuration;
-//    private Queue<Transition> transitionQueue;
-//    private Queue<Transition> backupTransitionQueue;
     private boolean stopped;
     private TurtleAnimator turtleAnimator;
     private Controller myController;
@@ -81,8 +73,6 @@ public class TurtleView{
     public TurtleView(Group turtles, Group paths, String name, Controller controller){
         penStatus = true;
         myPaths = paths;
-//        pathHistory = new LinkedList<>();
-//        backupPathHistory = new LinkedList<>();
         turtleName = name;
         myTurtles = turtles;
         myImage = createTurtle();
@@ -96,10 +86,6 @@ public class TurtleView{
         prevX = currentX;
         prevY = currentY;
         prevHeading = heading;
-//        totalDuration = 500;
-//        animationDuration = totalDuration;
-//        transitionQueue = new LinkedList<>();
-//        backupTransitionQueue = new LinkedList<>();
         stopped = true;
         turtleAnimator = new TurtleAnimator(this, myImage, myPaths);
         myController = controller;
@@ -110,7 +96,6 @@ public class TurtleView{
         ImageView turtleImage = new ImageView(string);
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
-//        st = new SequentialTransition();
         turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
         turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().add(turtleImage);
@@ -177,100 +162,10 @@ public class TurtleView{
         return fileChooser.showOpenDialog(stage);
     }
 
-//    /**
-//     * Updates the turtle's position, is called in the controller and updates the position whenever a corresponding command
-//     * is typed in.
-//     * @param newX - new x position
-//     * @param newY - new y position
-//     * @param orientation - new orientation
-//     */
     public void update(double newX, double newY, double orientation){turtleAnimator.update(newX, newY, orientation);}
-//        if(transitionQueue.isEmpty()){
-//            prevX = currentX;
-//            prevY = currentY;
-//            prevHeading = heading;
-//        }
-//        newY = -newY;
-//        newX += TURTLE_SCREEN_WIDTH/2;
-//        newY += TURTLE_SCREEN_HEIGHT/2;
-//        double oldX = currentX;
-//        double oldY = currentY;
-//        double oldHeading = heading;
-//        currentX = newX;
-//        currentY = newY;
-//        heading = orientation;
-//        if(newX != oldX || newY != oldY) {
-//            Path path = new Path();
-//            if(penStatus){
-//                path.setOpacity(PATH_OPACITY);
-//                path.setStrokeWidth(pathStrokeWidth);
-//            } else {
-//                path.setOpacity(PATH_NO_OPACITY);
-//            }
-//            path.setStroke(myPenColor);
-//            path.getElements().add(new MoveTo(oldX, oldY));
-//            path.getElements().add(new LineTo(newX, newY));
-//            PathTransition pt = new PathTransition(Duration.millis(animationDuration), path, myImage);
-//            pt.setPath(path);
-//            transitionQueue.add(pt);
-//            pathHistory.add(path);
-//        }
-//        if(orientation != oldHeading) {
-//            RotateTransition rt = new RotateTransition(Duration.millis(animationDuration),
-//                myImage);
-//            rt.setToAngle(orientation);
-//            transitionQueue.add(rt);
-//            pathHistory.add(new Path());
-//        }
-//    }
 
-//    /**
-//     * Once the turtle's position is updated, the animation is played in order to see the turtle move.
-//     */
     public void playAnimation(){turtleAnimator.playAnimation();}
-//        backupTransitionQueue = new LinkedList<>(transitionQueue);
-//        backupPathHistory = new LinkedList<>(pathHistory);
-//        animateRecurse();
-//    }
-//
-//    private void animateRecurse() {
-//        if(animationDuration == 0) {
-//            while(!transitionQueue.isEmpty()){
-//                st.getChildren().add(transitionQueue.remove());
-//                myPaths.getChildren().add(pathHistory.remove());
-//                st.play();
-//            }
-//        } if(!transitionQueue.isEmpty()) {
-//            stopped = false;
-//            st = new SequentialTransition(transitionQueue.remove());
-//            st.setOnFinished(e -> {
-//                animateRecurse();
-//                myPaths.getChildren().add(pathHistory.remove());
-//            });
-//            st.play();
-//        } else {
-//            stopped = true;
-//            st = new SequentialTransition();
-//            set(myImage.getTranslateX()-TURTLE_SCREEN_WIDTH/2+myImage.getBoundsInLocal().getWidth()/2,
-//                TURTLE_SCREEN_HEIGHT/2-myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
-//                myImage.getRotate());
-////            if(!myPaths.getChildren().contains(pathHistory)) {
-////                myPaths.getChildren().add(pathHistory);
-////            }
-//        }
-//    }
 
-//    /**
-//     * This method is called when the reset button is clicked in the UserInterface. It resets the turtle's position on the screen.
-//     */
-//    public void resetTurtle(){
-//        myImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - myImage.getBoundsInLocal().getWidth() / 2);
-//        myImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - myImage.getBoundsInLocal().getHeight() / 2);
-//        myImage.setRotate(0);
-//        heading = 0;
-//        currentY = TURTLE_SCREEN_HEIGHT/2;
-//        currentX = TURTLE_SCREEN_WIDTH/2;
-//    }
 
     /**
      * This method creates an object property which is then binded with the turtle's information and displayed on the screen.
@@ -408,44 +303,14 @@ public class TurtleView{
     }
 
     public void pause(){turtleAnimator.pause();}
-//        st.pause();
-//    }
-//
+
     public void play(){turtleAnimator.play();}
-//        if(stopped){
-//            animateRecurse();
-//        } else {
-//            st.play();
-//        }
-//    }
-//
+
     public void step(){turtleAnimator.step();}
-//        if(!stopped || !transitionQueue.isEmpty()) {
-//            if(stopped) {
-//                st = new SequentialTransition(transitionQueue.remove());
-//            }
-//            st.setOnFinished(e-> {
-//                myPaths.getChildren().add(pathHistory.remove());
-//                stopped = true;
-//            });
-//            st.play();
-//        }
-//    }
-//
+
     public void resetAnimation(){turtleAnimator.resetAnimation();}
-//        rewindPosition();
-//        transitionQueue = new LinkedList<>(backupTransitionQueue);
-//        pathHistory = new LinkedList<>(backupPathHistory);
-//    }
-//
+
     public void undo(){ turtleAnimator.undo(); }
-//
-//    private void rewindPosition() {
-//        stopped=true;
-//        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
-//        st = new SequentialTransition();
-//        myPaths.getChildren().removeAll(backupPathHistory);
-//    }
 
     public void setSpeed(int value){turtleAnimator.setSpeed(value);}
 
@@ -466,7 +331,6 @@ public class TurtleView{
 
     public void rewindCoords(){
         System.out.println(prevX + "" + prevY);
-//        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
         myImage.setTranslateX(prevX-myImage.getBoundsInLocal().getWidth()/2);
         myImage.setTranslateY(prevY-myImage.getBoundsInLocal().getHeight()/2);
         myImage.setRotate(prevHeading);

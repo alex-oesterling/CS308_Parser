@@ -57,7 +57,6 @@ public class TurtleAnimator {
    * @param orientation - new orientation
    */
   public void update(double newX, double newY, double orientation){
-//    if(resetted){transitionQueue=new LinkedList<>();}
     if(transitionQueue.isEmpty()){
       myTurtle.updateHistory();
     }
@@ -126,9 +125,6 @@ public class TurtleAnimator {
       myTurtle.updateCurrent(myImage.getTranslateX()-TURTLE_SCREEN_WIDTH/2+myImage.getBoundsInLocal().getWidth()/2,
           TURTLE_SCREEN_HEIGHT/2-myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
           myImage.getRotate());
-//            if(!myPaths.getChildren().contains(pathHistory)) {
-//                myPaths.getChildren().add(pathHistory);
-//            }
     }
   }
   public void pause(){
