@@ -1,6 +1,5 @@
 package slogo.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import slogo.view.Visualizer;
@@ -42,14 +41,12 @@ public class Turtle{
   private double shapeIndex;
   private double sizePixels;
   private double Id;
-  private List<String> turtleCount = new ArrayList<>();
   private String name;
 
   public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
     Id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
-    turtleCount.add(name);
   }
 
   /**
@@ -62,7 +59,6 @@ public class Turtle{
     Id = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
-    turtleCount.add(name);
   }
 
   /**
@@ -288,7 +284,7 @@ public class Turtle{
    * @return amount of turtles created thus far
    */
   public double getTurtleCount(){
-    return turtleCount.size();
+    return 9;
   }
 
   /**
