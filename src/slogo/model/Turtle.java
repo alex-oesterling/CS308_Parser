@@ -4,10 +4,8 @@ import java.util.List;
 
 public class Turtle{
 
-  //todo deal with making private
-  public static final int DEFAULT_STARTING_X = 0;
-  public static final int DEFAULT_STARTING_Y = 0;
-  private static final double DEFAULT_HEADING = 0;
+  private static final int DEFAULT_STARTING_X = 0;
+  private static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_PEN_INDEX = 0;
   private static final int DEFAULT_BG_INDEX = 7;
   private static final int DEFAULT_SHAPE_INDEX = 0;
@@ -18,6 +16,7 @@ public class Turtle{
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
   private static final int QUAD4_ENDS = 360;
+  private static final double DEFAULT_HEADING = 0;
   private static final double VISIBLE = 1;
   private static final double INVISIBLE = 0;
   private static final double DRAWING = 1.0;

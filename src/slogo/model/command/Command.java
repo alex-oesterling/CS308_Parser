@@ -58,9 +58,5 @@ abstract public class Command {
     return getResult();
   }
 
-  protected void setResult(Double value){
-    result = value;
-  }
-
   //TODO add throwCommandParametersError()
 }

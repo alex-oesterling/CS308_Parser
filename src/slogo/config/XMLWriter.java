@@ -111,9 +111,9 @@ public class XMLWriter {
 
   private Node writeUserVariables(){
     Element variables = myDocument.createElement("UserVariables");
-    Map<String, String> userVariables = myVisualizer.getUserVariables();
+    Map<String, Double> userVariables = myVisualizer.getUserVariables();
     for(String s : userVariables.keySet()){
-      variables.appendChild(createAttributeNode("Variable", new String[]{"name", "value"}, new String[]{s, userVariables.get(s)}));
+      variables.appendChild(createAttributeNode("Variable", new String[]{"name", "value"}, new String[]{s, userVariables.get(s).toString()}));
     }
     return variables;
   }

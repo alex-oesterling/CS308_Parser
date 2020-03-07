@@ -6,6 +6,8 @@ import java.util.List;
 
 public class ClearScreen extends Command {
 
+  private static final int DEFAULT_STARTING_X = 0;
+  private static final int DEFAULT_STARTING_Y = 0;
   private static final String UPDATE = "clear";
   private Turtle t;
 
@@ -31,7 +33,7 @@ public class ClearScreen extends Command {
    */
   @Override
   public Double getResult() {
-    return t.distanceToPosition(Turtle.DEFAULT_STARTING_X, Turtle.DEFAULT_STARTING_Y);
+    return t.distanceToPosition(DEFAULT_STARTING_X, DEFAULT_STARTING_Y);
   }
 
   /**
