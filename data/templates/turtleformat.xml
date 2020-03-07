@@ -23,8 +23,6 @@
     <Color index="2" color="black"/>
     <Color index="3" color="black"/>
   </ColorPalette>
-  <TurtlePalette>
-  </TurtlePalette>
   <Paths>
     <Path type=""/>
   </Paths>

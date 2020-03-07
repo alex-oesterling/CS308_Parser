@@ -1,10 +1,13 @@
 package slogo.config;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.PathElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -137,6 +140,18 @@ public class XMLWriter {
       colors.appendChild(createAttributeNode("Color", new String[]{"index", "color"}, new String[]{d.toString(), colorMap.get(d)}));
     }
     return colors;
+  }
+
+  private Node writePaths(){
+    Element paths = myDocument.createElement("Paths");
+    List<Path> pathList = new ArrayList<>(myVisualizer.getPaths());
+    for(Path p : pathList){
+      for(PathElement pe: p.getElements()){
+        pe.
+      }
+      paths.appendChild(createAttributeNode("Path", new String[]))
+    }
+    return paths;
   }
 
   private Node createAttributeNode(String name, String[] attributes, String[] attributeValues){

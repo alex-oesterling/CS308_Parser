@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
 import slogo.exceptions.InvalidCommandException;
@@ -190,7 +191,7 @@ public class Visualizer{
     } catch (InvalidTurtleException e) {
       e.displayError("Please add unique turtle:");
     }
-    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), myController);
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), this);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
@@ -213,7 +214,7 @@ public class Visualizer{
       System.out.println("YEET");
       return;
     }
-    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), myController);
+    TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), this);
     tempTurtle.set(startingX, startingY, heading);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
@@ -437,7 +438,28 @@ public class Visualizer{
     colorPalette.updateColorMap(index, hex);
   }
 
+  /**
+   * @return the map between index and hex valued color held within the colorPalette
+   * for writing to the XML
+   */
   public Map<Double, String> getColorMap(){
     return colorPalette.getColorMap();
+  }
+
+
+  /**
+   * Directly repositions the model-side turtle when being modified by commands
+   * undo/reset on the view end (IN THE MODEL's COORDINATE SYSTEM -- 0,0 is the center)
+   * @param newX - the newX position for the turtle to move to
+   * @param newY - the new Y position for the turtle to move to
+   * @param heading - the new heading for the turtle to move to
+   */
+  public void orientTurtle(double newX, double newY, double heading){myController.orientTurtle(newX, newY, heading);}
+
+  /**
+   * @return - A list of path objects to be modified and inspected to be written into the XML
+   */
+  public List<Path> getPaths(){
+    return userDefined.getPathList();
   }
 }
