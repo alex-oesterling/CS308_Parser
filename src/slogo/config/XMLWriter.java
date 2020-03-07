@@ -1,10 +1,13 @@
 package slogo.config;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.PathElement;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -71,6 +74,7 @@ public class XMLWriter {
     root.appendChild(writeCommandHistory());
     root.appendChild(writeUserVariables());
     root.appendChild(writeUserCommands());
+    root.appendChild(writeColorPalette());
   }
 
   private Node writePreferences() {
@@ -86,10 +90,11 @@ public class XMLWriter {
     for(String s : myVisualizer.getTurtles().keySet()){
       TurtleView currentTurtle = myVisualizer.getTurtles().get(s);
       Double[] attributeValues = currentTurtle.getData();
-      String[] attributeStrings = new String[attributeValues.length];
+      String[] attributeStrings = new String[attributes.length];
       for(int i = 0; i < attributeValues.length; i++){
-        attributeStrings[i] = attributeValues[i].toString();
+        attributeStrings[i+1] = attributeValues[i].toString();
       }
+      attributeStrings[0] = myVisualizer.getTurtles().get(s).getName();
       turtles.appendChild(createAttributeNode("Turtle", attributes, attributeStrings));
     }
     return turtles;
@@ -128,6 +133,27 @@ public class XMLWriter {
     return node;
   }
 
+  private Node writeColorPalette(){
+    Element colors = myDocument.createElement("ColorPalette");
+    Map<Double, String> colorMap = myVisualizer.getColorMap();
+    for(Double d : colorMap.keySet()){
+      colors.appendChild(createAttributeNode("Color", new String[]{"index", "color"}, new String[]{d.toString(), colorMap.get(d)}));
+    }
+    return colors;
+  }
+
+//  private Node writePaths(){
+//    Element paths = myDocument.createElement("Paths");
+//    List<Path> pathList = new ArrayList<>(myVisualizer.getPaths());
+//    for(Path p : pathList){
+//      for(PathElement pe: p.getElements()){
+//        pe.
+//      }
+//      paths.appendChild(createAttributeNode("Path", new String[]))
+//    }
+//    return paths;
+//  }
+
   private Node createAttributeNode(String name, String[] attributes, String[] attributeValues){
     Element node = myDocument.createElement(name);
     for(int i = 0; i < attributes.length; i++) {
@@ -135,5 +161,4 @@ public class XMLWriter {
     }
     return node;
   }
-
 }

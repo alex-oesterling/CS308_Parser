@@ -259,7 +259,7 @@ public class Controller {
   }
 
   private void makeMethod(String methodName){
-    try {
+   try {
       Method method = Controller.class.getDeclaredMethod(methodName);
       method.invoke(Controller.this);
     } catch (NoSuchMethodException e) {
@@ -320,6 +320,6 @@ public class Controller {
   }
 
   private void setColorPalette(){
-    myView.setColorPallete(currentCommand.getResult(), currentCommand.getViewInteractionString().split(" ")[1]);
+    myView.setColorPalette(currentCommand.getResult(), currentCommand.getViewInteractionString().split(" ")[1]);
   }
 }

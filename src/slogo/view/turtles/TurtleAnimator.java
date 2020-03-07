@@ -14,6 +14,9 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
+/**
+ *
+ */
 public class TurtleAnimator {
   private static final double PATH_OPACITY = .75;
   private static final double PATH_NO_OPACITY = 0.0;
@@ -104,7 +107,7 @@ public class TurtleAnimator {
     if(animationDuration == 0) {
       while(!transitionQueue.isEmpty()){
         st.getChildren().add(transitionQueue.remove());
-        myPaths.getChildren().add(pathHistory.remove());
+        addPath();
         st.play();
       }
     } if(!transitionQueue.isEmpty()) {
@@ -112,7 +115,7 @@ public class TurtleAnimator {
       st = new SequentialTransition(transitionQueue.remove());
       st.setOnFinished(e -> {
         animateRecurse();
-        myPaths.getChildren().add(pathHistory.remove());
+        addPath();
       });
       st.play();
     } else {
@@ -123,6 +126,13 @@ public class TurtleAnimator {
           myImage.getRotate());
     }
   }
+
+  private void addPath() {
+    Path path = pathHistory.remove();
+    myPaths.getChildren().add(path);
+    myTurtle.addPath(path);
+  }
+
   public void pause(){
     st.pause();
   }
@@ -141,7 +151,7 @@ public class TurtleAnimator {
         st = new SequentialTransition(transitionQueue.remove());
       }
       st.setOnFinished(e-> {
-        myPaths.getChildren().add(pathHistory.remove());
+        addPath();
         stopped = true;
       });
       st.play();
