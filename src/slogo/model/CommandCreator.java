@@ -105,7 +105,7 @@ public class CommandCreator {
 
   private void makeStacks() {
     makeNewStacks();
-    listParametersStack = new Stack<>(); //todo figure out why we separated this one out
+    listParametersStack = new Stack<>();
   }
 
   private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
