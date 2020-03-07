@@ -7,7 +7,6 @@ import java.util.List;
 public class ID extends Command {
 
   private Turtle t;
-
   /**
    * Constructor for the ID command
    * @param turtleList  the list of turtles being brought in to use this command (if needed)
@@ -28,5 +27,4 @@ public class ID extends Command {
   public Double getResult() {
     return t.getId();
   }
-
 }

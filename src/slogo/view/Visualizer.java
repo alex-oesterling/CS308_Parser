@@ -32,7 +32,6 @@ import slogo.view.turtles.TurtleView;
  * calls all the other classes that make up the entire SLogo project. This class connects all the
  * parts of the project.
  */
-
 public class Visualizer{
   private static final int TURTLE_SCREEN_WIDTH = 500;
   private static final int TURTLE_SCREEN_HEIGHT = 500;
@@ -74,7 +73,6 @@ public class Visualizer{
    *
    * @param stage - takes in the stage from the SlogoApp class
    */
-
   public Visualizer (Stage stage){
     myStage = stage;
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
@@ -127,11 +125,9 @@ public class Visualizer{
   /**
    * Adds a command to the user defined history once a command is added. Additionally is used in
    * saving the XML file.
-   *
    * @param command
    * @param syntax
    */
-
   public void addCommand(String command, String syntax){
     Node commandAndSyntax = makeUserDefined(command, syntax, commandLine.setOnClick(command), new Label());
     cmdMap.put(command, syntax);

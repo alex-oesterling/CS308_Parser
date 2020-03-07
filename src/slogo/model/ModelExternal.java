@@ -18,6 +18,21 @@ public class ModelExternal implements ModelExternalAPI {
   }
 
   @Override
+  /**
+   * Sets the turtle at specific position
+   * @param x x position
+   * @param y y position
+   * @param heading degrees fixing
+   */
+  public void orientTurtle(double x, double y, double heading) {
+    creator.orientTurtle(x, y, heading);
+  }
+
+  @Override
+  /**
+   * Sets specific turtle
+   * @param t the turtle being set
+   */
   public void setTurtle(Turtle t){
     creator.setTurtle(t);
   }
