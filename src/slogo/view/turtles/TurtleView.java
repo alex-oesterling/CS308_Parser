@@ -85,8 +85,8 @@ public class TurtleView{
         ImageView turtleImage = new ImageView(string);
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
-        turtleImage.setTranslateX(arena_width / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
-        turtleImage.setTranslateY(arena_height / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
+        turtleImage.setTranslateX((double)arena_width / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
+        turtleImage.setTranslateY((double)arena_height / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().add(turtleImage);
         return turtleImage;
     }
