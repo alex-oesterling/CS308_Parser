@@ -6,8 +6,9 @@ import java.util.List;
 
 public class PenUp extends Command {
 
-  private Turtle t;
   private static final double NOT_DRAWING = 0;
+  private static final String UPDATE = "updatePenStatus";
+  private Turtle t;
 
   /**
    * Constructor for pen up which allows the turtle to move without drawing, lifts pen sets the
@@ -32,5 +33,14 @@ public class PenUp extends Command {
   public Double execute() {
     t.setDrawing(NOT_DRAWING);
     return NOT_DRAWING;
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the update pen status string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }

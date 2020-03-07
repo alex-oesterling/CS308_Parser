@@ -7,6 +7,7 @@ import java.util.List;
 public class HideTurtle extends Command {
 
   private static final double HIDDEN = 0;
+  private static final String UPDATE = "updateTurtleView";
   private Turtle t;
 
   /**
@@ -32,6 +33,15 @@ public class HideTurtle extends Command {
   public Double execute() {
     t.setVisibility(HIDDEN);
     return HIDDEN;
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the update turtle view string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }
 

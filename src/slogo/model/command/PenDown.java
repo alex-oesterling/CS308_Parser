@@ -6,8 +6,9 @@ import java.util.List;
 
 public class PenDown extends Command {
 
-  private Turtle t;
   private static final double DRAWING = 1;
+  private static final String UPDATE = "updatePenStatus";
+  private Turtle t;
 
   /**
    * Constructor for pen down which allows the turtle to  start drawing/use its pen to draw sets the
@@ -32,5 +33,14 @@ public class PenDown extends Command {
   public Double execute() {
     t.setDrawing(DRAWING);
     return DRAWING;
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the update pen status string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }

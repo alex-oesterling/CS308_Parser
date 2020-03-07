@@ -6,12 +6,12 @@ import java.util.List;
 
 public class SetPenSize extends Command {
 
+  private static final String UPDATE = "updatePenSize";
   private Double size;
   private Turtle t;
 
   /**
-   * Set pen size constructor, takes in the number of pixels for the size of the pen to be switched
-   * to
+   * Set pen size constructor, takes in the number of pixels for the size of the pen to be switched to
    *
    * @param turtleList  the list of turtles being brought in to use this command (if needed)
    * @param doubleList  the list of doubles to be used for this command (if needed)
@@ -43,5 +43,14 @@ public class SetPenSize extends Command {
   public Double execute() {
     t.setPenSize(size);
     return this.getResult();
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the update pen size string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }
