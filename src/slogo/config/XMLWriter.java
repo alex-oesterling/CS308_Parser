@@ -142,17 +142,17 @@ public class XMLWriter {
     return colors;
   }
 
-  private Node writePaths(){
-    Element paths = myDocument.createElement("Paths");
-    List<Path> pathList = new ArrayList<>(myVisualizer.getPaths());
-    for(Path p : pathList){
-      for(PathElement pe: p.getElements()){
-        pe.
-      }
-      paths.appendChild(createAttributeNode("Path", new String[]))
-    }
-    return paths;
-  }
+//  private Node writePaths(){
+//    Element paths = myDocument.createElement("Paths");
+//    List<Path> pathList = new ArrayList<>(myVisualizer.getPaths());
+//    for(Path p : pathList){
+//      for(PathElement pe: p.getElements()){
+//        pe.
+//      }
+//      paths.appendChild(createAttributeNode("Path", new String[]))
+//    }
+//    return paths;
+//  }
 
   private Node createAttributeNode(String name, String[] attributes, String[] attributeValues){
     Element node = myDocument.createElement(name);
