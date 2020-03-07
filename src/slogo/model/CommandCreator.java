@@ -26,7 +26,6 @@ public class CommandCreator {
   private static final String WORK = "Work";
   private static final String WHITESPACE = "\\s+";
   private static final int ZERO = 0;
-  private static boolean IS_VARIABLE = false;
 
   private Controller control;
   private Stack<String> waitingCommandsStack, variablesStack;
@@ -164,29 +163,43 @@ public class CommandCreator {
     if (syntax.getSymbol(lines.get(ZERO)).equals(CONSTANT)){ // eg they type in 50 fd
       throw new InvalidConstantException(new Throwable(), errorResources.getString("StartWithConstant"));
     }
+
     makeHolderStacks();
-    while(iterator.hasNext() && !IS_VARIABLE) {
+
+    while(iterator.hasNext()) {
       String line = iterator.next();
-      if (line.trim().length() > 0) {
+      if (line.trim().length() > ZERO) {
         String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
+
         if(commandSyntax.equals(COMMAND)){
           doCommandWork(params, lang, syntax, currentList, line, commandSyntax, lines);
         } else if (commandSyntax.equals(CONSTANT)){
           doConstantWork(Double.parseDouble(line), currentList);
         } else if (commandSyntax.equals(VARIABLE)){
           variablesStack.push(line);
+          checkIfVarInMap(line);
         } else if (commandSyntax.equals(LIST_START)){
           doListStartWork();
         } else if (commandSyntax.equals(LIST_END)){
           doListEndWork();
         }
+
       }
     }
-    IS_VARIABLE = false;
+
     while(!waitingCommandsStack.isEmpty()){
       tryToMakeCommands(currentList);
     }
     return createExtendedList(currentList);
+  }
+
+  private void checkIfVarInMap(String variable){
+    if(control.validCommandVariable(variable)){
+      control.getUserCreatedCommandVariables(variable);
+    } else if (control.validConstantVariable(variable)){
+      argumentStack.push(control.getUserCreatedConstantVariables(variable));
+    }
+
   }
 
   private String doWorkString(String type){
