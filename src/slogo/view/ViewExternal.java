@@ -1,6 +1,7 @@
 package slogo.view;
 
 public class ViewExternal implements ViewExternalAPI {
+
   private Visualizer myVisualizer;
 
   public ViewExternal(Visualizer view){
@@ -68,4 +69,14 @@ public class ViewExternal implements ViewExternalAPI {
     myVisualizer.getCurrentTurtle().setCommandSize(size);
   }
 
+  @Override
+  public void setColorPallete(double id, double red, double green, double blue) {
+
+  }
+
+  @Override
+  public int getArenaWidth() {return myVisualizer.getArenaWidth(); }
+
+  @Override
+  public int getArenaHeight() {return myVisualizer.getArenaHeight(); }
 }

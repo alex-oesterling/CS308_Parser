@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -11,24 +11,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import java.util.ResourceBundle;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
 
 /**
  * This class creates a new window in which holds a list of ways to customize the turtle's pen. By opening this window, the
  * user is able to change the pen color, the pen width, and decide if the pen should be up or down.
  */
 public class PenProperties {
-
-    public static final String TITLE = "Pen Properties";
-    public static final Paint BACKGROUND = Color.web("#808080");
-    public static final String RESOURCES = "resources";
-    public static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
-    public static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
-    public static final String STYLESHEET = "styling.css";
-    public static final int SIZE_WIDTH = 300;
-    public static final int SIZE_HEIGHT = 170;
-    public static final int COLORPICKER_HEIGHT = 30;
-    public static final int HBOX_SPACING = 10;
-    public static final int VBOX_SPACING = 15;
+    private static final String TITLE = "Pen Properties";
+    private static final Paint BACKGROUND = Color.web("#808080");
+    private static final String RESOURCES = "resources";
+    private static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
+    private static final String DEFAULT_RESOURCE_FOLDER = RESOURCES + "/formats/";
+    private static final String STYLESHEET = "styling.css";
+    private static final int SIZE_WIDTH = 300;
+    private static final int SIZE_HEIGHT = 170;
+    private static final int COLORPICKER_HEIGHT = 30;
+    private static final int HBOX_SPACING = 10;
+    private static final int VBOX_SPACING = 15;
 
     private Styler styler;
     private ColorPicker colorPicker;

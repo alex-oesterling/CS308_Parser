@@ -61,7 +61,7 @@ public class Controller {
    */
   public void addTurtle() {
     IdOfTurtle++;
-    turtle = new Turtle(IdOfTurtle);
+    turtle = new Turtle(IdOfTurtle, myView.getArenaWidth(), myView.getArenaHeight());
     if (nameCount.containsKey(turtle.getName())) {
       Integer generation = nameCount.get(turtle.getName());
       nameCount.put(turtle.getName(), nameCount.get(turtle.getName()) + 1);
@@ -83,7 +83,7 @@ public class Controller {
    */
   public void addTurtle(String name, double startingX, double startingY, double startingHeading) {
     IdOfTurtle++;
-    Turtle t = new Turtle(name, startingX, startingY, startingHeading, IdOfTurtle);
+    Turtle t = new Turtle(name, startingX, startingY, startingHeading, IdOfTurtle, myView.getArenaWidth(), myView.getArenaHeight());
     if (nameToTurtle.containsKey(t.getName())) {
       throw new InvalidTurtleException("Turtle already exists",
           new Throwable()); //shouldn't ever get to this

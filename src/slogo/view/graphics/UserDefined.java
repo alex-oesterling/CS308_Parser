@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import java.util.ResourceBundle;
 import javafx.scene.Group;
@@ -10,18 +10,18 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import slogo.view.Styler;
 
 /**
  * This class creates many components of the visualizer. These components include all of the turtleview, the command history,
  * and the variable history.
  */
 public class UserDefined {
-
-    public static final int TURTLE_SCREEN_WIDTH = 500;
-    public static final int TURTLE_SCREEN_HEIGHT = 500;
-    public static final int TURTLE_SCREEN_STROKEWIDTH = 3;
-    public static final int VBOX_SPACING = 10;
-    public static final int VIEWPANE_PADDING = 10;
+    private static final int TURTLE_SCREEN_WIDTH = 500;
+    private static final int TURTLE_SCREEN_HEIGHT = 500;
+    private static final int TURTLE_SCREEN_STROKEWIDTH = 3;
+    private static final int VBOX_SPACING = 10;
+    private static final int VIEWPANE_PADDING = 10;
 
     private Rectangle turtleArea;
     private Color backgroundColor;
@@ -58,13 +58,13 @@ public class UserDefined {
         Node varScroll = makeHistory(varHistory);
         Node commandScroll = makeHistory(commandHistory);
 
-        commandHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING);
-        varHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING);
+        commandHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING*2);
+        varHistory.setPrefWidth(turtleArea.getWidth()/2-VIEWPANE_PADDING*2);
 
         Label varLabel = styler.createLabel("Variables");
         VBox variables = new VBox();
         variables.getChildren().addAll(varLabel, varScroll);
-        variables.setVgrow(commandScroll, Priority.ALWAYS);
+        variables.setVgrow(varScroll, Priority.ALWAYS);
 
         Label cmdLabel = styler.createLabel("Commands");
         VBox commands = new VBox();
