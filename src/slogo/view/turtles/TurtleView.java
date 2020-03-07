@@ -228,6 +228,7 @@ public class TurtleView{
         turtle.setFitHeight(TURTLE_HEIGHT);
         myTurtles.getChildren().remove(myImage);
         myImage = turtle;
+        turtleAnimator.setShape(myImage);
         myTurtles.getChildren().add(myImage);
         set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
     }
