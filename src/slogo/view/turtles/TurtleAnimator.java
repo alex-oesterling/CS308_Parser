@@ -14,6 +14,9 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
+/**
+ *
+ */
 public class TurtleAnimator {
   private static final double PATH_OPACITY = .75;
   private static final double PATH_NO_OPACITY = 0.0;

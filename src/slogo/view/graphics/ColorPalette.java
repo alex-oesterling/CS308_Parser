@@ -56,14 +56,11 @@ public class ColorPalette {
     }
 
     /**
-     * Updates an indicated entry in the colormap to a new specified value based on 3 RGB inputs
+     * Updates an indicated entry in the colormap to a new specified value based a given hex color
      * @param index - the entry to be overwritten
-     * @param red - the value of the red portion of the color
-     * @param green - the value of the green portion of the color
-     * @param blue - the value of the blue portion of the color
+     * @param hex - the hex color to be overwritten
      */
-    public void updateColorMap(double index, double red, double green, double blue){
-        String hex = String.format("#%02x%02x%02x", (int)red, (int)green, (int)blue);
+    public void updateColorMap(double index, String hex){
         treeMap.put(index, hex);
         stage.setScene(setScene());
     }

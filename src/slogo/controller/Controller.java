@@ -248,7 +248,7 @@ public class Controller {
                 myView.updateCommandPenColor(c.getResult());
             } else if(c instanceof SetShape){
                 System.out.println(c.getResult());
-                myView.updateShape(c.getResult());
+                    myView.updateShape(c.getResult());
             } else if(c instanceof SetPenSize){
                 myView.updatePenSize(c.getResult());
             } else if(c instanceof ID){

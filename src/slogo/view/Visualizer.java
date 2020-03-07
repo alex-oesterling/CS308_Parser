@@ -17,6 +17,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import slogo.controller.Controller;
+import slogo.exceptions.InvalidCommandException;
 import slogo.exceptions.InvalidTurtleException;
 import slogo.view.graphics.ColorPalette;
 import slogo.view.graphics.CommandLine;
@@ -247,7 +248,11 @@ public class Visualizer{
    * @param value - the index corresponding to the desired color
    */
   public void setPenColor(double value){
-    currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
+    try {
+      currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
+    } catch (NullPointerException e){
+      throw new InvalidCommandException(new Throwable(), "Index:", ""+value);
+    }
   }
 
   /**
@@ -291,7 +296,7 @@ public class Visualizer{
    * in the shape palette map
    * @param value - defined by the user in their command
    */
-  public void setShape(double value){
+  public void setShape (double value){
       currentTurtle.setShape(shapePalette.getShapeMapValue(value));
   }
 
@@ -386,13 +391,11 @@ public class Visualizer{
   public int getArenaHeight(){return TURTLE_SCREEN_HEIGHT;}
 
   /**
-   * Updates an indicated entry in the colormap to a new specified value based on 3 RGB inputs
+   * Updates an indicated entry in the colormap to a new specified value based on a given hex color
    * @param index - the entry to be overwritten
-   * @param red - the value of the red portion of the color
-   * @param green - the value of the green portion of the color
-   * @param blue - the value of the blue portion of the color
+   * @param hex - the hex color of the new color
    */
-  public void updateColorMap(double index, double red, double green, double blue){
-    colorPalette.updateColorMap(index, red, green, blue);
+  public void updateColorMap(double index, String hex){
+    colorPalette.updateColorMap(index, hex);
   }
 }

@@ -13,7 +13,7 @@ public interface ViewExternalAPI {
   void addCommand(String commandSyntax, String syntax);
   void addVariable(String newVariable, String newValue);
   void setCommandSize(int size);
-  void setColorPallete(double id, double red, double green, double blue);
+  void setColorPalette(double id, String hex);
   int getArenaWidth();
   int getArenaHeight();
 }
