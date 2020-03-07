@@ -7,8 +7,8 @@ import java.util.List;
 public class SetPalette extends Command {
 
   private static final String UPDATE = "setColorPalette";
-  private String hex;
-  private Double index, red, green, blue;
+  private int red, green, blue;
+  private double index;
 
   /**
    * Sets the color in the palette to a desired color given the r g b values
@@ -20,11 +20,10 @@ public class SetPalette extends Command {
    */
   public SetPalette(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList) {
     super();
-    index = doubleList.get(FIRST_INDEX);
-    red = doubleList.get(SECOND_INDEX);
-    green = doubleList.get(THIRD_INDEX);
-    blue = doubleList.get(FOURTH_INDEX);
-    hex = String.format("#%02x%02x%02x", red, green, blue);
+    blue = (int) ((double) doubleList.get(FIRST_INDEX));
+    green = (int) ((double) doubleList.get(SECOND_INDEX));
+    red = (int) ((double) doubleList.get(THIRD_INDEX));
+    index = doubleList.get(FOURTH_INDEX);
   }
 
   /**
@@ -42,6 +41,12 @@ public class SetPalette extends Command {
    */
   @Override
   public String getViewInteractionString() {
-    return UPDATE + " " + hex;
+    return String.format(UPDATE + " " + "#%02x%02x%02x", red, green, blue);
+  }
+
+  public static void main(String[] args) {
+    System.out.println(String.format(UPDATE + " " +"#%02x%02x%02x", 50, 50, 50));
+    String happy = String.format("#%02x%02x%02x", 50, 50, 50);
+    System.out.println(happy);
   }
 }
