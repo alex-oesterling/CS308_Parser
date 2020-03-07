@@ -253,12 +253,12 @@ public class Controller {
       System.out.println(currentCommand);
       System.out.println(currentCommand.getResult());
       currentCommand.execute();
-      makeMethod(currentCommand, currentCommand.getViewInteractionString().split(" ")[ZERO]);
+      makeMethod(currentCommand.getViewInteractionString().split(" ")[ZERO]);
     }
     myView.updateStatus();
   }
 
-  private void makeMethod(Command c, String methodName){
+  private void makeMethod(String methodName){
     try {
       Method method = Controller.class.getDeclaredMethod(methodName);
       method.invoke(Controller.this);
@@ -317,5 +317,9 @@ public class Controller {
     myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
     myView.clear();
     myView.updatePenStatus(1);
+  }
+
+  private void setColorPalette(){
+    myView.setColorPallete(currentCommand.getResult(), currentCommand.getViewInteractionString().split(" ")[1]);
   }
 }
