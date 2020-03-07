@@ -27,7 +27,7 @@ public class Controller {
   private Map<String, Integer> nameCount;
   private Turtle turtle;
   private ViewExternal myView;
-  private double IdOfTurtle;
+  private Double IdOfTurtle;
   private ResourceBundle errorResources;
 
   /**
@@ -42,6 +42,7 @@ public class Controller {
     modelExternal = new ModelExternal(this, language);
     errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
     myView = visualizer;
+    IdOfTurtle = 0.0;
 
     makeMaps();
   }
@@ -252,7 +253,9 @@ public class Controller {
         myView.updateShape(c.getResult());
       } else if (c instanceof SetPenSize) {
         myView.updatePenSize(c.getResult());
-      } else {
+      } else if (c instanceof ID){
+      }
+      else {
         myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
       }
     }

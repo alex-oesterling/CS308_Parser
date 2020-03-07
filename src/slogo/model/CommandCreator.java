@@ -8,7 +8,6 @@ import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import slogo.controller.Controller;
 import slogo.exceptions.*;
 import slogo.model.command.*;
@@ -22,7 +21,9 @@ public class CommandCreator {
   private static final String CONSTANT = "Constant";
   private static final String NO_MATCH = "NO MATCH";
   private static final String VARIABLE = "Variable";
-  private static final String MAKE_VARIABLE = "MakeVariable";
+  //private static final String MAKE_VARIABLE = "MakeVariable";
+  private static final String LIST_START = "ListStart";
+  private static final String LIST_END = "ListEnd";
   private static final String DO = "do";
   private static final String WORK = "Work";
   private static final String WHITESPACE = "\\s+";
@@ -165,9 +166,9 @@ public class CommandCreator {
           } else {
             throw new InvalidVariableException(new Throwable(), errorResources.getString("FakeVariable"));
           }
-        } else if (commandSyntax.equals("ListStart")){
+        } else if (commandSyntax.equals(LIST_START)){
           doListStartWork();
-        } else if (commandSyntax.equals("ListEnd")){
+        } else if (commandSyntax.equals(LIST_END)){
           doListEndWork();
         }
       }
@@ -201,27 +202,27 @@ public class CommandCreator {
     if (commandName.equals(NO_MATCH)){
       throw new InvalidCommandException(new Throwable(), commandSyntax, line);
     }
-    else if (commandName.equals(MAKE_VARIABLE)){
-      dealWithMakingVariables(lines, line, syntax);
-    } else {
+//    else if (commandName.equals(MAKE_VARIABLE)){
+//      dealWithMakingVariables(lines, line, syntax);}
+    else {
       validCommand(params, commandName, commandList);
     }
   }
 
-  private void dealWithMakingVariables(List<String> lines, String line, Parser syntax){
-    IS_VARIABLE = true;
-    List<String> copyLines = new CopyOnWriteArrayList(lines);
-    copyLines.remove(line);
-    String variable = copyLines.get(ZERO);
-    String firstCommand = copyLines.get(1); //todo magic number
-    String type = syntax.getSymbol(firstCommand);
-    copyLines.remove(variable);
-    if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals("Command"))){
-      control.addUserCreatedCommand(variable, copyLines);
-    } else if (copyLines.size() == 1 && type.equals("Constant")){
-      control.addUserCreatedVariable(variable, firstCommand);
-    }
-  }
+//  private void dealWithMakingVariables(List<String> lines, String line, Parser syntax){
+//    IS_VARIABLE = true;
+//    List<String> copyLines = new CopyOnWriteArrayList(lines);
+//    copyLines.remove(line);
+//    String variable = copyLines.get(ZERO);
+//    String firstCommand = copyLines.get(1);
+//    String type = syntax.getSymbol(firstCommand);
+//    copyLines.remove(variable);
+//    if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals("Command"))){
+//      control.addUserCreatedCommand(variable, copyLines);
+//    } else if (copyLines.size() == 1 && type.equals("Constant")){
+//      control.addUserCreatedVariable(variable, firstCommand);
+//    }
+//  }
 
   private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
     commandStack.push(commandName); //add string to stack

@@ -39,10 +39,12 @@ public class Turtle{
   private double shapeIndex;
   private double sizePixels;
   private double Id;
+  private Double turtleCount;
   private String name;
 
-  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
+  public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle){
     Id = IdOfTurtle;
+    turtleCount = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = turtleName;
   }
@@ -53,8 +55,9 @@ public class Turtle{
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
    */
-  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, double IdOfTurtle){
+  public Turtle(double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle){
     Id = IdOfTurtle;
+    turtleCount = IdOfTurtle;
     initializeBasicThings(startingXPosition, startingYPosition, startingHeading);
     name = DEFAULT_TURTLE_NAMES.get((int) Math.floor(Math.random()*(DEFAULT_TURTLE_NAMES.size())));
   }
@@ -64,7 +67,7 @@ public class Turtle{
    * but with a specific name
    * @param turtleName string to set name to
    */
-  public Turtle(String turtleName, double IdOfTurtle){
+  public Turtle(String turtleName, Double IdOfTurtle){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
     name = turtleName;
   }
@@ -72,7 +75,7 @@ public class Turtle{
   /**
    * Default Turtle constructor
    */
-  public Turtle(double IdOfTurtle){
+  public Turtle(Double IdOfTurtle){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle);
   }
 
@@ -279,8 +282,8 @@ public class Turtle{
    * Get's the turtle count
    * @return amount of turtles created thus far
    */
-  public double getTurtleCount(){
-    return 9;
+  public Double getTurtleCount(){
+    return turtleCount;
   }
 
   /**
