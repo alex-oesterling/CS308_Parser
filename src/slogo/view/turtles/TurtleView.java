@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import slogo.controller.Controller;
+import slogo.view.Visualizer;
 
 /**
  * This class creates an instance of a turtle and stores all the relevant turtle information. In this way, we are able to
@@ -61,7 +62,7 @@ public class TurtleView{
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
     private boolean stopped;
     private TurtleAnimator turtleAnimator;
-    private Controller myController;
+    private Visualizer myVisualizer;
     private SequentialTransition st;
 
     /**
@@ -70,9 +71,9 @@ public class TurtleView{
      * @param turtles - a group of all the turtles from the visualizer
      * @param paths - a group of the paths of the turtles
      * @param name - the name of the turtle in which this turtleview instance is being created for
-     * @param controller - the controller object to which the TurtleView sends back updated position data when it is set on the view side.
+     * @param visualizer - the Visualizer object to which the TurtleView sends back updated position data when it is set on the view side.
      */
-    public TurtleView(Group turtles, Group paths, String name, Controller controller){
+    public TurtleView(Group turtles, Group paths, String name, Visualizer visualizer){
         penStatus = true;
         myPaths = paths;
         turtleName = name;
@@ -85,12 +86,9 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
-//        prevX = currentX;
-//        prevY = currentY;
-//        prevHeading = heading;
         stopped = true;
         turtleAnimator = new TurtleAnimator(this, myImage, myPaths);
-        myController = controller;
+        myVisualizer = visualizer;
     }
 
     private ImageView createTurtle(){
@@ -280,7 +278,7 @@ public class TurtleView{
         myImage.setTranslateY(currentY-myImage.getBoundsInLocal().getHeight()/2);
         myImage.setRotate(heading);
 
-        myController.orientTurtle(newX, newY, newHeading);
+        myVisualizer.orientTurtle(newX, newY, newHeading);
     }
 
     /**
@@ -378,4 +376,10 @@ public class TurtleView{
     public void undoMove(){
         set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
     }
+
+    /**
+     * Adds the path object to the visualizer's list of paths for writing into XML
+     * @param path - the path to be saved in a list of paths in the view
+     */
+    public void addPath(Path path){myVisualizer.getPaths().add(path);}
 }
