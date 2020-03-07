@@ -11,6 +11,7 @@ abstract public class Command {
   protected static final int FOURTH_INDEX = 3;
   private static final double DEFAULT_COMMAND_RESULT = 0;
   private static final String UPDATE = "update";
+  private static final String MY_PACKAGE = "slogo.model.command.";
   private double result;
 
   /**
@@ -63,5 +64,13 @@ abstract public class Command {
    */
   public Double execute(){
     return getResult();
+  }
+
+  @Override
+  public String toString(){
+    String me = this.getClass().getName();
+    String justMe = String.join(" ", me.split(MY_PACKAGE));
+
+    return justMe + " " + this.getResult();
   }
 }

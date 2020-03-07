@@ -26,7 +26,6 @@ public class CommandCreator {
   private static final String WORK = "Work";
   private static final String WHITESPACE = "\\s+";
   private static final int ZERO = 0;
-  private static boolean IS_VARIABLE = false;
 
   private Controller control;
   private Stack<String> waitingCommandsStack, variablesStack;
@@ -36,6 +35,7 @@ public class CommandCreator {
   private Stack<Stack> commandStackHolder, argumentStackHolder, parametersStackHolder, listParametersStackHolder, variableStackHolder, variableParametersStackHolder, listStackHolder;
   private Stack<List<Command>> currentListHolder = new Stack<>();
   private Turtle turtle;
+  private String currentLine;
   private Parser commandParser, parametersParser, syntaxParser, listParamsParser, doubleParamsParser, varsParamsParser;
   private List<Command> currentList, extendedList;
   private ResourceBundle errorResources;
@@ -81,7 +81,7 @@ public class CommandCreator {
    * @param commands the commands the user typed in
    */
   public List<Command> getCommandsOf(String commands){
-    return createExtendedList(parseText(syntaxParser, commandParser, parametersParser, asList(commands.split(WHITESPACE))));
+    return createExtendedList(parseText(asList(commands.split(WHITESPACE))));
   }
 
   private void makeParsers(String language){
@@ -157,36 +157,51 @@ public class CommandCreator {
     return list;
   }
 
-  private List<Command> parseText (Parser syntax, Parser lang, Parser params, List<String> lines) {
+  private List<Command> parseText(List<String> lines) {
     currentList = new ArrayList<>();
     ListIterator<String> iterator = lines.listIterator();
 
-    if (syntax.getSymbol(lines.get(ZERO)).equals(CONSTANT)){ // eg they type in 50 fd
+    if (syntaxParser.getSymbol(lines.get(ZERO)).equals(CONSTANT)){ // eg they type in 50 fd
       throw new InvalidConstantException(new Throwable(), errorResources.getString("StartWithConstant"));
     }
+
     makeHolderStacks();
-    while(iterator.hasNext() && !IS_VARIABLE) {
-      String line = iterator.next();
-      if (line.trim().length() > 0) {
-        String commandSyntax = syntax.getSymbol(line); //get what sort of thing it is
+
+    while(iterator.hasNext()) {
+      currentLine = iterator.next();
+      if (currentLine.trim().length() > ZERO) {
+        String commandSyntax = syntaxParser.getSymbol(currentLine); //get what sort of thing it is
+
         if(commandSyntax.equals(COMMAND)){
-          doCommandWork(params, lang, syntax, currentList, line, commandSyntax, lines);
+          doCommandWork();
         } else if (commandSyntax.equals(CONSTANT)){
-          doConstantWork(Double.parseDouble(line), currentList);
+          doConstantWork();
         } else if (commandSyntax.equals(VARIABLE)){
-          variablesStack.push(line);
+          doVariableWork();
         } else if (commandSyntax.equals(LIST_START)){
           doListStartWork();
         } else if (commandSyntax.equals(LIST_END)){
           doListEndWork();
         }
+
+
+        tryToMakeCommands(currentList);
       }
     }
-    IS_VARIABLE = false;
     while(!waitingCommandsStack.isEmpty()){
       tryToMakeCommands(currentList);
     }
     return createExtendedList(currentList);
+  }
+
+  private void doVariableWork(){
+    if(control.validCommandVariable(currentLine)){
+      List<Command> varCommand = control.getUserCreatedCommandVariables(currentLine);
+      currentList.addAll(varCommand);
+    } else if (control.validConstantVariable(currentLine)){
+      argumentStack.push(control.getUserCreatedConstantVariables(currentLine));
+    }
+    variablesStack.push(currentLine);
   }
 
   private String doWorkString(String type){
@@ -203,28 +218,24 @@ public class CommandCreator {
       listStack.push(currentList);
     }
     stopHoldingStacks();
-    tryToMakeCommands(currentList);
   }
 
-  private void doCommandWork(Parser params, Parser lang, Parser syntax, List<Command> commandList, String line, String commandSyntax, List<String> lines){
-    String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
+  private void doCommandWork(){
+    String commandName = commandParser.getSymbol(currentLine); //get the string name, such as "Forward" or "And"
     if (commandName.equals(NO_MATCH)) {
-      throw new InvalidCommandException(new Throwable(), commandSyntax, line);
-    }
-    else {
-      validCommand(params, commandName, commandList);
+      throw new InvalidCommandException(new Throwable(), syntaxParser.getSymbol(currentLine), currentLine);
+    } else {
+      validCommand(commandName);
     }
   }
 
-  private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
+  private void validCommand(String commandName) {
     waitingCommandsStack.push(commandName); //add string to stack
-    pushParamsNeeded(params.getSymbol(commandName)); //get Parameters string, and convert that string to a double
-    return tryToMakeCommands(commandList);
+    pushParamsNeeded(parametersParser.getSymbol(commandName)); //get Parameters string, and convert that string to a double
   }
 
-  private void doConstantWork(Double constant, List<Command> commandList){
-    argumentStack.push(constant);
-    tryToMakeCommands(commandList);
+  private void doConstantWork(){
+    argumentStack.push(Double.parseDouble(currentLine));
   }
 
   /**
@@ -274,7 +285,10 @@ public class CommandCreator {
       doubleParametersStack.push(ZERO);
     }
     Command newCommand = getCommand(waitingCommandsStack.pop());
-    if(!waitingCommandsStack.isEmpty()){
+    if(!variablesStack.isEmpty()){
+      listStack.push(List.of(newCommand));
+      tryToMakeCommands(commands);
+    } else if(!waitingCommandsStack.isEmpty()){
       argumentStack.push(newCommand.getResult());
       tryToMakeCommands(commands); //slightly recursive
     }

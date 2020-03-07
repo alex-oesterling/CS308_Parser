@@ -1,5 +1,6 @@
 package slogo.model.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import slogo.model.Turtle;
 
@@ -8,10 +9,10 @@ public class MakeVariable extends Command {
   private static final String USER_CONSTANT = "addUserConstantToMap";
   private static final String USER_COMMAND = "addUserCommandToMap";
   private static final String SEPARATION = " ";
-  private static boolean isConstant = false;
-  private double constant;
-  private List<Command> command;
-  private String variable;
+  private boolean isConstant;
+  private double constant, result;
+  private List<Command> command, returningList;
+  private String variable, returningString;
 
 
   /**
@@ -26,10 +27,14 @@ public class MakeVariable extends Command {
     super();
     variable = stringList.get(FIRST_INDEX);
     if (! commandList.isEmpty()){
-      command = commandList.get(FIRST_INDEX);
+      returningList = super.getCommandList();
+      returningList.addAll(commandList.get(FIRST_INDEX));
+      result = returningList.get(returningList.size()-1).getResult();
+      returningString = USER_COMMAND + SEPARATION + variable;
     } else if (! doubleList.isEmpty()){
-      constant = doubleList.get(FIRST_INDEX);
-      isConstant = true;
+      result = doubleList.get(FIRST_INDEX);
+      returningList = super.getCommandList();
+      returningString = USER_CONSTANT + SEPARATION + variable;
     }
   }
 
@@ -39,10 +44,7 @@ public class MakeVariable extends Command {
    */
   @Override
   public Double getResult() {
-    if(isConstant) {
-      return constant;
-    }
-    return command.get(FIRST_INDEX).getResult();
+    return result;
   }
 
   /**
@@ -51,10 +53,7 @@ public class MakeVariable extends Command {
    */
   @Override
   public List<Command> getCommandList() {
-    if(isConstant){
-      return super.getCommandList();
-    }
-    return command;
+    return returningList;
   }
 
   /**
@@ -63,11 +62,7 @@ public class MakeVariable extends Command {
    */
   @Override
   public String getViewInteractionString() {
-    if (isConstant){
-      isConstant = false;
-      return USER_CONSTANT + SEPARATION + variable;
-    } else {
-      return USER_COMMAND + SEPARATION + variable;
-    }
+   return returningString;
   }
+
 }
