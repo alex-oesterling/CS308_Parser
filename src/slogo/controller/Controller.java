@@ -24,7 +24,7 @@ public class Controller {
   private static final double STARTING_ID = 0;
 
   private ModelExternal modelExternal;
-  private Map<String, List> userCreatedCommandVariables;
+  private Map<String, List<Command>> userCreatedCommandVariables;
   private Map<String, Double> userCreatedConstantVariables;
   private Map<String, Turtle> nameToTurtle;
   private Map<Turtle, Double> turtleId;
@@ -146,8 +146,7 @@ public class Controller {
    * @param syntax variable commands
    */
   public void addUserCommand(String key, String syntax) {
-    List<String> commandList = Arrays.asList(syntax.split(" "));
-    userCreatedCommandVariables.putIfAbsent(key, commandList);
+    userCreatedCommandVariables.putIfAbsent(key, modelExternal.getCommandsOf(syntax));
   }
 
   /**
@@ -178,7 +177,6 @@ public class Controller {
     executeCommandList(modelExternal.getCommandsOf(commands));
   }
 
-  //todo finish comment
 
   /**
    * get the user created constant or variable in a line from the map
@@ -190,16 +188,14 @@ public class Controller {
     return userCreatedConstantVariables.get(line);
   }
 
-  //todo finish comment
-
   /**
-   * @param line
+   * @param variable
    * @return
    */
-  public List<String> getUserCreatedCommandVariables(String line) {
-    return userCreatedCommandVariables.get(line);
+  public List<Command> getUserCreatedCommandVariables(String variable) {
+    return userCreatedCommandVariables.get(variable);
   }
-
+//todo comment
   public boolean validCommandVariable(String variable){
     return userCreatedCommandVariables.containsKey(variable);
   }
@@ -212,8 +208,6 @@ public class Controller {
     myView.setCommandSize(l.size());
     for (Command c : l) {
       currentCommand = c;
-      System.out.println(currentCommand);
-      System.out.println(currentCommand.getResult());
       currentCommand.execute();
       makeMethod(currentCommand.getViewInteractionString().split(" ")[ZERO]);
     }
@@ -241,9 +235,11 @@ public class Controller {
 
   private void addUserCommandToMap(){
     String variableName = currentCommand.getViewInteractionString().split(" ")[ONE];
-      userCreatedCommandVariables.put(variableName, currentCommand.getCommandList());
-      String commandSyntax = String.join(" ", currentCommand.getCommandList().toArray(new String[ZERO]));
-      myView.addCommand(variableName, commandSyntax);
+    List<Command> commands = currentCommand.getCommandList();
+    commands.remove(ZERO); //remove the MakeVariable command
+    userCreatedCommandVariables.put(variableName, commands);
+    String commandSyntax = commands.get(ZERO).toString();
+    myView.addCommand(variableName, commandSyntax);
   }
 
   private void update(){

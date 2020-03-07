@@ -12,7 +12,7 @@ public class MakeVariable extends Command {
   private boolean isConstant;
   private double constant, result;
   private List<Command> command, returningList;
-  private String variable;
+  private String variable, returningString;
 
 
   /**
@@ -27,13 +27,14 @@ public class MakeVariable extends Command {
     super();
     variable = stringList.get(FIRST_INDEX);
     if (! commandList.isEmpty()){
-      command = commandList.get(FIRST_INDEX);
-      result = command.get(command.size()-1).getResult();
-      returningList = command;
+      returningList = super.getCommandList();
+      returningList.addAll(commandList.get(FIRST_INDEX));
+      result = returningList.get(returningList.size()-1).getResult();
+      returningString = USER_COMMAND + SEPARATION + variable;
     } else if (! doubleList.isEmpty()){
-      constant = doubleList.get(FIRST_INDEX);
-      result = constant;
-      returningList = new ArrayList<>();
+      result = doubleList.get(FIRST_INDEX);
+      returningList = super.getCommandList();
+      returningString = USER_CONSTANT + SEPARATION + variable;
     }
   }
 
@@ -61,11 +62,7 @@ public class MakeVariable extends Command {
    */
   @Override
   public String getViewInteractionString() {
-    if (isConstant){
-      isConstant = false;
-      return USER_CONSTANT + SEPARATION + variable;
-    } else {
-      return USER_COMMAND + SEPARATION + variable;
-    }
+   return returningString;
   }
+
 }

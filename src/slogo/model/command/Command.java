@@ -11,6 +11,7 @@ abstract public class Command {
   protected static final int FOURTH_INDEX = 3;
   private static final double DEFAULT_COMMAND_RESULT = 0;
   private static final String UPDATE = "update";
+  private static final String MY_PACKAGE = "slogo.model.command.";
   private double result;
 
   /**
@@ -47,16 +48,29 @@ abstract public class Command {
     return UPDATE;
   }
 
+  /**
+   * Make a list with just this command in it
+   * @return the command list of just this command
+   */
   public List<Command> getCommandList(){
-    //make a list that has just this command in it
     List<Command> ret = new ArrayList<>();
     ret.add(this);
     return ret;
   }
 
+  /**
+   * Executes the command
+   * @return the double result
+   */
   public Double execute(){
     return getResult();
   }
 
-  //TODO add throwCommandParametersError()
+  @Override
+  public String toString(){
+    String me = this.getClass().getName();
+    String justMe = String.join(" ", me.split(MY_PACKAGE));
+
+    return justMe + " " + this.getResult();
+  }
 }

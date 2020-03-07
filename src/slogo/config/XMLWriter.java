@@ -2,10 +2,13 @@ package slogo.config;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 import javax.xml.parsers.DocumentBuilder;
@@ -75,6 +78,7 @@ public class XMLWriter {
     root.appendChild(writeUserVariables());
     root.appendChild(writeUserCommands());
     root.appendChild(writeColorPalette());
+    root.appendChild(writePaths());
   }
 
   private Node writePreferences() {
@@ -142,17 +146,26 @@ public class XMLWriter {
     return colors;
   }
 
-//  private Node writePaths(){
-//    Element paths = myDocument.createElement("Paths");
-//    List<Path> pathList = new ArrayList<>(myVisualizer.getPaths());
-//    for(Path p : pathList){
-//      for(PathElement pe: p.getElements()){
-//        pe.
-//      }
-//      paths.appendChild(createAttributeNode("Path", new String[]))
-//    }
-//    return paths;
-//  }
+  private Node writePaths(){
+    Element paths = myDocument.createElement("Paths");
+    List<Path> pathList = new ArrayList<>(myVisualizer.getPaths());
+    for(Path p : pathList){
+      List<String> attributeValues = new ArrayList();
+      for(PathElement pe: p.getElements()){
+        attributeValues.addAll(Arrays.asList(pe.toString().split(" ")));
+      }
+      attributeValues.add(p.getStrokeWidth()+"");
+      Color color = (Color) p.getStroke();
+      String hex = String.format( "#%02X%02X%02X",
+          (int)( color.getRed() * 255 ),
+          (int)( color.getGreen() * 255 ),
+          (int)( color.getBlue() * 255 ) );
+      attributeValues.add(hex);
+      attributeValues.add(p.getOpacity()+"");
+      paths.appendChild(createAttributeNode("Path", new String[]{"x0", "y0", "x1", "y1", "stroke", "color", "opacity"}, attributeValues.toArray(new String[0])));
+    }
+    return paths;
+  }
 
   private Node createAttributeNode(String name, String[] attributes, String[] attributeValues){
     Element node = myDocument.createElement(name);

@@ -44,9 +44,4 @@ public class SetPalette extends Command {
     return String.format(UPDATE + " " + "#%02x%02x%02x", red, green, blue);
   }
 
-  public static void main(String[] args) {
-    System.out.println(String.format(UPDATE + " " +"#%02x%02x%02x", 50, 50, 50));
-    String happy = String.format("#%02x%02x%02x", 50, 50, 50);
-    System.out.println(happy);
-  }
 }
