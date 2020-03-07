@@ -200,6 +200,14 @@ public class Controller {
     return userCreatedCommandVariables.get(line);
   }
 
+  public boolean validCommandVariable(String variable){
+    return userCreatedCommandVariables.containsKey(variable);
+  }
+
+  public boolean validConstantVariable(String variable){
+    return userCreatedConstantVariables.containsKey(variable);
+  }
+
   private void executeCommandList(List<Command> l) {
     myView.setCommandSize(l.size());
     for (Command c : l) {
