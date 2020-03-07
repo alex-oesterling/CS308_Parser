@@ -1,8 +1,13 @@
 package slogo.controller;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ResourceBundle;
+
 import slogo.exceptions.*;
-import slogo.model.CommandCreator;
+import slogo.model.ModelExternal;
 import slogo.model.Turtle;
 import slogo.model.command.*;
 import slogo.view.ViewExternal;
@@ -14,7 +19,7 @@ public class Controller {
   private static final int ZERO = 0;
   private static final Integer SECOND_GEN = 2;
 
-  private CommandCreator commandCreator;
+  private ModelExternal modelExternal;
   private Map<String, List> userCreatedCommandVariables;
   private Map<String, String> userCreatedConstantVariables;
   private Map<String, Turtle> nameToTurtle;
@@ -34,7 +39,7 @@ public class Controller {
    * @param language   the specific language being used (aka english, chinese, etc)
    */
   public Controller(ViewExternal visualizer, String language) {
-    commandCreator = new CommandCreator(this, language);
+    modelExternal = new ModelExternal(this, language);
     errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
     myView = visualizer;
 
@@ -64,7 +69,7 @@ public class Controller {
     }
     nameCount.putIfAbsent(turtle.getName(), SECOND_GEN);
     nameToTurtle.putIfAbsent(turtle.getName(), turtle);
-    commandCreator.setTurtle(turtle);
+    modelExternal.setTurtle(turtle);
   }
 
   /**
@@ -84,7 +89,7 @@ public class Controller {
     }
     nameToTurtle.putIfAbsent(t.getName(), t);
     turtle = t;
-    commandCreator.setTurtle(t);
+    modelExternal.setTurtle(t);
   }
 
   /**
@@ -136,7 +141,7 @@ public class Controller {
    */
   public void chooseTurtle(String name) {
     turtle = nameToTurtle.get(name);
-    commandCreator.setTurtle(turtle);
+    modelExternal.setTurtle(turtle);
   }
 
   /**
@@ -145,7 +150,7 @@ public class Controller {
    * @param language input language: English, Spanish, Urdu, etc.
    */
   public void addLanguage(String language) {
-    commandCreator.setLanguage(language);
+    modelExternal.setLanguage(language);
   }
 
   /**
@@ -154,7 +159,7 @@ public class Controller {
    * @param commands the commands the user typed in
    */
   public void sendCommands(String commands) {
-    executeCommandList(commandCreator.getCommandsOf(commands));
+    executeCommandList(modelExternal.getCommandsOf(commands));
   }
 
   //todo finish comment
