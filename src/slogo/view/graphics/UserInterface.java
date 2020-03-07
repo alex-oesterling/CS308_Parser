@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -10,17 +10,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import slogo.view.Styler;
+import slogo.view.Visualizer;
+import slogo.view.graphics.HelpWindow;
+import slogo.view.graphics.MoveTurtle;
 
 /**
  * This class creates all of the user defined visuals which are then added to the visualizer. This includes all the user interface
  * buttons as well as all of the turtle interface buttons.
  */
 public class UserInterface {
-  public static final int VBOX_SPACING = 10;
-  public static final int COLORPICKER_HEIGHT = 30;
-  public static final int LISTVIEW_WIDTH = 100;
-  public static final int LISTVIEW_HEIGHT  = 250;
-  public static final int HBOX_SPACING = 10;
+  private static final int VBOX_SPACING = 10;
+  private static final int COLORPICKER_HEIGHT = 30;
+  private static final int LISTVIEW_WIDTH = 100;
+  private static final int LISTVIEW_HEIGHT  = 250;
+  private static final int HBOX_SPACING = 10;
 
   private Styler styler;
   private ResourceBundle myResources;

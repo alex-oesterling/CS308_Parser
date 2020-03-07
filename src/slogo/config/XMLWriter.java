@@ -3,6 +3,8 @@ package slogo.config;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,7 +16,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import slogo.view.TurtleView;
+import slogo.view.turtles.TurtleView;
 import slogo.view.Visualizer;
 
 public class XMLWriter {
@@ -23,17 +25,25 @@ public class XMLWriter {
 
   public XMLWriter(Visualizer visualizer){
     myVisualizer = visualizer;
-    try {
-      setupDocument();
-    } catch (ParserConfigurationException e) {
-      //THROW ERROR
-    }
+    setupDocument();
   }
 
-  private void setupDocument() throws ParserConfigurationException {
+  private void setupDocument() {
     DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
+    DocumentBuilder documentBuilder = null;
+    try {
+      documentBuilder = documentFactory.newDocumentBuilder();
+    } catch (ParserConfigurationException e) {
+      displayAndLogError("Failed to build document parser", e);
+    }
     myDocument = documentBuilder.newDocument();
+  }
+
+  private void displayAndLogError(String header, Exception e) {
+    Alert errorAlert = new Alert(AlertType.ERROR);
+    errorAlert.setHeaderText(header);
+    errorAlert.setContentText(e.getMessage());
+    errorAlert.showAndWait();
   }
 
   /**
@@ -49,7 +59,7 @@ public class XMLWriter {
       StreamResult streamResult = new StreamResult(new File(filepath));
       transformer.transform(domSource, streamResult);
     }catch(TransformerException e){
-      //FIX ERROR HANDLING
+      displayAndLogError("Failed to write game state into XML", e);
     }
   }
 
@@ -75,8 +85,12 @@ public class XMLWriter {
     String[] attributes = new String[]{"name", "xpos", "ypos", "heading"};
     for(String s : myVisualizer.getTurtles().keySet()){
       TurtleView currentTurtle = myVisualizer.getTurtles().get(s);
-      String[] attributeValues = currentTurtle.getData();
-      turtles.appendChild(createAttributeNode("Turtle", attributes, attributeValues));
+      Double[] attributeValues = currentTurtle.getData();
+      String[] attributeStrings = new String[attributeValues.length];
+      for(int i = 0; i < attributeValues.length; i++){
+        attributeStrings[i] = attributeValues[i].toString();
+      }
+      turtles.appendChild(createAttributeNode("Turtle", attributes, attributeStrings));
     }
     return turtles;
   }

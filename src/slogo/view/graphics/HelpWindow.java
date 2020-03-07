@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -17,15 +17,14 @@ import java.util.TreeMap;
  * language of SLogo changes too.
  */
 public class HelpWindow {
-
-    public static final String TITLE = "Command Reference Page";
-    public static final Paint BACKGROUND = Color.AZURE;
-    public static final String RESOURCE = "resources.languages";
-    public static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
-    public static final int SIZE_WIDTH = 500;
-    public static final int SIZE_HEIGHT = 500;
-    public static final int GRID_VGAP = 5;
-    public static final int GRID_HGAP = 70;
+    private static final String TITLE = "Command Reference Page";
+    private static final Paint BACKGROUND = Color.AZURE;
+    private static final String RESOURCE = "resources.languages";
+    private static final String DEFAULT_RESOURCE_PACKAGE = RESOURCE + ".";
+    private static final int SIZE_WIDTH = 500;
+    private static final int SIZE_HEIGHT = 500;
+    private static final int GRID_VGAP = 5;
+    private static final int GRID_HGAP = 70;
 
     GridPane grid;
     ResourceBundle myResources;

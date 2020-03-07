@@ -6,6 +6,7 @@
   </Preferences>
   <Turtles>
     <Turtle name="Alex" xpos="50" ypos="50" heading="90"/>
+    <Turtle name="Alex" xpos="50" ypos="50" heading="90"/>
   </Turtles>
   <CommandHistory>
     <Command syntax="fd 50"/>

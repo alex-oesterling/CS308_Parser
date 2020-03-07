@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.graphics;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -17,15 +17,14 @@ import java.util.Map;
  * background color. Additionally, the user can change the colors in the color palette.
  */
 public class ColorPalette {
-
-    public static final Paint BACKGROUND = Color.AZURE;
-    public static final String TITLE = "Color Palette";
-    public static final int SIZE_WIDTH = 150;
-    public static final int SIZE_HEIGHT = 500;
-    public static final int RECTANGLE_WIDTH = 50;
-    public static final int RECTANGLE_HEIGHT = 25;
-    public static final int HBOX_SPACING = 10;
-    public static final int VBOX_SPACING = 10;
+    private static final Paint BACKGROUND = Color.AZURE;
+    private static final String TITLE = "Color Palette";
+    private static final int SIZE_WIDTH = 150;
+    private static final int SIZE_HEIGHT = 500;
+    private static final int RECTANGLE_WIDTH = 50;
+    private static final int RECTANGLE_HEIGHT = 25;
+    private static final int HBOX_SPACING = 10;
+    private static final int VBOX_SPACING = 10;
 
     private Map<Double, String> treeMap;
 
