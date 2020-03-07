@@ -225,16 +225,16 @@ public class Controller {
     }
   }
 
-  private void addUserConstantToMap(Command c) {
-    String variableName = c.getViewInteractionString().split(" ")[ONE];
-      userCreatedConstantVariables.put(variableName, c.getResult());
-      myView.addVariable(variableName, c.getResult());
+  private void addUserConstantToMap() {
+    String variableName = currentCommand.getViewInteractionString().split(" ")[ONE];
+      userCreatedConstantVariables.put(variableName, currentCommand.getResult());
+      myView.addVariable(variableName, currentCommand.getResult());
   }
 
-  private void addUserCommandToMap(Command c){
-    String variableName = c.getViewInteractionString().split(" ")[ONE];
-      userCreatedCommandVariables.put(variableName, c.getCommandList());
-      String commandSyntax = String.join(" ", c.getCommandList().toArray(new String[ZERO]));
+  private void addUserCommandToMap(){
+    String variableName = currentCommand.getViewInteractionString().split(" ")[ONE];
+      userCreatedCommandVariables.put(variableName, currentCommand.getCommandList());
+      String commandSyntax = String.join(" ", currentCommand.getCommandList().toArray(new String[ZERO]));
       myView.addCommand(variableName, commandSyntax);
   }
 
