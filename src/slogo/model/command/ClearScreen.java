@@ -6,6 +6,7 @@ import java.util.List;
 
 public class ClearScreen extends Command {
 
+  private static final String UPDATE = "clear";
   private Turtle t;
 
   /**
@@ -43,5 +44,14 @@ public class ClearScreen extends Command {
   public Double execute() {
     t.goHome();
     return this.getResult();
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the clear string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }

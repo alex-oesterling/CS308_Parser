@@ -6,6 +6,8 @@ import java.util.List;
 
 public class SetPalette extends Command {
 
+  private static final String UPDATE = "setColorPalette";
+  private String hex;
   private Double index, red, green, blue;
 
   /**
@@ -22,5 +24,24 @@ public class SetPalette extends Command {
     red = doubleList.get(SECOND_INDEX);
     green = doubleList.get(THIRD_INDEX);
     blue = doubleList.get(FOURTH_INDEX);
+    hex = String.format("#%02x%02x%02x", red, green, blue);
+  }
+
+  /**
+   * Returns the index number for the color in the palette to be changed
+   * @return the index number
+   */
+  @Override
+  public Double getResult() {
+    return index;
+  }
+
+  /**
+   * Returns the method variable name and the hex value to be returned
+   * @return the method variable name and the hex value
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE + " " + hex;
   }
 }

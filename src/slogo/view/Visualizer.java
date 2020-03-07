@@ -179,7 +179,6 @@ public class Visualizer{
       }
     }
   }
-
   /**
    * Allows the user to add another turtle to a single turtle area / turtle group. The user is then able to control the
    * turtles at different times.
