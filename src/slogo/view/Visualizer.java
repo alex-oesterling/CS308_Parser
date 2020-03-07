@@ -43,7 +43,6 @@ public class Visualizer{
   private static final String DEFAULT_LANGUAGE = "English";
   private static final double UNSELECTED_OPACITY = .5;
   private static final int SELECTED_OPACITY = 1;
-  private static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
 
   private Controller myController;
   private ViewExternal viewExternal;
@@ -83,7 +82,7 @@ public class Visualizer{
     commandLine = new CommandLine(this, myResources);
     myToolBar = new ToolBar(stage, this, myResources);
     userInterface = new UserInterface(this, myResources);
-    colorPalette = new ColorPalette(createColorMap());
+    colorPalette = new ColorPalette();
     shapePalette = new ShapePalette();
     penProperties = new PenProperties(this, myResources);
     myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
@@ -170,17 +169,6 @@ public class Visualizer{
         number = Double.parseDouble(value.getText());
       }
     }
-  }
-
-  private Map<Double, String> createColorMap(){
-    ResourceBundle myColorResources = ResourceBundle.getBundle(DEFAULT_COLOR_RESOURCE_PACKAGE);
-    Enumeration e = myColorResources.getKeys();
-    TreeMap<Double, String> treeMap = new TreeMap<>();
-    while (e.hasMoreElements()) {
-      String keyStr = (String) e.nextElement();
-      treeMap.put(Double.valueOf(keyStr), myColorResources.getString(keyStr));
-    }
-    return treeMap;
   }
 
   /**
@@ -396,4 +384,15 @@ public class Visualizer{
    * @return the height of the canvas the turtle can move in
    */
   public int getArenaHeight(){return TURTLE_SCREEN_HEIGHT;}
+
+  /**
+   * Updates an indicated entry in the colormap to a new specified value based on 3 RGB inputs
+   * @param index - the entry to be overwritten
+   * @param red - the value of the red portion of the color
+   * @param green - the value of the green portion of the color
+   * @param blue - the value of the blue portion of the color
+   */
+  public void updateColorMap(double index, double red, double green, double blue){
+    colorPalette.updateColorMap(index, red, green, blue);
+  }
 }

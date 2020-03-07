@@ -1,5 +1,8 @@
 package slogo.view.graphics;
 
+import java.util.Enumeration;
+import java.util.ResourceBundle;
+import java.util.TreeMap;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -25,16 +28,21 @@ public class ColorPalette {
     private static final int RECTANGLE_HEIGHT = 25;
     private static final int HBOX_SPACING = 10;
     private static final int VBOX_SPACING = 10;
+    private static final String RESOURCES = "resources";
+    private static final String FORMAT_PACKAGE = RESOURCES + ".formats.";
+    private static final String DEFAULT_COLOR_RESOURCE_PACKAGE = FORMAT_PACKAGE + ".Colors";
+
 
     private Map<Double, String> treeMap;
+    private Stage stage;
 
     /**
      * This public class creates a scene in which the color palette is then displayed. It takes in a map with doubles as
      * the keys and strings as the values. In this way, the backend can update the map.
-     * @param colorMap
      */
-    public ColorPalette(Map<Double, String> colorMap){
-        this.treeMap = colorMap;
+    public ColorPalette(){
+        treeMap = createColorMap();
+        stage = new Stage();
     }
 
     /**
@@ -42,10 +50,33 @@ public class ColorPalette {
      * still access the colors and the indices.
      */
     public void showPalette(){
-        Stage stage = new Stage();
         stage.setScene(setScene());
         stage.setTitle(TITLE);
         stage.show();
+    }
+
+    /**
+     * Updates an indicated entry in the colormap to a new specified value based on 3 RGB inputs
+     * @param index - the entry to be overwritten
+     * @param red - the value of the red portion of the color
+     * @param green - the value of the green portion of the color
+     * @param blue - the value of the blue portion of the color
+     */
+    public void updateColorMap(double index, double red, double green, double blue){
+        String hex = String.format("#%02x%02x%02x", (int)red, (int)green, (int)blue);
+        treeMap.put(index, hex);
+        stage.setScene(setScene());
+    }
+
+    private Map<Double, String> createColorMap(){
+        ResourceBundle myColorResources = ResourceBundle.getBundle(DEFAULT_COLOR_RESOURCE_PACKAGE);
+        Enumeration e = myColorResources.getKeys();
+        TreeMap<Double, String> treeMap = new TreeMap<>();
+        while (e.hasMoreElements()) {
+            String keyStr = (String) e.nextElement();
+            treeMap.put(Double.valueOf(keyStr), myColorResources.getString(keyStr));
+        }
+        return treeMap;
     }
 
     private Scene setScene(){
