@@ -75,6 +75,8 @@ Interesting data files:
     - see turtleformat.xml
 
 Known Bugs:
+- Turtles command doesn't return the amount of turtles but the id number, even when declared as Double
+instead of double
 
 Extra credit:
 
