@@ -30,6 +30,7 @@ public class Controller {
   private Turtle turtle;
   private ViewExternal myView;
   private double IdOfTurtle;
+  private Command currentCommand;
   private ResourceBundle errorResources;
 
   /**
@@ -235,35 +236,37 @@ public class Controller {
 
   private void executeCommandList(List<Command> l) {
     for (Command c : l) {
-      System.out.println(c);
-      System.out.println(c.getResult());
-      c.execute();
-      if (c instanceof ClearScreen) {
-        myView.updatePenStatus(0);
-        myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
-        myView.clear();
-        myView.updatePenStatus(1);
-      } else if (c instanceof HideTurtle
-          || c instanceof ShowTurtle) { //FIXME get rid of instance of. maybe commands can have a string that returns a view method to call and then we use reflection for making the method with one parameter (getResult())...
-        myView.updateTurtleView(c.getResult());
-      } else if (c instanceof PenDown || c instanceof PenUp) {
-        myView.updatePenStatus(c.getResult());
-      } else if (c instanceof SetBackground) {
-        myView.updateBackgroundColor(c.getResult());
-      } else if (c instanceof SetPenColor) {
-        myView.updateCommandPenColor(c.getResult());
-      } else if (c instanceof SetShape) {
-        myView.updateShape(c.getResult());
-      } else if (c instanceof SetPenSize) {
-        myView.updatePenSize(c.getResult());
-      } else {
-        myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
-      }
+      currentCommand = c;
+      System.out.println(currentCommand);
+      System.out.println(currentCommand.getResult());
+      currentCommand.execute();
+//      if (c instanceof ClearScreen) {
+//        myView.updatePenStatus(0);
+//        myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
+//        myView.clear();
+//        myView.updatePenStatus(1);
+//      } else if (c instanceof HideTurtle
+//          || c instanceof ShowTurtle) { //FIXME get rid of instance of. maybe commands can have a string that returns a view method to call and then we use reflection for making the method with one parameter (getResult())...
+//        myView.updateTurtleView(c.getResult());
+//      } else if (c instanceof PenDown || c instanceof PenUp) {
+//        myView.updatePenStatus(c.getResult());
+//      } else if (c instanceof SetBackground) {
+//        myView.updateBackgroundColor(c.getResult());
+//      } else if (c instanceof SetPenColor) {
+//        myView.updateCommandPenColor(c.getResult());
+//      } else if (c instanceof SetShape) {
+//        myView.updateShape(c.getResult());
+//      } else if (c instanceof SetPenSize) {
+//        myView.updatePenSize(c.getResult());
+//      } else {
+//        myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
+//      }
+      makeMethod(currentCommand, currentCommand.getViewInteractionString().split(" ")[ZERO]);
     }
     myView.updateStatus();
   }
 
-  private void makeMethod(String methodName, List<String> parameters){
+  private void makeMethod(Command c, String methodName){
     try {
       Method method = Controller.class.getDeclaredMethod(methodName);
       method.invoke(Controller.this);
@@ -279,45 +282,45 @@ public class Controller {
   }
 
   private void addUserConstantToMap(Command c) {
-    String variableName = c.getViewInteractionString().split("|")[1];//todo remove hard code 1
+    String variableName = c.getViewInteractionString().split(" ")[1];//todo remove hard code 1
     //todo handle putting into maps
   }
 
   private void addUserCommandToMap(Command c){
-    String variableName = c.getViewInteractionString().split("|")[1];//todo remove hard code 1
+    String variableName = c.getViewInteractionString().split(" ")[1];//todo remove hard code 1
     //todo handle putting into maps
 
   }
 
-  private void update(Command c){
+  private void update(){
     myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
   }
 
-  private void updatePenSize(Command c){
-    myView.updatePenSize(c.getResult());
+  private void updatePenSize(){
+    myView.updatePenSize(currentCommand.getResult());
   }
 
-  private void updateShape(Command c){
-    myView.updateShape(c.getResult());
+  private void updateShape(){
+    myView.updateShape(currentCommand.getResult());
   }
 
-  private void updateCommandPenColor(Command c){
-    myView.updateCommandPenColor(c.getResult());
+  private void updateCommandPenColor(){
+    myView.updateCommandPenColor(currentCommand.getResult());
   }
 
-  private void updateBackgroundColor(Command c) {
-    myView.updateBackgroundColor(c.getResult());
+  private void updateBackgroundColor() {
+    myView.updateBackgroundColor(currentCommand.getResult());
   }
 
-  private void updatePenStatus(Command c){
-    myView.updatePenStatus(c.getResult());
+  private void updatePenStatus() {
+    myView.updatePenStatus(currentCommand.getResult());
   }
 
-  private void updateTurtleView(Command c){
-    myView.updateTurtleView(c.getResult());
+  private void updateTurtleView(){
+    myView.updateTurtleView(currentCommand.getResult());
   }
 
-  private void clear(Command c) {
+  private void clear() {
     myView.updatePenStatus(0);
     myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
     myView.clear();
