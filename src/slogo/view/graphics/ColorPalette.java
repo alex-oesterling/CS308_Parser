@@ -104,4 +104,6 @@ public class ColorPalette {
      * @return hex string which is then converted into a color in ViewExternal
      */
     public String getColorMapValue(double value){return treeMap.get(value);}
+
+    public Map<Double, String> getColorMap(){return treeMap;}
 }

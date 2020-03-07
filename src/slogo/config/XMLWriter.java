@@ -71,6 +71,7 @@ public class XMLWriter {
     root.appendChild(writeCommandHistory());
     root.appendChild(writeUserVariables());
     root.appendChild(writeUserCommands());
+    root.appendChild(writeColorPalette());
   }
 
   private Node writePreferences() {
@@ -136,4 +137,8 @@ public class XMLWriter {
     return node;
   }
 
+  private Node writeColorPalette(){
+    Element colors = myDocument.createElement("ColorPalette");
+//    Map<Double, String>
+  }
 }

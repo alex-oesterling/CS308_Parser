@@ -6,7 +6,6 @@
   </Preferences>
   <Turtles>
     <Turtle name="Alex" xpos="50" ypos="50" heading="90"/>
-    <Turtle name="Alex" xpos="50" ypos="50" heading="90"/>
   </Turtles>
   <CommandHistory>
     <Command syntax="fd 50"/>
@@ -19,11 +18,13 @@
   <UserCommands>
     <Command name=":command" syntax="fd fd 50"/>
   </UserCommands>
-  <ColorPallete>
+  <ColorPalette>
     <Color index="1" color="black"/>
-  </ColorPallete>
-  <TurtlePallete>
-  </TurtlePallete>
+    <Color index="2" color="black"/>
+    <Color index="3" color="black"/>
+  </ColorPalette>
+  <TurtlePalette>
+  </TurtlePalette>
   <Paths>
     <Path type=""/>
   </Paths>

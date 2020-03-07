@@ -398,4 +398,8 @@ public class Visualizer{
   public void updateColorMap(double index, String hex){
     colorPalette.updateColorMap(index, hex);
   }
+
+  public Map<Double, String> getColorMap(){
+    return colorPalette.getColorMap();
+  }
 }
