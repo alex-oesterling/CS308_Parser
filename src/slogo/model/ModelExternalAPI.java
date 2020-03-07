@@ -12,5 +12,6 @@ import slogo.model.command.Command;
 public interface ModelExternalAPI {
   void setTurtle(Turtle t);
   void setLanguage(String language);
+  void orientTurtle(double x, double y, double heading);
   List<Command> getCommandsOf(String commands);
 }

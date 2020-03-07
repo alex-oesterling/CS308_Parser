@@ -103,6 +103,16 @@ public class Controller {
   }
 
   /**
+   * Sets the turtle to specific position
+   * @param xPos x pos to set to
+   * @param yPos y pos to set to
+   * @param heading degrees to be facing
+   */
+  public void orientTurtle(double xPos, double yPos, double heading){
+    modelExternal.orientTurtle(xPos, yPos, heading);
+  }
+
+  /**
    * Allows a command variable to be updated in the UI
    *
    * @param key      the old command value
