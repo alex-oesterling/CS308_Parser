@@ -18,13 +18,14 @@ import slogo.fun.RomanNumerals;
 public class Controller {
 
   private static final String ERROR_PACKAGE = "resources.information.ErrorText";
-  private static final int ZERO = 0;
   private static final Integer SECOND_GEN = 2;
+  private static final int ONE = 1;
+  private static final int ZERO = 0;
   private static final double STARTING_ID = 0;
 
   private ModelExternal modelExternal;
   private Map<String, List> userCreatedCommandVariables;
-  private Map<String, String> userCreatedConstantVariables;
+  private Map<String, Double> userCreatedConstantVariables;
   private Map<String, Turtle> nameToTurtle;
   private Map<Turtle, Double> turtleId;
   private Map<String, Integer> nameCount;
@@ -117,12 +118,12 @@ public class Controller {
   }
 
   /**
-   * Allows a command variable to be updated in the UI
+   * When the user changes a variable, this is updates map with new variable
    *
-   * @param key      the old command value
+   * @param key      the variable name value
    * @param newValue what it will be changed to
    */
-  public void updateCommandVariable(String key, String newValue) {
+  public void updateConstantVariable(String key, Double newValue) {
     if (userCreatedConstantVariables.containsKey(key)) {
       userCreatedConstantVariables.put(key, newValue);
     }
@@ -134,7 +135,7 @@ public class Controller {
    * @param key   variable name
    * @param value variable value
    */
-  public void addUserVariable(String key, String value) {
+  public void addUserVariable(String key, Double value) {
     userCreatedConstantVariables.putIfAbsent(key, value);
   }
 
@@ -177,75 +178,6 @@ public class Controller {
     executeCommandList(modelExternal.getCommandsOf(commands));
   }
 
-  //todo finish comment
-
-  /**
-   * get the user created constant or variable in a line from the map
-   *
-   * @param line
-   * @return
-   */
-  public String getUserCreatedConstantVariables(String line) {
-    return userCreatedConstantVariables.get(line);
-  }
-
-  //todo finish comment
-
-  /**
-   * @param line
-   * @return
-   */
-  public List<String> getUserCreatedCommandVariables(String line) {
-    return userCreatedCommandVariables.get(line);
-  }
-
-  //todo finish comment
-
-  /**
-   * @param line
-   * @return
-   */
-  public boolean hasUserCreatedCommandVariables(String line) {
-    return userCreatedCommandVariables.containsKey(line);
-  }
-
-  //todo finish comment
-
-  /**
-   * @param line
-   * @return
-   */
-  public boolean hasUserCreatedConstantVariables(String line) {
-    return userCreatedConstantVariables.containsKey(line);
-  }
-
-  //todo finish comment
-
-  /**
-   * @param variable
-   * @param copyLines
-   */
-  public void addUserCreatedCommand(String variable, List<String> copyLines) {
-    if (!userCreatedConstantVariables.containsKey(variable)) {
-      userCreatedCommandVariables.put(variable, copyLines);
-      String commandSyntax = String.join(" ", copyLines.toArray(new String[ZERO]));
-      myView.addCommand(variable, commandSyntax);
-    } else {
-      throw new InvalidVariableException(new Throwable(),
-          errorResources.getString("AlreadyConstant"));
-    }
-  }
-
-  public void addUserCreatedVariable(String variable, String firstCommand) {
-    if (!userCreatedCommandVariables.containsKey(variable)) {
-      userCreatedConstantVariables.put(variable, firstCommand);
-      myView.addVariable(variable, firstCommand);
-    } else {
-      throw new InvalidVariableException(new Throwable(),
-          errorResources.getString("AlreadyCommand"));
-    }
-  }
-
   private void executeCommandList(List<Command> l) {
     myView.setCommandSize(l.size());
     for (Command c : l) {
@@ -265,23 +197,23 @@ public class Controller {
     } catch (NoSuchMethodException e) {
       throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
     } catch (IllegalAccessException e) {
-      //todo change this
-      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+      throw new IllegalException(new Throwable(), errorResources.getString("Illegal"));
     } catch (InvocationTargetException e) {
-      //todo change this
-      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+      throw new InvocationException(new Throwable(), errorResources.getString("Invocation"));
     }
   }
 
-  private void addUserConstantToMap(Command c) {
-    String variableName = c.getViewInteractionString().split(" ")[1];//todo remove hard code 1
-    //todo handle putting into maps
+  private void addUserConstantToMap() {
+    String variableName = currentCommand.getViewInteractionString().split(" ")[ONE];
+      userCreatedConstantVariables.put(variableName, currentCommand.getResult());
+      myView.addVariable(variableName, currentCommand.getResult());
   }
 
-  private void addUserCommandToMap(Command c){
-    String variableName = c.getViewInteractionString().split(" ")[1];//todo remove hard code 1
-    //todo handle putting into maps
-
+  private void addUserCommandToMap(){
+    String variableName = currentCommand.getViewInteractionString().split(" ")[ONE];
+      userCreatedCommandVariables.put(variableName, currentCommand.getCommandList());
+      String commandSyntax = String.join(" ", currentCommand.getCommandList().toArray(new String[ZERO]));
+      myView.addCommand(variableName, commandSyntax);
   }
 
   private void update(){

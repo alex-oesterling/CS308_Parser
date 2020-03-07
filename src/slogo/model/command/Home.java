@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Home extends Command {
 
+  private static final int DEFAULT_STARTING_X = 0;
+  private static final int DEFAULT_STARTING_Y = 0;
   private Turtle t;
 
   /**
@@ -28,7 +30,7 @@ public class Home extends Command {
    */
   @Override
   public Double getResult(){
-    return t.distanceToPosition(Turtle.DEFAULT_STARTING_X, Turtle.DEFAULT_STARTING_Y);
+    return t.distanceToPosition(DEFAULT_STARTING_X, DEFAULT_STARTING_Y);
   }
 
   /**
@@ -38,6 +40,6 @@ public class Home extends Command {
   @Override
   public Double execute() {
     t.goHome();
-    return t.distanceToPosition(Turtle.DEFAULT_STARTING_X, Turtle.DEFAULT_STARTING_Y);
+    return t.distanceToPosition(DEFAULT_STARTING_X, DEFAULT_STARTING_Y);
   }
 }

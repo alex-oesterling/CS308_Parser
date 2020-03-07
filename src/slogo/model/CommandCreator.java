@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.Stack;
-import java.util.concurrent.CopyOnWriteArrayList;
 import slogo.controller.Controller;
 import slogo.exceptions.*;
 import slogo.model.command.*;
@@ -21,7 +20,6 @@ public class CommandCreator {
   private static final String CONSTANT = "Constant";
   private static final String NO_MATCH = "NO MATCH";
   private static final String VARIABLE = "Variable";
-  //private static final String MAKE_VARIABLE = "MakeVariable";
   private static final String LIST_START = "ListStart";
   private static final String LIST_END = "ListEnd";
   private static final String DO = "do";
@@ -107,7 +105,7 @@ public class CommandCreator {
 
   private void makeStacks() {
     makeNewStacks();
-    listParametersStack = new Stack<>(); //todo figure out why we separated this one out
+    listParametersStack = new Stack<>();
   }
 
   private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
@@ -174,17 +172,10 @@ public class CommandCreator {
         if(commandSyntax.equals(COMMAND)){
           doCommandWork(params, lang, syntax, currentList, line, commandSyntax, lines);
         } else if (commandSyntax.equals(CONSTANT)){
-          doConstantWork(line, currentList);
+          doConstantWork(Double.parseDouble(line), currentList);
         } else if (commandSyntax.equals(VARIABLE)){
-//          if(control.hasUserCreatedCommandVariables(line)){
-//            doCommandVariable(line, syntax, lang, params, currentList);
-//          } else if (control.hasUserCreatedConstantVariables(line)){
-//            doConstantVariable(line, currentList);
-//          } else {
-//            throw new InvalidVariableException(new Throwable(), errorResources.getString("FakeVariable"));
-//          }
           variablesStack.push(line);
-        } else if (commandSyntax.equals("ListStart")){
+        } else if (commandSyntax.equals(LIST_START)){
           doListStartWork();
         } else if (commandSyntax.equals(LIST_END)){
           doListEndWork();
@@ -225,48 +216,14 @@ public class CommandCreator {
     }
   }
 
-//  private void dealWithMakingVariables(List<String> lines, String line, Parser syntax){
-//    IS_VARIABLE = true;
-//    List<String> copyLines = new CopyOnWriteArrayList(lines);
-//    copyLines.remove(line);
-//    String variable = copyLines.get(ZERO);
-//    String firstCommand = copyLines.get(1);
-//    String type = syntax.getSymbol(firstCommand);
-//    copyLines.remove(variable);
-//    if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals("Command"))){
-//      control.addUserCreatedCommand(variable, copyLines);
-//    } else if (copyLines.size() == 1 && type.equals("Constant")){
-//      control.addUserCreatedVariable(variable, firstCommand);
-//    }
-//  }
-
   private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
     waitingCommandsStack.push(commandName); //add string to stack
     pushParamsNeeded(params.getSymbol(commandName)); //get Parameters string, and convert that string to a double
     return tryToMakeCommands(commandList);
   }
 
-  //fixme add in controller
-  private void doCommandVariable(String line, Parser syntax, Parser lang, Parser params, List<Command> commandList){
-    List<String> variableDoesWhat = control.getUserCreatedCommandVariables(line)/*userCreatedCommandVariables.get(line)*/;
-
-    for (String s : variableDoesWhat){
-      String comSyntax = syntax.getSymbol(s);
-      if (comSyntax.equals(COMMAND)){
-        doCommandWork(params, lang, syntax, commandList, s, comSyntax, variableDoesWhat);
-      } else if (comSyntax.equals(CONSTANT)){
-        doConstantWork(s, commandList);
-      }
-    }
-  }
-
-  //fixme add in controller
-  private void doConstantVariable(String line, List commandList){
-    doConstantWork(control.getUserCreatedConstantVariables(line)/*userCreatedConstantVariables.get(line)*/, commandList);
-  }
-
-  private void doConstantWork(String constant, List<Command> commandList){
-    argumentStack.push(Double.parseDouble(constant));
+  private void doConstantWork(Double constant, List<Command> commandList){
+    argumentStack.push(constant);
     tryToMakeCommands(commandList);
   }
 
@@ -347,7 +304,7 @@ public class CommandCreator {
 
   private Command makeCommand(Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
     List<Turtle> turtleListToGive = new ArrayList<>();
-    turtleListToGive.add(turtle/*activeTurtles*/); //fixme
+    turtleListToGive.add(turtle);
 
     return (Command) constructor.newInstance(turtleListToGive, doubleListToGive(), commandListToGive(), stringListToGive());
   }

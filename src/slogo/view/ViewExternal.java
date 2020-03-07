@@ -60,7 +60,7 @@ public class ViewExternal implements ViewExternalAPI {
   }
 
   @Override
-  public void addVariable(String newVariable, String newValue) {
+  public void addVariable(String newVariable, Double newValue) {
     myVisualizer.addVariable(newVariable, newValue);
   }
 

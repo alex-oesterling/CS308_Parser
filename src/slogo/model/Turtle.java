@@ -4,10 +4,8 @@ import java.util.List;
 
 public class Turtle{
 
-  //todo deal with making private
-  public static final int DEFAULT_STARTING_X = 0;
-  public static final int DEFAULT_STARTING_Y = 0;
-  private static final double DEFAULT_HEADING = 0;
+  private static final int DEFAULT_STARTING_X = 0;
+  private static final int DEFAULT_STARTING_Y = 0;
   private static final int DEFAULT_PEN_INDEX = 0;
   private static final int DEFAULT_BG_INDEX = 7;
   private static final int DEFAULT_SHAPE_INDEX = 0;
@@ -18,6 +16,7 @@ public class Turtle{
   private static final int QUAD3_BEGINS = 180;
   private static final int QUAD4_BEGINS = 270;
   private static final int QUAD4_ENDS = 360;
+  private static final double DEFAULT_HEADING = 0;
   private static final double VISIBLE = 1;
   private static final double INVISIBLE = 0;
   private static final double DRAWING = 1.0;
@@ -40,6 +39,16 @@ public class Turtle{
   private Double turtleCount;
   private String name;
 
+  /**
+   * Turtle constructor to create turtle at a specific point and specific pen color and with a given name
+   * @param turtleName name of the turtle
+   * @param startingXPosition the x position
+   * @param startingYPosition the y position
+   * @param startingHeading the heading
+   * @param IdOfTurtle the id of the turtle
+   * @param screenWidth the width of the screen
+   * @param screenHeight the height  of the screen
+   */
   public Turtle(String turtleName, double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle, int screenWidth, int screenHeight){
     id = IdOfTurtle;
     turtleCount = IdOfTurtle;
@@ -54,6 +63,9 @@ public class Turtle{
    * @param startingXPosition value to set xPosition to
    * @param startingYPosition value to set yPosition to
    * @param startingHeading value to set heading to; degrees clockwise from east
+   * @param IdOfTurtle the current id of this turtle
+   * @param screenHeight the height of the screen
+   * @param screenWidth the width of the screen
    */
   public Turtle(double startingXPosition, double startingYPosition, double startingHeading, Double IdOfTurtle, int screenWidth, int screenHeight){
     id = IdOfTurtle;
@@ -68,6 +80,9 @@ public class Turtle{
    * Turtle constructor to create a turtle at the default origin
    * but with a specific name
    * @param turtleName string to set name to
+   * @param IdOfTurtle the current id of this turtle
+   * @param screenHeight the height of the screen
+   * @param screenWidth the width of the screen
    */
   public Turtle(String turtleName, Double IdOfTurtle, int screenWidth, int screenHeight){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle, screenWidth, screenHeight);
@@ -76,6 +91,9 @@ public class Turtle{
 
   /**
    * Default Turtle constructor
+   * @param IdOfTurtle the current id of this turtle
+   * @param screenHeight the height of the screen
+   * @param screenWidth the width of the screen
    */
   public Turtle(Double IdOfTurtle, int screenWidth, int screenHeight){
     this(DEFAULT_STARTING_X, DEFAULT_STARTING_Y, DEFAULT_HEADING, IdOfTurtle, screenWidth, screenHeight);
