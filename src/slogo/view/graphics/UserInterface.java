@@ -43,6 +43,7 @@ public class UserInterface {
     myResources = resources;
     myVisualizer = visualizer;
     myList = new ListView<>();
+    turtleBox = new ComboBox();
   }
 
   /**
@@ -107,7 +108,6 @@ public class UserInterface {
   }
 
   private ComboBox<String> makeTurtleSelector(){
-    turtleBox = new ComboBox();
     turtleBox.setPromptText("Pick Turtle");
     turtleBox.valueProperty().addListener((o, old, neww) ->{
       myVisualizer.setTurtle(neww);

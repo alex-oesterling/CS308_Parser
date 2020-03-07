@@ -84,7 +84,7 @@ public class Visualizer{
     varMap = new TreeMap<>();
     cmdMap = new TreeMap<>();
     viewExternal = new ViewExternal(this);
-    userDefined = new UserDefined(myResources);
+    userDefined = new UserDefined(this, myResources);
     commandLine = new CommandLine(this, myResources);
     myToolBar = new ToolBar(stage, this, myResources);
     userInterface = new UserInterface(this, myResources);
@@ -219,7 +219,6 @@ public class Visualizer{
     tempTurtle.set(startingX, startingY, heading);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
     myTurtlesProperty.getValue().add(myController.getTurtleName());
-
     setTurtle(myController.getTurtleName());
   }
 
