@@ -14,14 +14,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import slogo.view.Styler;
+import slogo.view.Visualizer;
 
 /**
  * This class creates many components of the visualizer. These components include all of the turtleview, the command history,
  * and the variable history.
  */
 public class UserDefined {
-    private static final int TURTLE_SCREEN_WIDTH = 500;
-    private static final int TURTLE_SCREEN_HEIGHT = 500;
     private static final int TURTLE_SCREEN_STROKEWIDTH = 3;
     private static final int VBOX_SPACING = 10;
     private static final int VIEWPANE_PADDING = 10;
@@ -34,17 +33,22 @@ public class UserDefined {
     private VBox varHistory;
     private Styler styler;
     private List<Path> pathList;
+    private int arena_width;
+    private int arena_height;
 
     /**
      * Initializes all the groups and other elements.
+     * @param visualizer - the visualizer object in order to pass in arena dimensions
      * @param resources - a resources bundle in order to create all the labels
      */
-    public UserDefined(ResourceBundle resources){
+    public UserDefined(Visualizer visualizer, ResourceBundle resources){
         turtlePaths = new Group();
         turtles = new Group();
         backgroundColor = Color.WHITE;
         styler = new Styler(resources);
         pathList = new ArrayList<>();
+        arena_width=visualizer.getArenaWidth();
+        arena_height=visualizer.getArenaHeight();
     }
 
     /**
@@ -85,7 +89,7 @@ public class UserDefined {
     }
 
     private Group createBox() {
-        turtleArea = new Rectangle(TURTLE_SCREEN_WIDTH, TURTLE_SCREEN_HEIGHT);
+        turtleArea = new Rectangle(arena_width, arena_height);
         turtleArea.setFill(backgroundColor);
         turtleArea.setStroke(Color.BLACK);
         turtleArea.setStrokeWidth(TURTLE_SCREEN_STROKEWIDTH);
@@ -97,7 +101,7 @@ public class UserDefined {
     private Node makeHistory(VBox history) {
         ScrollPane userCommands = new ScrollPane();
         userCommands.setContent(history);
-        userCommands.setPrefSize(TURTLE_SCREEN_WIDTH/2,TURTLE_SCREEN_HEIGHT/4);
+        userCommands.setPrefSize(arena_width /2, arena_height /4);
         history.heightProperty().addListener((obs, old, newValue) -> userCommands.setVvalue((Double)newValue));
         return userCommands;
     }

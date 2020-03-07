@@ -1,7 +1,9 @@
 package slogo.view.graphics;
 
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -12,8 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import slogo.view.Styler;
 import slogo.view.Visualizer;
-import slogo.view.graphics.HelpWindow;
-import slogo.view.graphics.MoveTurtle;
 
 /**
  * This class creates all of the user defined visuals which are then added to the visualizer. This includes all the user interface
@@ -32,6 +32,8 @@ public class UserInterface {
   private ColorPicker backgroundColorPicker;
   private ComboBox<String> turtleBox;
   private ListView<String> myList;
+  private SimpleObjectProperty<ObservableList<String>> turtleProperty;
+
 
   /**
    * Initializes are variables and instances that are used throughout the class.
@@ -43,6 +45,8 @@ public class UserInterface {
     myResources = resources;
     myVisualizer = visualizer;
     myList = new ListView<>();
+    turtleBox = new ComboBox();
+    turtleProperty = myVisualizer.getTurtlesProperty();
   }
 
   /**
@@ -107,13 +111,12 @@ public class UserInterface {
   }
 
   private ComboBox<String> makeTurtleSelector(){
-    turtleBox = new ComboBox();
     turtleBox.setPromptText("Pick Turtle");
     turtleBox.valueProperty().addListener((o, old, neww) ->{
       myVisualizer.setTurtle(neww);
       turtleBox.getSelectionModel().select(neww);
     });
-    turtleBox.itemsProperty().bind(myVisualizer.getTurtlesProperty());
+    turtleBox.itemsProperty().bind(turtleProperty);
     turtleBox.getSelectionModel().selectFirst();
     return turtleBox;
   }
@@ -154,4 +157,10 @@ public class UserInterface {
    * the listview is unbinded and then rebinded again.
    */
   public ListView<String> getList(){return myList;}
+
+  /**
+   * @return the combobox which the user uses to select the
+   * active turtle
+   */
+  public ComboBox<String> getTurtleBox(){return turtleBox;}
 }

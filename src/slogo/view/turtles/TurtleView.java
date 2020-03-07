@@ -1,36 +1,23 @@
 package slogo.view.turtles;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import javafx.animation.PathTransition;
-import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.scene.transform.Translate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import slogo.controller.Controller;
 import slogo.view.Visualizer;
 
 /**
@@ -41,8 +28,6 @@ public class TurtleView{
     private static final String XML_FILEPATH = "user.dir";
     private static final int TURTLE_WIDTH = 50;
     private static final int TURTLE_HEIGHT = 40;
-    private static final int TURTLE_SCREEN_WIDTH = 500;
-    private static final int TURTLE_SCREEN_HEIGHT = 500;
     private static final int PATH_STROKE_WIDTH = 3;
     private static final String ERROR_DIALOG = "Please Choose Another File";
 
@@ -58,6 +43,8 @@ public class TurtleView{
     private double prevY;
     private double prevHeading;
     private double pathStrokeWidth;
+    private int arena_width;
+    private int arena_height;
     private String turtleName;
     private SimpleObjectProperty<ObservableList<String>> myTurtle;
     private boolean stopped;
@@ -74,6 +61,9 @@ public class TurtleView{
      * @param visualizer - the Visualizer object to which the TurtleView sends back updated position data when it is set on the view side.
      */
     public TurtleView(Group turtles, Group paths, String name, Visualizer visualizer){
+        myVisualizer = visualizer;
+        arena_width = visualizer.getArenaWidth();
+        arena_height = visualizer.getArenaHeight();
         penStatus = true;
         myPaths = paths;
         turtleName = name;
@@ -88,7 +78,6 @@ public class TurtleView{
         heading = 0;
         stopped = true;
         turtleAnimator = new TurtleAnimator(this, myImage, myPaths);
-        myVisualizer = visualizer;
     }
 
     private ImageView createTurtle(){
@@ -96,8 +85,8 @@ public class TurtleView{
         ImageView turtleImage = new ImageView(string);
         turtleImage.setFitWidth(TURTLE_WIDTH);
         turtleImage.setFitHeight(TURTLE_HEIGHT);
-        turtleImage.setTranslateX(TURTLE_SCREEN_WIDTH / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
-        turtleImage.setTranslateY(TURTLE_SCREEN_HEIGHT / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
+        turtleImage.setTranslateX((double)arena_width / 2 - turtleImage.getBoundsInLocal().getWidth() / 2);
+        turtleImage.setTranslateY((double)arena_height / 2 - turtleImage.getBoundsInLocal().getHeight() / 2);
         myTurtles.getChildren().add(turtleImage);
         return turtleImage;
     }
@@ -170,12 +159,12 @@ public class TurtleView{
     public SimpleObjectProperty<ObservableList<String>> turtleStats(){
         ObservableList<String> observableList = FXCollections.observableArrayList();
         observableList.addAll(turtleName,
-                Double.toString(currentX),
-                Double.toString(currentY),
-                Double.toString(heading),
-                String.valueOf(myPenColor),
-                Double.toString(pathStrokeWidth),
-                Boolean.toString(penStatus));
+            Double.toString(currentX), //fixme convert to model coordinates
+            Double.toString(currentY),
+            Double.toString(heading),
+            String.valueOf(myPenColor),
+            Double.toString(pathStrokeWidth),
+            Boolean.toString(penStatus));
         myTurtle.setValue(observableList);
         return myTurtle;
     }
@@ -228,7 +217,7 @@ public class TurtleView{
         myImage = turtle;
         turtleAnimator.setShape(myImage);
         myTurtles.getChildren().add(myImage);
-        set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
+        set(currentX- arena_width /2, arena_height /2-currentY, heading);
     }
 
     /**
@@ -272,11 +261,9 @@ public class TurtleView{
      */
     public void set(double newX, double newY, double newHeading){
         updateCurrent(newX, newY, newHeading);
-
         myImage.setTranslateX(currentX-myImage.getBoundsInLocal().getWidth()/2);
         myImage.setTranslateY(currentY-myImage.getBoundsInLocal().getHeight()/2);
         myImage.setRotate(heading);
-
         myVisualizer.orientTurtle(newX, newY, newHeading);
     }
 
@@ -291,8 +278,8 @@ public class TurtleView{
      * @return
      */
     public Double[] getData(){
-        double coordinateX = currentX - TURTLE_SCREEN_WIDTH/2;
-        double coordinateY = TURTLE_SCREEN_HEIGHT/2 - currentY;
+        double coordinateX = currentX - arena_width /2;
+        double coordinateY = arena_height /2 - currentY;
         return new Double[]{coordinateX, coordinateY, heading};
     }
 
@@ -353,8 +340,8 @@ public class TurtleView{
      */
     public void updateCurrent(double newX, double newY, double orientation){
         newY = -newY;
-        newX += TURTLE_SCREEN_WIDTH/2;
-        newY += TURTLE_SCREEN_HEIGHT/2;
+        newX += arena_width /2;
+        newY += arena_height /2;
         currentX = newX;
         currentY = newY;
         heading = orientation;
@@ -373,7 +360,7 @@ public class TurtleView{
      * Undoes the most recent command by setting the turtle to its old coordinates
      */
     public void undoMove(){
-        set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
+        set(prevX- arena_width /2, arena_height /2-prevY, prevHeading);
     }
 
     /**
@@ -381,4 +368,28 @@ public class TurtleView{
      * @param path - the path to be saved in a list of paths in the view
      */
     public void addPath(Path path){myVisualizer.getPaths().add(path);}
+
+    /**
+     * Handles conversion of coordinates between model coordinate system (0,0 is center of page)
+     * and view coordinate system (0,0 is upper left corner) for JFX animation
+     * @param x - model-coordinate X
+     * @param y - model-coordinate Y
+     * @param heading - model-coordinate heading
+     * @return an array containing view-converted data
+     */
+    public double[] convertCoordinatesToView(double x, double y, double heading){
+        return new double[]{x+arena_width/2, (y*-1)+arena_height/2, heading};
+    }
+
+    /**
+     * Handles conversion of coordinates between view coordinate system and model coordinate system
+     * (see above)
+     * @param x - view-coordinate X
+     * @param y - view-coordinate Y
+     * @param heading - view-coordinate heading
+     * @return an array containing model-converted data
+     */
+    public double[] convertCoordinatesToModel(double x, double y, double heading){
+        return new double[]{x-arena_width/2, arena_height/2-y, heading};
+    }
 }

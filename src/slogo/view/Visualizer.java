@@ -84,7 +84,7 @@ public class Visualizer{
     varMap = new TreeMap<>();
     cmdMap = new TreeMap<>();
     viewExternal = new ViewExternal(this);
-    userDefined = new UserDefined(myResources);
+    userDefined = new UserDefined(this, myResources);
     commandLine = new CommandLine(this, myResources);
     myToolBar = new ToolBar(stage, this, myResources);
     userInterface = new UserInterface(this, myResources);
@@ -194,6 +194,7 @@ public class Visualizer{
     }
     TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), this);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
+    userInterface.getTurtleBox().setValue(myController.getTurtleName());
     myTurtlesProperty.getValue().add(myController.getTurtleName());
     setTurtle(myController.getTurtleName());
   }
@@ -212,14 +213,13 @@ public class Visualizer{
       myController.addTurtle(name, startingX, startingY, heading);
     } catch (InvalidTurtleException e) {
       e.displayError("Please fix XML to contain unique turtles:");
-      System.out.println("YEET");
       return;
     }
     TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), this);
     tempTurtle.set(startingX, startingY, heading);
     turtleMap.putIfAbsent(myController.getTurtleName(), tempTurtle);
+    userInterface.getTurtleBox().setValue(myController.getTurtleName());
     myTurtlesProperty.getValue().add(myController.getTurtleName());
-
     setTurtle(myController.getTurtleName());
   }
 
