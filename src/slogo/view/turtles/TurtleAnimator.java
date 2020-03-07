@@ -118,7 +118,7 @@ public class TurtleAnimator {
       stopped = true;
       st = new SequentialTransition();
       double[] modelCoords = myTurtle.convertCoordinatesToModel(myImage.getTranslateX()+myImage.getBoundsInLocal().getWidth()/2,
-          myImage.getTranslateY()-myImage.getBoundsInLocal().getHeight()/2,
+          myImage.getTranslateY()+myImage.getBoundsInLocal().getHeight()/2,
           myImage.getRotate());
       myTurtle.updateCurrent(modelCoords[0], modelCoords[1], modelCoords[2]);
     }
