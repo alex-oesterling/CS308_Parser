@@ -30,14 +30,14 @@ public class CommandCreator {
   private static boolean IS_VARIABLE = false;
 
   private Controller control;
-  private Stack<String> commandStack;
+  private Stack<String> waitingCommandsStack, variablesStack;
   private Stack<Double> argumentStack;
-  private Stack<Integer> doubleParametersStack, listParametersStack;
+  private Stack<Integer> doubleParametersStack, listParametersStack, variableParametersStack;
   private Stack<List<Command>> listStack;
-  private Stack<Stack> commandStackHolder, argumentStackHolder, parametersStackHolder, listParametersStackHolder, listStackHolder;
+  private Stack<Stack> commandStackHolder, argumentStackHolder, parametersStackHolder, listParametersStackHolder, variableStackHolder, variableParametersStackHolder, listStackHolder;
   private Stack<List<Command>> currentListHolder = new Stack<>();
   private Turtle turtle;
-  private Parser commandParser, parametersParser, syntaxParser, listParamsParser, doubleParamsParser;
+  private Parser commandParser, parametersParser, syntaxParser, listParamsParser, doubleParamsParser, varsParamsParser;
   private List<Command> currentList, extendedList;
   private ResourceBundle errorResources;
 
@@ -93,6 +93,9 @@ public class CommandCreator {
 
     doubleParamsParser = new Parser(INFORMATION_PACKAGE);
     doubleParamsParser.addPatterns("TurtleAndDoubleParameters");
+
+    varsParamsParser = new Parser(INFORMATION_PACKAGE);
+    varsParamsParser.addPatterns("VariablesParameters");
   }
 
   private void makeStacks() {
@@ -101,9 +104,11 @@ public class CommandCreator {
   }
 
   private void makeNewStacks(){ //INTENTIONALLY MAKING NEW STACKS RATHER THAN CLEARING
-    commandStack = new Stack<>();
+    waitingCommandsStack = new Stack<>();
     argumentStack = new Stack<>();
     doubleParametersStack = new Stack<>();
+    variablesStack = new Stack<>();
+    variableParametersStack = new Stack<>();
     listStack = new Stack<>();
   }
 
@@ -112,15 +117,19 @@ public class CommandCreator {
     argumentStackHolder = new Stack<>();
     parametersStackHolder = new Stack<>();
     listParametersStackHolder = new Stack<>();
+    variableStackHolder = new Stack<>();
+    variableParametersStackHolder = new Stack<>();
     listStackHolder = new Stack<>();
     currentListHolder = new Stack<>();
   }
 
   private void holdStacks(){
-    commandStackHolder.push(commandStack);
+    commandStackHolder.push(waitingCommandsStack);
     argumentStackHolder.push(argumentStack);
     parametersStackHolder.push(doubleParametersStack);
     listParametersStackHolder.push(listParametersStack);
+    variableStackHolder.push(variablesStack);
+    variableParametersStackHolder.push(variableParametersStack);
     listStackHolder.push(listStack);
     makeNewStacks();
     listStack =  listStackHolder.pop();
@@ -128,10 +137,12 @@ public class CommandCreator {
   }
 
   private void stopHoldingStacks(){
-    commandStack = commandStackHolder.pop();
+    waitingCommandsStack = commandStackHolder.pop();
     argumentStack = argumentStackHolder.pop();
     doubleParametersStack = parametersStackHolder.pop();
     listParametersStack = listParametersStackHolder.pop();
+    variablesStack = variableStackHolder.pop();
+    variableParametersStack = variableParametersStackHolder.pop();
     currentList = currentListHolder.pop();
   }
 
@@ -158,13 +169,14 @@ public class CommandCreator {
         } else if (commandSyntax.equals(CONSTANT)){
           doConstantWork(line, currentList);
         } else if (commandSyntax.equals(VARIABLE)){
-          if(control.hasUserCreatedCommandVariables(line)){
-            doCommandVariable(line, syntax, lang, params, currentList);
-          } else if (control.hasUserCreatedConstantVariables(line)){
-            doConstantVariable(line, currentList);
-          } else {
-            throw new InvalidVariableException(new Throwable(), errorResources.getString("FakeVariable"));
-          }
+//          if(control.hasUserCreatedCommandVariables(line)){
+//            doCommandVariable(line, syntax, lang, params, currentList);
+//          } else if (control.hasUserCreatedConstantVariables(line)){
+//            doConstantVariable(line, currentList);
+//          } else {
+//            throw new InvalidVariableException(new Throwable(), errorResources.getString("FakeVariable"));
+//          }
+          variablesStack.push(line);
         } else if (commandSyntax.equals("ListStart")){
           doListStartWork();
         } else if (commandSyntax.equals("ListEnd")){
@@ -173,7 +185,7 @@ public class CommandCreator {
       }
     }
     IS_VARIABLE = false;
-    while(!commandStack.isEmpty()){
+    while(!waitingCommandsStack.isEmpty()){
       tryToMakeCommands(currentList);
     }
     return createExtendedList(currentList);
@@ -198,14 +210,14 @@ public class CommandCreator {
 
   private void doCommandWork(Parser params, Parser lang, Parser syntax, List<Command> commandList, String line, String commandSyntax, List<String> lines){
     String commandName = lang.getSymbol(line); //get the string name, such as "Forward" or "And"
-    if (commandName.equals(NO_MATCH)){
+    if (commandName.equals(NO_MATCH)) {
       throw new InvalidCommandException(new Throwable(), commandSyntax, line);
+//    } else if (commandName.equals(MAKE_VARIABLE)){
+//      dealWithMakingVariables(lines, line, syntax);
+//    } else {
     }
-    else if (commandName.equals(MAKE_VARIABLE)){
-      dealWithMakingVariables(lines, line, syntax);
-    } else {
       validCommand(params, commandName, commandList);
-    }
+//    }
   }
 
   private void dealWithMakingVariables(List<String> lines, String line, Parser syntax){
@@ -224,7 +236,7 @@ public class CommandCreator {
   }
 
   private List<Command> validCommand(Parser params, String commandName, List<Command> commandList) {
-    commandStack.push(commandName); //add string to stack
+    waitingCommandsStack.push(commandName); //add string to stack
     pushParamsNeeded(params.getSymbol(commandName)); //get Parameters string, and convert that string to a double
     return tryToMakeCommands(commandList);
   }
@@ -253,24 +265,31 @@ public class CommandCreator {
     tryToMakeCommands(commandList);
   }
 
-  private void pushParamsNeeded(String commandParams){
-    String listParamString = listParamsParser.getSymbol(commandParams);
-    if(listParamString.equals(NO_MATCH)){
+  /**
+   * puts the number of parameters of each type on each respective parameters stack
+   * @param commandType type of command
+   */
+  private void pushParamsNeeded(String commandType){
+    String listParamString = listParamsParser.getSymbol(commandType);
+    String doubleParamsString = doubleParamsParser.getSymbol(commandType);
+    String varsParamsString = varsParamsParser.getSymbol(commandType);
+
+    if(listParamString.equals(NO_MATCH) || doubleParamsString.equals(NO_MATCH) || varsParamsString.equals(NO_MATCH)){
       throw new InvalidPropertyException(new Throwable(), errorResources.getString("InvalidPropertiesFile"));
-    } else {
-      listParametersStack.push(Integer.parseInt(listParamString));
     }
 
-    String doubleParamsString = doubleParamsParser.getSymbol(commandParams);
-    if(doubleParamsString.equals(NO_MATCH)){
-      throw new InvalidPropertyException(new Throwable(), errorResources.getString("InvalidPropertiesFile"));
-    } else {
-      doubleParametersStack.push(Integer.parseInt(doubleParamsString)); //add that value to the params stack
-    }
+    listParametersStack.push(Integer.parseInt(listParamString));
+    doubleParametersStack.push(Integer.parseInt(doubleParamsString));
+    variableParametersStack.push(Integer.parseInt(varsParamsString));
   }
 
   private List<Command> tryToMakeCommands(List<Command> commandList){
-    if(checkArgumentStack() && checkListStack()){
+    if(variableParametersStack.isEmpty()){
+      return commandList; //we have nothing more to do
+    }
+    if (variableParametersStack.peek() != ZERO && (checkArgumentStack() || checkListStack())){
+      commandList.add(weHaveEnoughArgumentsToMakeACommand(commandList));
+    } else if (variableParametersStack.peek() == ZERO && checkArgumentStack() && checkListStack()){
       commandList.add(weHaveEnoughArgumentsToMakeACommand(commandList));
     }
     return commandList;
@@ -285,10 +304,17 @@ public class CommandCreator {
   }
 
   private Command weHaveEnoughArgumentsToMakeACommand(List<Command> commands){
-    Command newCommand = getCommand(commandStack.pop());
-    if(!commandStack.isEmpty()){
+    if(variableParametersStack.peek() != ZERO && checkArgumentStack()){
+      listParametersStack.pop();
+      listParametersStack.push(ZERO);
+    } else if (variableParametersStack.peek() != ZERO && checkListStack()){
+      doubleParametersStack.pop();
+      doubleParametersStack.push(ZERO);
+    }
+    Command newCommand = getCommand(waitingCommandsStack.pop());
+    if(!waitingCommandsStack.isEmpty()){
       argumentStack.push(newCommand.getResult());
-      tryToMakeCommands(commands); //slightly recursive :D
+      tryToMakeCommands(commands); //slightly recursive
     }
     return newCommand;
   }
@@ -311,16 +337,17 @@ public class CommandCreator {
   }
 
   private Constructor commandConstructor(Class command) throws NoSuchMethodException {
-    return command.getConstructor(List.class, List.class, List.class);
+    return command.getConstructor(List.class, List.class, List.class, List.class);
   }
 
   private Command makeCommand(Constructor constructor) throws IllegalAccessException, InvocationTargetException, InstantiationException {
     List<Turtle> turtleListToGive = new ArrayList<>();
     turtleListToGive.add(turtle/*activeTurtles*/); //fixme
 
-    return (Command) constructor.newInstance(turtleListToGive, doubleListToGive(), commandListToGive());
+    return (Command) constructor.newInstance(turtleListToGive, doubleListToGive(), commandListToGive(), stringListToGive());
   }
 
+  //todo make the below three methods into one method
   private List<Double> doubleListToGive(){
     List<Double> doubles = new ArrayList<>();
     if(doubleParametersStack.isEmpty()){
@@ -343,6 +370,18 @@ public class CommandCreator {
       lists.add(listStack.pop());
     }
     return lists;
+  }
+
+  private List<String> stringListToGive(){
+    List<String> strings = new ArrayList<>();
+    if(variableParametersStack.isEmpty()){
+      return strings;
+    }
+    int numberOfStringsNeeded = variableParametersStack.pop();
+    for(int k=0; k < numberOfStringsNeeded; k++){
+      strings.add(variablesStack.pop());
+    }
+    return strings;
   }
 
   private List<Command> createExtendedList(List<Command> l){

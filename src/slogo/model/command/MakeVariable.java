@@ -27,8 +27,7 @@ public class MakeVariable extends Command {
     variable = stringList.get(FIRST_INDEX);
     if (! commandList.isEmpty()){
       command = commandList.get(FIRST_INDEX);
-    }
-    else if (! doubleList.isEmpty()){
+    } else if (! doubleList.isEmpty()){
       constant = doubleList.get(FIRST_INDEX);
       isConstant = true;
     }
@@ -40,7 +39,10 @@ public class MakeVariable extends Command {
    */
   @Override
   public Double getResult() {
-    return constant;
+    if(isConstant) {
+      return constant;
+    }
+    return command.get(FIRST_INDEX).getResult();
   }
 
   /**
@@ -49,6 +51,9 @@ public class MakeVariable extends Command {
    */
   @Override
   public List<Command> getCommandList() {
+    if(isConstant){
+      return super.getCommandList();
+    }
     return command;
   }
 
@@ -61,8 +66,7 @@ public class MakeVariable extends Command {
     if (isConstant){
       isConstant = false;
       return USER_CONSTANT + SEPARATION + variable;
-    }
-    else {
+    } else {
       return USER_COMMAND + SEPARATION + variable;
     }
   }
