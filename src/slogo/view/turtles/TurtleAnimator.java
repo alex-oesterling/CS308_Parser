@@ -9,6 +9,8 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import slogo.view.paths.LinePathElement;
