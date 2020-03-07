@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 abstract public class Command {
-  //TODO make error catching in each of the command classes, so that if the wrong parameters are passed in the code doesn't break
-
 
   protected static final int FIRST_INDEX = 0;
   protected static final int SECOND_INDEX = 1;
   protected static final int THIRD_INDEX = 2;
   protected static final int FOURTH_INDEX = 3;
   private static final double DEFAULT_COMMAND_RESULT = 0;
+  private static final String UPDATE = "update";
   private double result;
 
   /**
@@ -38,6 +37,14 @@ abstract public class Command {
    */
   public Double getResult(){
     return result;
+  }
+
+  /**
+   * Allows the string to be returned to allow for method reflection
+   * @return the string name
+   */
+  public String getViewInteractionString(){
+    return UPDATE;
   }
 
   public List<Command> getCommandList(){

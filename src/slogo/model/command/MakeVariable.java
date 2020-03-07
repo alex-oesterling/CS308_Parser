@@ -1,14 +1,18 @@
 package slogo.model.command;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import slogo.model.Parser;
 import slogo.model.Turtle;
 
 public class MakeVariable extends Command {
 
-  private List<String> variables;
+  private static final String USER_CONSTANT = "addUserConstantToMap";
+  private static final String USER_COMMAND = "addUserCommandToMap";
+  private static final String SEPARATION = "|";
+  private static boolean isConstant = false;
+  private double constant;
+  private List<Command> command;
+  private String variable;
+
 
   /**
    * MakeVariable constructor for creating a command that holds a double
@@ -20,20 +24,46 @@ public class MakeVariable extends Command {
    */
   public MakeVariable(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
     super();
-    variables = stringList;
+    variable = stringList.get(FIRST_INDEX);
+    if (! commandList.isEmpty()){
+      command = commandList.get(FIRST_INDEX);
+    }
+    else if (! doubleList.isEmpty()){
+      constant = doubleList.get(FIRST_INDEX);
+      isConstant = true;
+    }
   }
 
-//  private void dealWithMakingVariables(String line, Parser syntax){
-//    List<String> copyLines = new CopyOnWriteArrayList(variables);
-//    copyLines.remove(line);
-//    String variable = copyLines.get(0);
-//    String firstCommand = copyLines.get(1); //todo magic number
-//    String type = syntax.getSymbol(firstCommand);
-//    copyLines.remove(variable);
-//    if (copyLines.size() > 1 || (copyLines.size() == 1 && type.equals("Command"))){
-//      control.addUserCreatedCommand(variable, copyLines);
-//    } else if (copyLines.size() == 1 && type.equals("Constant")){
-//      control.addUserCreatedVariable(variable, firstCommand);
-//    }
-//  }
+  /**
+   * Returns the constant if the variable is a constant variable
+   * @return constant
+   */
+  @Override
+  public Double getResult() {
+    return constant;
+  }
+
+  /**
+   * Returns the command expression  if the variable is a command variable
+   * @return command list
+   */
+  @Override
+  public List<Command> getCommandList() {
+    return command;
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the string to update map
+   */
+  @Override
+  public String getViewInteractionString() {
+    if (isConstant){
+      isConstant = false;
+      return USER_CONSTANT + SEPARATION + variable;
+    }
+    else {
+      return USER_COMMAND + SEPARATION + variable;
+    }
+  }
 }

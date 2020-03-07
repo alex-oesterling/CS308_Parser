@@ -251,12 +251,9 @@ public class Controller {
       } else if (c instanceof SetPenColor) {
         myView.updateCommandPenColor(c.getResult());
       } else if (c instanceof SetShape) {
-        System.out.println(c.getResult());
         myView.updateShape(c.getResult());
       } else if (c instanceof SetPenSize) {
         myView.updatePenSize(c.getResult());
-      } else if (c instanceof ID) {
-        System.out.println(c.getResult());
       } else {
         myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
       }

@@ -6,6 +6,7 @@ import java.util.List;
 
 public class SetPenColor extends Command {
 
+  private static final String UPDATE = "updateCommandPenColor";
   private Double color;
   private Turtle t;
 
@@ -42,5 +43,14 @@ public class SetPenColor extends Command {
   public Double execute() {
     t.setPenColor(color);
     return this.getResult();
+  }
+
+  /**
+   * Returns the string for method reflection
+   * @return the update command pen color string
+   */
+  @Override
+  public String getViewInteractionString() {
+    return UPDATE;
   }
 }
