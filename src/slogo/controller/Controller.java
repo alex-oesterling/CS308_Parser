@@ -247,6 +247,7 @@ public class Controller {
   }
 
   private void executeCommandList(List<Command> l) {
+    myView.setCommandSize(l.size());
     for (Command c : l) {
       currentCommand = c;
       System.out.println(currentCommand);
