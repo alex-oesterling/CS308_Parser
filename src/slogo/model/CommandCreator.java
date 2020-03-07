@@ -2,6 +2,7 @@ package slogo.model;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -171,20 +172,7 @@ public class CommandCreator {
       currentLine = iterator.next();
       if (currentLine.trim().length() > ZERO) {
         String commandSyntax = syntaxParser.getSymbol(currentLine); //get what sort of thing it is
-
-        if(commandSyntax.equals(COMMAND)){
-          doCommandWork();
-        } else if (commandSyntax.equals(CONSTANT)){
-          doConstantWork();
-        } else if (commandSyntax.equals(VARIABLE)){
-          doVariableWork();
-        } else if (commandSyntax.equals(LIST_START)){
-          doListStartWork();
-        } else if (commandSyntax.equals(LIST_END)){
-          doListEndWork();
-        }
-
-
+        makeMethod(doWorkString(commandSyntax));
         tryToMakeCommands(currentList);
       }
     }
@@ -192,6 +180,19 @@ public class CommandCreator {
       tryToMakeCommands(currentList);
     }
     return createExtendedList(currentList);
+  }
+
+  private void makeMethod(String methodName){
+    try {
+      Method method = CommandCreator.class.getDeclaredMethod(methodName);
+      method.invoke(CommandCreator.this);
+    } catch (NoSuchMethodException e) {
+      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+    } catch (IllegalAccessException e) {
+      throw new IllegalException(new Throwable(), errorResources.getString("Illegal"));
+    } catch (InvocationTargetException e) {
+      throw new InvocationException(new Throwable(), errorResources.getString("Invocation"));
+    }
   }
 
   private void doVariableWork(){
