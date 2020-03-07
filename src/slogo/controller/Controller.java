@@ -1,5 +1,7 @@
 package slogo.controller;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -259,5 +261,66 @@ public class Controller {
       }
     }
     myView.updateStatus();
+  }
+
+  private void makeMethod(String methodName, List<String> parameters){
+    try {
+      Method method = Controller.class.getDeclaredMethod(methodName);
+      method.invoke(Controller.this);
+    } catch (NoSuchMethodException e) {
+      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+    } catch (IllegalAccessException e) {
+      //todo change this
+      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+    } catch (InvocationTargetException e) {
+      //todo change this
+      throw new NoClassException(new Throwable(), errorResources.getString("NoMethod"));
+    }
+  }
+
+  private void addUserConstantToMap(Command c) {
+    String variableName = c.getViewInteractionString().split("|")[1];//todo remove hard code 1
+    //todo handle putting into maps
+  }
+
+  private void addUserCommandToMap(Command c){
+    String variableName = c.getViewInteractionString().split("|")[1];//todo remove hard code 1
+    //todo handle putting into maps
+
+  }
+
+  private void update(Command c){
+    myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
+  }
+
+  private void updatePenSize(Command c){
+    myView.updatePenSize(c.getResult());
+  }
+
+  private void updateShape(Command c){
+    myView.updateShape(c.getResult());
+  }
+
+  private void updateCommandPenColor(Command c){
+    myView.updateCommandPenColor(c.getResult());
+  }
+
+  private void updateBackgroundColor(Command c) {
+    myView.updateBackgroundColor(c.getResult());
+  }
+
+  private void updatePenStatus(Command c){
+    myView.updatePenStatus(c.getResult());
+  }
+
+  private void updateTurtleView(Command c){
+    myView.updateTurtleView(c.getResult());
+  }
+
+  private void clear(Command c) {
+    myView.updatePenStatus(0);
+    myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
+    myView.clear();
+    myView.updatePenStatus(1);
   }
 }
