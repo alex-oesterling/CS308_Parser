@@ -11,7 +11,7 @@ public class If extends Command {
   private List<Command> commands, returningList;
   private static final Double DEFAULT = 0.0;
 
-  public If(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList){
+  public If(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
     super();
     commands = commandList.get(FIRST_INDEX);
     conditionResult = (doubleList.get(FIRST_INDEX)!=0.0);

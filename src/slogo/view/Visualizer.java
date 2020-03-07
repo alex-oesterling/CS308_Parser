@@ -28,8 +28,9 @@ import slogo.view.graphics.UserInterface;
 import slogo.view.turtles.TurtleView;
 
 /**
- * The main class of the view. This class is called as soon as the program is run and effectively calls all the other classes
- * that make up the entire SLogo project. This class connects all the parts of the project.
+ * The main class of the view. This class is called as soon as the program is run and effectively
+ * calls all the other classes that make up the entire SLogo project. This class connects all the
+ * parts of the project.
  */
 public class Visualizer{
   private static final int TURTLE_SCREEN_WIDTH = 500;
@@ -65,8 +66,10 @@ public class Visualizer{
 
 
   /**
-   * This constructor initializes all instances of other classes and important variables and data structures that will be used
-   * throughout the rest of the class as well as be passed into other calls to other classes.
+   * This constructor initializes all instances of other classes and important variables and data
+   * structures that will be used throughout the rest of the class as well as be passed into other
+   * calls to other classes.
+   *
    * @param stage - takes in the stage from the SlogoApp class
    */
   public Visualizer (Stage stage){
@@ -90,6 +93,7 @@ public class Visualizer{
 
   /**
    * Sets the scene of the entire view and uses the css styling sheet
+   *
    * @return scene in which all the main features are added
    */
   public Scene setupScene() {
@@ -97,17 +101,18 @@ public class Visualizer{
     myScene.getStylesheets()
         .add(getClass().getClassLoader().getResource(DEFAULT_RESOURCE_FOLDER + STYLESHEET)
             .toExternalForm());
-    myScene.addEventFilter(KeyEvent.KEY_PRESSED, e->commandLine.scrollHistory(e.getCode()));
+    myScene.addEventFilter(KeyEvent.KEY_PRESSED, e -> commandLine.scrollHistory(e.getCode()));
     return myScene;
   }
 
-  private BorderPane createView(){
+  private BorderPane createView() {
     BorderPane viewPane = new BorderPane();
     viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
     Node toolBar = myToolBar.setupToolBar();
     Node turtleView = userDefined.showUserDefined();
     Node cLine = commandLine.setupCommandLine();
     Node uInterface = userInterface.createTotalUI();
+
     viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setTop(toolBar);
     viewPane.setLeft(turtleView);
@@ -117,7 +122,8 @@ public class Visualizer{
   }
 
   /**
-   * Adds a command to the user defined history once a command is added. Additionally is used in saving the XML file.
+   * Adds a command to the user defined history once a command is added. Additionally is used in
+   * saving the XML file.
    * @param command
    * @param syntax
    */
@@ -140,7 +146,9 @@ public class Visualizer{
     return keyAndValue;
   }
   /**
-   * Adds a variable to the user defined history once a variable is added. Additionally is used in saving the XML file.
+   * Adds a variable to the user defined history once a variable is added. Additionally is used in
+   * saving the XML file.
+   *
    * @param variable
    * @param value
    */
@@ -155,17 +163,18 @@ public class Visualizer{
   private void updateVariable(String variableName, Label value){
     TextInputDialog updateVariable = new TextInputDialog();
     updateVariable.setTitle("Update Variable");
-    updateVariable.setHeaderText("Update " + variableName + " value by entering in a valid number:");
+    updateVariable
+        .setHeaderText("Update " + variableName + " value by entering in a valid number:");
     updateVariable.setContentText("Enter new number here:");
     Optional<String> result = updateVariable.showAndWait();
-    if(result.isPresent()){
+    if (result.isPresent()) {
       Double number = null;
-      try{
+      try {
         number = Double.valueOf(result.get());
         varMap.put(variableName, number.toString());
         value.setText(result.get());
         myController.updateCommandVariable(variableName, number.toString());
-      } catch (NumberFormatException e){
+      } catch (NumberFormatException e) {
         number = Double.parseDouble(value.getText());
       }
     }
@@ -175,10 +184,10 @@ public class Visualizer{
    * Allows the user to add another turtle to a single turtle area / turtle group. The user is then able to control the
    * turtles at different times.
    */
-  public void addTurtle(){
+  public void addTurtle() {
     try {
       myController.addTurtle();
-    } catch (InvalidTurtleException e){
+    } catch (InvalidTurtleException e) {
       e.displayError("Please add unique turtle:");
     }
     TurtleView tempTurtle = new TurtleView(userDefined.getTurtles(), userDefined.getTurtlePaths(), myController.getTurtleName(), myController);
@@ -194,12 +203,12 @@ public class Visualizer{
    * @param name - name or ID of new turtle used as an identifier
    * @param startingX - starting x position
    * @param startingY - starting y position
-   * @param heading - starting orientation
+   * @param heading   - starting orientation
    */
-  public void addTurtle(String name, double startingX, double startingY, double heading){
+  public void addTurtle(String name, double startingX, double startingY, double heading) {
     try {
       myController.addTurtle(name, startingX, startingY, heading);
-    } catch (InvalidTurtleException e){
+    } catch (InvalidTurtleException e) {
       e.displayError("Please fix XML to contain unique turtles:");
       System.out.println("YEET");
       return;
@@ -213,17 +222,18 @@ public class Visualizer{
   }
 
   /**
-   * Given a turtle's name or id, sets that turtle to be the current active turtle. In addition, it changes the opacity
-   * of all the turtles to indicate which are active and which aren't.
+   * Given a turtle's name or id, sets that turtle to be the current active turtle. In addition, it
+   * changes the opacity of all the turtles to indicate which are active and which aren't.
+   *
    * @param name
    */
-  public void setTurtle(String name){
+  public void setTurtle(String name) {
     userInterface.getList().itemsProperty().unbind();
-    if(currentTurtle != null) {
+    if (currentTurtle != null) {
       currentTurtle.setOpacity(UNSELECTED_OPACITY);
     }
     currentTurtle = turtleMap.get(name);
-    if(penProperties !=null){
+    if (penProperties != null) {
       penProperties.getColorPicker().setValue(currentTurtle.getColor());
     }
     currentTurtle.setOpacity(SELECTED_OPACITY);
@@ -232,75 +242,88 @@ public class Visualizer{
   }
 
   /**
-   * Retrieves the turtle view instance of the current turtle in order to manipulate its information.
+   * Retrieves the turtle view instance of the current turtle in order to manipulate its
+   * information.
+   *
    * @return a turtle view instance
    */
-  public TurtleView getCurrentTurtle(){return currentTurtle;}
+  public TurtleView getCurrentTurtle() {
+    return currentTurtle;
+  }
 
   /**
    * Clears all the turtle paths on the screen.
    */
-  public void clear(){userDefined.getTurtlePaths().getChildren().clear();}
+  public void clear() {
+    userDefined.getTurtlePaths().getChildren().clear();
+  }
 
   /**
    * Sets the turtle's pen color given a color found by the index in the color palette.
+   *
    * @param value - the index corresponding to the desired color
    */
-  public void setPenColor(double value){
+  public void setPenColor(double value) {
     currentTurtle.updatePen(Color.web(colorPalette.getColorMapValue(value)));
   }
 
   /**
    * Shows the color palette when the color palette button is clicked
    */
-  public EventHandler showColorPalette(){
-    return e->colorPalette.showPalette();
+  public EventHandler showColorPalette() {
+    return e -> colorPalette.showPalette();
   }
 
   /**
    * Shows the shape palette when the shape palette button is clicked
    */
   public EventHandler showShapePalette() {
-    return e->shapePalette.showPalette();
+    return e -> shapePalette.showPalette();
   }
 
   /**
    * Shows the pen properties when the pen properties button is clicked
    */
   public EventHandler createPenProperties() {
-    return e->penProperties.showProperties();
+    return e -> penProperties.showProperties();
   }
 
   /**
-   * Sets the background color based on a value that the user types into the command text area, this value corresponds to
-   * a color in the color palette map
+   * Sets the background color based on a value that the user types into the command text area, this
+   * value corresponds to a color in the color palette map
+   *
    * @param value - defined by the user in their command
    */
-  public void setBackgroundColorFromPalette(double value){
-      setBackgroundColor(colorPalette.getColorMapValue(value));
+  public void setBackgroundColorFromPalette(double value) {
+    setBackgroundColor(colorPalette.getColorMapValue(value));
   }
 
   /**
    * Sets the pen size based on a value that the user types into the command text area
+   *
    * @param value - defined by the user in their command
    */
-  public void setPenSize(double value){currentTurtle.changePenWidth(value);}
-
-  /**
-   * Sets the turtle shape based on a value that the user types into the command text area, this value corresponds to an image
-   * in the shape palette map
-   * @param value - defined by the user in their command
-   */
-  public void setShape(double value){
-      currentTurtle.setShape(shapePalette.getShapeMapValue(value));
+  public void setPenSize(double value){
+    currentTurtle.changePenWidth(value);
   }
 
   /**
-   * Based on the language selected in the combobox, adds the language to the controller so that commands can be understood
-   * in that language.
+   * Sets the turtle shape based on a value that the user types into the command text area, this
+   * value corresponds to an image in the shape palette map
+   *
+   * @param value - defined by the user in their command
+   */
+  public void setShape(double value) {
+    currentTurtle.setShape(shapePalette.getShapeMapValue(value));
+  }
+
+  /**
+   * Based on the language selected in the combobox, adds the language to the controller so that
+   * commands can be understood in that language.
+   *
    * @param newLanguage - language from combobox
    */
-  public void setLanguage(String newLanguage){
+  public void setLanguage(String newLanguage) {
     language = newLanguage;
     myController.addLanguage(language);
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
@@ -311,10 +334,12 @@ public class Visualizer{
   }
 
   /**
-   * Sets the background based on a hex value and is used to set the background color from an XML file.
+   * Sets the background based on a hex value and is used to set the background color from an XML
+   * file.
+   *
    * @param hexColor - string to be converted into java color
    */
-  public void setBackgroundColor(String hexColor){
+  public void setBackgroundColor(String hexColor) {
     userDefined.setFill(Color.web(hexColor));
     userInterface.setBackgroundPicker(hexColor);
   }
@@ -322,68 +347,82 @@ public class Visualizer{
   /**
    * @return the current commandline for the XML file
    */
-  public CommandLine getTerminal(){return commandLine;}
+  public CommandLine getTerminal() {
+    return commandLine;
+  }
 
   /**
    * @return the current language for the XML file
    */
-  public String getLanguage(){
+  public String getLanguage() {
     return language;
   }
 
   /**
    * @return the current background color for the XML file
    */
-  public Color getBackground(){
+  public Color getBackground() {
     return userDefined.getFill();
   }
 
   /**
    * @return the current map of turtles for the XML file
    */
-  public Map<String, TurtleView> getTurtles(){
+  public Map<String, TurtleView> getTurtles() {
     return turtleMap;
   }
 
   /**
    * @return the user defined variables for the XML file
    */
-  public Map<String, String> getUserVariables(){
+  public Map<String, String> getUserVariables() {
     return varMap;
   }
 
   /**
    * @return the user defined commands for the XML file
    */
-  public Map<String, String> getUserCommands(){
+  public Map<String, String> getUserCommands() {
     return cmdMap;
   }
 
   /**
-   * Sends a command that the user typed into the text area to the controller for it to then be parsed.
+   * Sends a command that the user typed into the text area to the controller for it to then be
+   * parsed.
+   *
    * @param command
    */
-  public void sendCommands(String command){myController.sendCommands(command);}
+  public void sendCommands(String command) {
+    myController.sendCommands(command);
+  }
 
   /**
    * @return Gets the userdefined view objects to then be added to the visualizer.
    */
-  public UserDefined getUserDefined(){return userDefined;}
+  public UserDefined getUserDefined() {
+    return userDefined;
+  }
 
   /**
    * @return the turtles property which is binded to the turtlebox to update the values
    */
-  public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty(){return myTurtlesProperty;}
+  public SimpleObjectProperty<ObservableList<String>> getTurtlesProperty(){
+    return myTurtlesProperty;
+  }
 
   /**
    * @return the width of the canvas the turtle can move in
    */
-  public int getArenaWidth(){return TURTLE_SCREEN_WIDTH;}
+  public int getArenaWidth(){
+    return TURTLE_SCREEN_WIDTH;
+  }
 
   /**
    * @return the height of the canvas the turtle can move in
    */
-  public int getArenaHeight(){return TURTLE_SCREEN_HEIGHT;}
+  public int getArenaHeight() {
+    return TURTLE_SCREEN_HEIGHT;
+  }
 
   /**
    * Updates an indicated entry in the colormap to a new specified value based on 3 RGB inputs

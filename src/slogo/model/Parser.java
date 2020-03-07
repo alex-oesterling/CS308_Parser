@@ -1,7 +1,5 @@
 package slogo.model;
 
-import slogo.exceptions.InvalidCommandException;
-
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
