@@ -3,6 +3,7 @@ package slogo.view.graphics;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -11,6 +12,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import java.util.Map;
 import java.util.TreeMap;
+import slogo.exceptions.InvalidCommandException;
 
 /**
  * This class creates a palette of shapes and corresponding doubles as indices. In this way, the user is able to use the
@@ -79,10 +81,14 @@ public class ShapePalette {
 
     private ImageView addTurtle(String turtle){
         String string = "resources/turtles/" + turtle;
-        ImageView turtleImage = new ImageView(string);
-        turtleImage.setFitWidth(TURTLE_WIDTH);
-        turtleImage.setFitHeight(TURTLE_HEIGHT);
-        return turtleImage;
+        try {
+            ImageView turtleImage = new ImageView(string);
+            turtleImage.setFitWidth(TURTLE_WIDTH);
+            turtleImage.setFitHeight(TURTLE_HEIGHT);
+            return turtleImage;
+        } catch (IllegalArgumentException e){
+            throw e;
+        }
     }
 
     /**
@@ -90,7 +96,12 @@ public class ShapePalette {
      * @param value - the double that the user types in that corresponds to the desired image.
      * @return - creates a new instance of the image which is then returned.
      */
-    public ImageView getShapeMapValue(double value){
-        return addTurtle(map.get(value));
+    public ImageView getShapeMapValue (double value){
+        try {
+            ImageView turtleImage = addTurtle(map.get(value));
+            return turtleImage;
+        } catch (IllegalArgumentException e){
+            throw new InvalidCommandException(new Throwable(), "Index:", ""+ value);
+        }
     }
 }
