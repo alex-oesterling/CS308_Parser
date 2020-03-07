@@ -66,9 +66,11 @@ public class TurtleView{
 
     /**
      * Creates an instance of all the important variables that need to be referenced from other methods in this class.
+     * Creates the paired Animator class which handles the actual animation of the TurtleView
      * @param turtles - a group of all the turtles from the visualizer
      * @param paths - a group of the paths of the turtles
      * @param name - the name of the turtle in which this turtleview instance is being created for
+     * @param controller - the controller object to which the TurtleView sends back updated position data when it is set on the view side.
      */
     public TurtleView(Group turtles, Group paths, String name, Controller controller){
         penStatus = true;
@@ -83,9 +85,9 @@ public class TurtleView{
         currentX = myImage.getTranslateX() + myImage.getBoundsInLocal().getWidth()/2;
         currentY = myImage.getTranslateY() + myImage.getBoundsInLocal().getHeight()/2;
         heading = 0;
-        prevX = currentX;
-        prevY = currentY;
-        prevHeading = heading;
+//        prevX = currentX;
+//        prevY = currentY;
+//        prevHeading = heading;
         stopped = true;
         turtleAnimator = new TurtleAnimator(this, myImage, myPaths);
         myController = controller;
@@ -112,12 +114,7 @@ public class TurtleView{
             BufferedImage bufferedImage = ImageIO.read(imageFile);
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
             turtleImage.setImage(image);
-            turtleImage.setFitWidth(TURTLE_WIDTH);
-            turtleImage.setFitHeight(TURTLE_HEIGHT);
-            myTurtles.getChildren().remove(myImage);
-            myImage = turtleImage;
-            myTurtles.getChildren().add(myImage);
-            set(currentX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-currentY, heading);
+            setShape(turtleImage);
         } catch (IllegalArgumentException e){
             return;
         } catch (IOException e) {
@@ -222,20 +219,13 @@ public class TurtleView{
     }
 
     /**
-     * Called by the controller and then the visualizer which reads in a double value from the user commands and then sets the
-     * pen width.
-     * @param value
-     */
-    public void setPenSize(double value){
-        pathStrokeWidth = value;
-    }
-
-    /**
      * Works in conjunction with the shape palette in which the user specifies the value of the shape they want and then
      * the image is passed into this method and set to be the turtle.
      * @param turtle
      */
     public void setShape(ImageView turtle){
+        turtle.setFitWidth(TURTLE_WIDTH);
+        turtle.setFitHeight(TURTLE_HEIGHT);
         myTurtles.getChildren().remove(myImage);
         myImage = turtle;
         myTurtles.getChildren().add(myImage);
@@ -252,13 +242,19 @@ public class TurtleView{
     }
 
     /**
-     *
+     * Returns the color of the Turtle's pen
      * @return Color - the current pen color
      */
     public Color getColor(){return myPenColor;}
 
+    /**
+     * @return LineWidth - the width of the pen the turtle is writing with
+     */
     public double getLineWidth(){return pathStrokeWidth;}
 
+    /**
+     * @return penDown - The status of whether or not the pen is down for the turtle
+     */
     public boolean penDown(){return penStatus;}
 
     /**
@@ -286,6 +282,10 @@ public class TurtleView{
         myController.setTurtle(newX, newY, newHeading);
     }
 
+    /**
+     * Adjusts the duration of each individual animation so the total duration for each "submitted command" is the same
+     * @param size
+     */
     public void setCommandSize(int size){turtleAnimator.setCommandSize(size);}
 
     /**
@@ -298,28 +298,61 @@ public class TurtleView{
         return new Double[]{coordinateX, coordinateY, heading};
     }
 
+    /**
+     * @return Name - the name of the turtle
+     */
     public String getName(){
         return turtleName;
     }
 
+    /**
+     * Pauses the animation within the turtleAnimator
+     */
     public void pause(){turtleAnimator.pause();}
 
+    /**
+     * Resumes the animation within the turtleAnimator
+     */
     public void play(){turtleAnimator.play();}
 
+    /**
+     * Steps the turtleAnimator by a single command
+     */
     public void step(){turtleAnimator.step();}
 
+    /**
+     * Resets the animation for the turtleAnimator
+     */
     public void resetAnimation(){turtleAnimator.resetAnimation();}
 
+    /**
+     * Undoes the most recent command
+     */
     public void undo(){ turtleAnimator.undo(); }
 
+    /**
+     * Sets the total duration of the animation
+     * @param value - A double representing the total duration in milliseconds
+     */
     public void setSpeed(int value){turtleAnimator.setSpeed(value);}
 
+    /**
+     * Brings variables tracking historical position of the turtle (for reset/undo) up to
+     * speed with the current coordinates
+     */
     public void updateHistory(){
         prevX = currentX;
         prevY = currentY;
         prevHeading = heading;
     }
 
+    /**
+     * Updates the current variables to new specified conditions
+     * in the Model's coordinate reference (center of area is 0,0)
+     * @param newX - New x coordinate in the Model's coordinate reference
+     * @param newY - New y coordinate in the Model's coordinate reference
+     * @param orientation - New orientation in the Model's coordinate reference
+     */
     public void updateCurrent(double newX, double newY, double orientation){
         newY = -newY;
         newX += TURTLE_SCREEN_WIDTH/2;
@@ -329,14 +362,19 @@ public class TurtleView{
         heading = orientation;
     }
 
-    public void rewindCoords(){
-        System.out.println(prevX + "" + prevY);
+    /**
+     * Moves turtleview's render to the previous position (for resetting the animation)
+     */
+    public void rewindAnimation(){
         myImage.setTranslateX(prevX-myImage.getBoundsInLocal().getWidth()/2);
         myImage.setTranslateY(prevY-myImage.getBoundsInLocal().getHeight()/2);
         myImage.setRotate(prevHeading);
     }
 
-    public void undoAnimation(){
+    /**
+     * Undoes the most recent command by setting the turtle to its old coordinates
+     */
+    public void undoMove(){
         set(prevX-TURTLE_SCREEN_WIDTH/2, TURTLE_SCREEN_HEIGHT/2-prevY, prevHeading);
     }
 }

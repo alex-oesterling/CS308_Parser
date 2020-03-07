@@ -26,7 +26,7 @@ public class Controller {
     private Map<String, Integer> nameCount;
     private Turtle turtle;
     private ViewExternal myView;
-    private double IdOfTurtle;
+    private Double IdOfTurtle;
     private ResourceBundle errorResources;
 
     /**
@@ -40,7 +40,7 @@ public class Controller {
         commandCreator = new CommandCreator(this, language);
         errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
         myView = visualizer;
-
+        IdOfTurtle = 0.0;
         makeMaps();
     }
 

@@ -156,7 +156,7 @@ public class TurtleAnimator {
     stopped=true;
     st = new SequentialTransition();
 
-    myTurtle.rewindCoords();
+    myTurtle.rewindAnimation();
     myPaths.getChildren().removeAll(backupPathHistory);
     transitionQueue = new LinkedList<>(backupTransitionQueue);
     pathHistory = new LinkedList<>(backupPathHistory);
@@ -167,7 +167,7 @@ public class TurtleAnimator {
     stopped=true;
     st = new SequentialTransition();
 
-    myTurtle.undoAnimation();
+    myTurtle.undoMove();
     transitionQueue = new LinkedList<>();
     myPaths.getChildren().removeAll(backupPathHistory);
     pathHistory = new LinkedList<>();

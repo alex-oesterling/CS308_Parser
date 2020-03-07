@@ -54,11 +54,12 @@ public class Visualizer{
   private ShapePalette shapePalette;
   private Map<String, TurtleView> turtleMap;
   private ResourceBundle myResources;
-  private String language;
+  private String language = "English";
   private Map<String, String> varMap;
   private Map<String, String> cmdMap;
   private SimpleObjectProperty<ObservableList<String>> myTurtlesProperty;
   private TurtleView currentTurtle;
+//  private Map<String, TurtleView> activeTurtles;
   private slogo.view.graphics.ToolBar myToolBar;
   private Stage myStage;
   private UserDefined userDefined;
@@ -71,22 +72,22 @@ public class Visualizer{
    * @param stage - takes in the stage from the SlogoApp class
    */
   public Visualizer (Stage stage){
-    language = "English";
+    myStage = stage;
     myResources = ResourceBundle.getBundle(FORMAT_PACKAGE + language);
-    userDefined = new UserDefined(myResources);
+    myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     turtleMap = new TreeMap<>();
+//    activeTurtles = new TreeMap<>();
     varMap = new TreeMap<>();
     cmdMap = new TreeMap<>();
     viewExternal = new ViewExternal(this);
-    myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
+    userDefined = new UserDefined(myResources);
     commandLine = new CommandLine(this, myResources);
-    myToolBar = new slogo.view.graphics.ToolBar(stage, this, myResources);
-    myTurtlesProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+    myToolBar = new ToolBar(stage, this, myResources);
     userInterface = new UserInterface(this, myResources);
     colorPalette = new ColorPalette(createColorMap());
     shapePalette = new ShapePalette();
     penProperties = new PenProperties(this, myResources);
-    myStage = stage;
+    myController = new Controller(viewExternal, DEFAULT_LANGUAGE);
   }
 
   /**
@@ -105,12 +106,10 @@ public class Visualizer{
   private BorderPane createView(){
     BorderPane viewPane = new BorderPane();
     viewPane.setPadding(new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_PADDING, VIEWPANE_PADDING));
-
     Node toolBar = myToolBar.setupToolBar();
     Node turtleView = userDefined.showUserDefined();
     Node cLine = commandLine.setupCommandLine();
     Node uInterface = userInterface.createTotalUI();
-
     viewPane.setMargin(cLine, new Insets(VIEWPANE_MARGIN, VIEWPANE_PADDING, VIEWPANE_MARGIN, VIEWPANE_PADDING));
     viewPane.setTop(toolBar);
     viewPane.setLeft(turtleView);
@@ -125,39 +124,43 @@ public class Visualizer{
    * @param syntax
    */
   public void addCommand(String command, String syntax){
-    Label recentCommand = new Label(command);
-    Label syntaxLabel = new Label(syntax); //modify based on what model wants it to do
-    HBox commandAndSyntax = new HBox();
-    commandAndSyntax.setOnMouseClicked(commandLine.setOnClick(command));
-    commandAndSyntax.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
-    final Pane spacer = new Pane();
-    commandAndSyntax.setHgrow(spacer, Priority.ALWAYS);
-    commandAndSyntax.getChildren().addAll(recentCommand, spacer, syntaxLabel);
+    Node commandAndSyntax = makeUserDefined(command, syntax, commandLine.setOnClick(command), new Label());
     cmdMap.put(command, syntax);
     userDefined.addCommand(commandAndSyntax);
     myController.addUserCommand(command, syntax);
   }
 
+  private Node makeUserDefined(String key, String value, EventHandler event, Label mutable){
+    Label keyLabel = new Label(key);
+    mutable.setText(value); //modify based on what model wants it to do
+    HBox keyAndValue = new HBox();
+    keyAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
+    final Pane spacer = new Pane();
+    keyAndValue.setHgrow(spacer, Priority.ALWAYS);
+    keyAndValue.getChildren().addAll(keyLabel, spacer, mutable);
+    keyAndValue.setOnMouseClicked(event);
+    return keyAndValue;
+  }
   /**
    * Adds a variable to the user defined history once a variable is added. Additionally is used in saving the XML file.
    * @param variable
    * @param value
    */
   public void addVariable(String variable, String value){
-    Label recentCommand = new Label(variable);
-    Label valueLabel = new Label(value);
-    HBox variableAndValue = new HBox();
-    variableAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
-    final Pane spacer = new Pane();
-    variableAndValue.setHgrow(spacer, Priority.ALWAYS);
-    variableAndValue.getChildren().addAll(recentCommand, spacer, valueLabel);
+//    Label recentCommand = new Label(variable);
+//    Label valueLabel = new Label(value);
+//    HBox variableAndValue = new HBox();
+//    variableAndValue.setMinWidth(TURTLE_SCREEN_WIDTH / 2);
+//    final Pane spacer = new Pane();
+//    variableAndValue.setHgrow(spacer, Priority.ALWAYS);
+//    variableAndValue.getChildren().addAll(recentCommand, spacer, valueLabel);
+    Label valueLabel = new Label();
+    Node variableAndValue = makeUserDefined(variable, value, e->updateVariable(variable, valueLabel), valueLabel);
     varMap.put(variable, value);
-    variableAndValue.setOnMouseClicked(e->updateVariable(variable, valueLabel));
     userDefined.addVariable(variableAndValue);
     myController.addUserVariable(variable, value);
   }
 
-  //FIXME variable types :right now all it handles is doubles and poorly at that
   private void updateVariable(String variableName, Label value){
     TextInputDialog updateVariable = new TextInputDialog();
     updateVariable.setTitle("Update Variable");
@@ -173,7 +176,6 @@ public class Visualizer{
         myController.updateCommandVariable(variableName, number.toString());
       } catch (NumberFormatException e){
         number = Double.parseDouble(value.getText());
-
       }
     }
   }
@@ -254,14 +256,6 @@ public class Visualizer{
    */
   public TurtleView getCurrentTurtle(){return currentTurtle;}
 
-//  public void reset(){
-//    clear();
-//    myController.resetAll();
-//    for(TurtleView turtle : turtleMap.values()) {
-//      turtle.resetTurtle();
-//    }
-//  }
-
   /**
    * Clears all the turtle paths on the screen.
    */
@@ -309,7 +303,7 @@ public class Visualizer{
    * Sets the pen size based on a value that the user types into the command text area
    * @param value - defined by the user in their command
    */
-  public void setPenSize(double value){currentTurtle.setPenSize(value);}
+  public void setPenSize(double value){currentTurtle.changePenWidth(value);}
 
   /**
    * Sets the turtle shape based on a value that the user types into the command text area, this value corresponds to an image

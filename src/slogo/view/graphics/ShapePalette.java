@@ -40,7 +40,9 @@ public class ShapePalette {
      * Here, a new stage is set. The ShapePalette class creates a new window and displays the palette using a map of doubles
      * mapped to strings which then correspond to images in the resource file.
      */
-    public ShapePalette(){ }
+    public ShapePalette(){
+        createGrid();
+    }
 
     /**
      * Only called when the shape palette needs to be shown. In this way, without the shape palette showing, the user can
@@ -54,7 +56,6 @@ public class ShapePalette {
     }
 
     private Scene setScene(){
-        createGrid();
         ScrollPane s1 = new ScrollPane();
         s1.setPrefSize(SIZE_WIDTH, SIZE_HEIGHT);
         s1.setContent(vbox);
