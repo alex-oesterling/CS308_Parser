@@ -182,6 +182,9 @@ public class TurtleAnimator {
       return;
     }
     animationDuration = totalDuration / size;
+    if(animationDuration == 0){
+      animationDuration = 1;
+    }
   }
 
   public void setSpeed(int value){
