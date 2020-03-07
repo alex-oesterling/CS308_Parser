@@ -61,6 +61,9 @@ public class TurtleView{
      * @param visualizer - the Visualizer object to which the TurtleView sends back updated position data when it is set on the view side.
      */
     public TurtleView(Group turtles, Group paths, String name, Visualizer visualizer){
+        myVisualizer = visualizer;
+        arena_width = visualizer.getArenaWidth();
+        arena_height = visualizer.getArenaHeight();
         penStatus = true;
         myPaths = paths;
         turtleName = name;
@@ -75,9 +78,6 @@ public class TurtleView{
         heading = 0;
         stopped = true;
         turtleAnimator = new TurtleAnimator(this, myImage, myPaths);
-        myVisualizer = visualizer;
-        arena_width = visualizer.getArenaWidth();
-        arena_height = visualizer.getArenaHeight();
     }
 
     private ImageView createTurtle(){
@@ -159,12 +159,12 @@ public class TurtleView{
     public SimpleObjectProperty<ObservableList<String>> turtleStats(){
         ObservableList<String> observableList = FXCollections.observableArrayList();
         observableList.addAll(turtleName,
-                Double.toString(currentX), //fixme convert to model coordinates
-                Double.toString(currentY),
-                Double.toString(heading),
-                String.valueOf(myPenColor),
-                Double.toString(pathStrokeWidth),
-                Boolean.toString(penStatus));
+            Double.toString(currentX), //fixme convert to model coordinates
+            Double.toString(currentY),
+            Double.toString(heading),
+            String.valueOf(myPenColor),
+            Double.toString(pathStrokeWidth),
+            Boolean.toString(penStatus));
         myTurtle.setValue(observableList);
         return myTurtle;
     }
