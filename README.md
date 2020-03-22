@@ -39,7 +39,7 @@ Main class:
     - This is split into the turtle and how the result of commands are displayed and into the user interface and how the user can interact with the visualizer
     - The user interface is broken down even further depending on which user interface object requires a new window or scene to be created
 
-
+ 
 Data files needed:
 - XML templates 
 - All language files corresponding to different commands

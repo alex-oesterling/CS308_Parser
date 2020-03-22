@@ -2,6 +2,9 @@ package slogo.model.command;
 
 import java.util.List;
 
+/**
+ * @author Dana Mulligan
+ */
 abstract public class CommandWithReturningList extends Command{
 
   protected static final Double DEFAULT = 0.0;

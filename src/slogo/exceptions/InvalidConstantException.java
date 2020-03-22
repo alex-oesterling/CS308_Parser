@@ -1,8 +1,9 @@
 package slogo.exceptions;
 
-
+/**
+ * @author Tyler Meier
+ */
 public class InvalidConstantException extends SuperException {
-    private String message;
 
     /**
      * Thrown when there is an error involving constants

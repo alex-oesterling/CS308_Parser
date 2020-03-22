@@ -2,9 +2,11 @@ package slogo.model.command;
 
 import java.util.ArrayList;
 import slogo.model.Turtle;
-
 import java.util.List;
 
+/**
+ * @author Dana Mulligan
+ */
 public class DoTimes extends CommandWithReturningList{
 
   private Double times;
