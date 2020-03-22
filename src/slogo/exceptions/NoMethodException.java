@@ -1,12 +1,10 @@
 package slogo.exceptions;
 
-/**
- * @author Tyler Meier
- */
+
 public class NoMethodException extends SuperException {
 
     /**
-     * Thrown when there is a no method found exception
+     * Thrown when there is an error involving variables
      * @param cause cause of error
      * @param text text to be displayed
      */

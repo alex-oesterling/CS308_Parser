@@ -3,9 +3,6 @@ package slogo.model.command;
 import java.util.List;
 import slogo.model.Turtle;
 
-/**
- * @author Dana Mulligan
- */
 public class To extends Command {
 
   List<Command> commands;

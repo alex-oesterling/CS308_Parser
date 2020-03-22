@@ -3,11 +3,6 @@ package slogo.model.command;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The superclass of commands that all of the commands extend. It contains all of
- * the different constructors for commands an]s well as the methods used in each subclass command
- * @author Tyler Meier and Dana Mulligan
- */
 abstract public class Command {
 
   protected static final int FIRST_INDEX = 0;
@@ -71,10 +66,6 @@ abstract public class Command {
     return getResult();
   }
 
-  /**
-   * Changes the command to return to a string so that it can be updated correctly
-   * @return the newly created command string
-   */
   @Override
   public String toString(){
     String me = this.getClass().getName();

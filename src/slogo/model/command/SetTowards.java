@@ -1,11 +1,9 @@
 package slogo.model.command;
 
 import java.util.List;
+import java.util.Set;
 import slogo.model.Turtle;
 
-/**
- * @author Tyler Meier and Dana Mulligan
- */
 public class SetTowards extends Command {
 
   private Turtle t;

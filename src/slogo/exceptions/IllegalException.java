@@ -1,12 +1,10 @@
 package slogo.exceptions;
 
-/**
- * @author Tyler Meier
- */
+
 public class IllegalException extends SuperException {
 
     /**
-     * Thrown when there is an illegal access exception
+     * Thrown when there is an error involving variables
      * @param cause cause of error
      * @param text text to be displayed
      */
