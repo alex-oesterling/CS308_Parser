@@ -4,7 +4,7 @@ package slogo.exceptions;
 public class NoClassException extends SuperException {
 
     /**
-     * Thrown when there is an error involving variables
+     * Thrown when there is a no class found exception
      * @param cause cause of error
      * @param text text to be displayed
      */
