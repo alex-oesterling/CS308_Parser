@@ -1,11 +1,9 @@
 package slogo.model.command;
 
 import slogo.model.Turtle;
+
 import java.util.List;
 
-/**
- * @author Tyler Meier and Dana Mulligan
- */
 public class LessThan extends Command {
 
   /**
@@ -19,4 +17,5 @@ public class LessThan extends Command {
   public LessThan(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
     super(doubleList.get(SECOND_INDEX)<doubleList.get(FIRST_INDEX));
   }
+
 }

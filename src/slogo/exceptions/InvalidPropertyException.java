@@ -1,12 +1,10 @@
 package slogo.exceptions;
 
-/**
- * @author Tyler Meier
- */
+
 public class InvalidPropertyException extends SuperException {
 
     /**
-     * Thrown when there is an error involving an invalid properties file
+     * Thrown when there is an error involving variables
      * @param cause cause of error
      * @param text text to be displayed
      */

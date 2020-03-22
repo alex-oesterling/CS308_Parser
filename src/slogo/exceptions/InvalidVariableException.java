@@ -1,8 +1,6 @@
 package slogo.exceptions;
 
-/**
- * @author Tyler Meier
- */
+
 public class InvalidVariableException extends SuperException {
 
     /**

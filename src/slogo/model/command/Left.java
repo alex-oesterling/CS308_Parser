@@ -1,11 +1,9 @@
 package slogo.model.command;
 
 import slogo.model.Turtle;
+
 import java.util.List;
 
-/**
- * @author Tyler Meier and Dana Mulligan
- */
 public class Left extends Command {
 
   private static final Double LEFT = -1.0;
@@ -36,4 +34,5 @@ public class Left extends Command {
     t.turn(degrees * LEFT);
     return this.getResult();
   }
+
 }

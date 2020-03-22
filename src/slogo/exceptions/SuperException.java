@@ -1,17 +1,13 @@
 package slogo.exceptions;
 
-/**
- * Super class for all of the exception classes
- * @author Tyler Meier
- */
 abstract public class SuperException extends RuntimeException{
 
     private String message;
 
     /**
-     * Allows the exception to be thrown, default method
-     * @param cause cause of error
-     * @param text text to be displayed
+     *
+     * @param cause
+     * @param text
      */
     public SuperException(Throwable cause, String text){
         super(cause);
@@ -19,8 +15,8 @@ abstract public class SuperException extends RuntimeException{
     }
 
     /**
-     * Gets the error message
-     * @return the message to be displayed
+     *
+     * @return
      */
     public String getMessage(){
         return message;
