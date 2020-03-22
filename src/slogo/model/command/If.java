@@ -1,10 +1,12 @@
 package slogo.model.command;
 
 import slogo.model.Turtle;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Dana Mulligan
+ */
 public class If extends Command {
 
   private boolean conditionResult;
