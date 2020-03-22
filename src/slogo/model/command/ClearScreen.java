@@ -58,4 +58,5 @@ public class ClearScreen extends Command {
   public String getViewInteractionString() {
     return UPDATE;
   }
+
 }
