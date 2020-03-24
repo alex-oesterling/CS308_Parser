@@ -1,11 +1,9 @@
 package slogo.model.command;
 
 import slogo.model.Turtle;
+
 import java.util.List;
 
-/**
- * @author Tyler Meier and Dana Mulligan
- */
 public class SetBackground extends Command {
 
   private static final String UPDATE = "updateBackgroundColor";

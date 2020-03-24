@@ -1,0 +1,26 @@
+dfde 12
+dcds 5
+repete 2
+[
+  repete 6
+  [
+    repete 2
+    [
+      repete 30
+      [
+        dev 6
+        dr 2
+      ]
+      dr 120
+    ]
+    dr 60
+  ]
+  dr 30
+]
+maison
+dcds 6
+sic
+gc 90 dev 20 dr 90
+sac
+repete 360 [ dev 5 dr 15 ]
+ct

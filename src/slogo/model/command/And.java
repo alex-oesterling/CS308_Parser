@@ -1,11 +1,9 @@
 package slogo.model.command;
 
 import slogo.model.Turtle;
+
 import java.util.List;
 
-/**
- * @author Tyler Meier and Dana Mulligan
- */
 public class And extends Command {
 
   /**
@@ -18,4 +16,5 @@ public class And extends Command {
   public And(List<Turtle> turtleList, List<Double> doubleList, List<List<Command>> commandList, List<String> stringList){
    super(doubleList.get(FIRST_INDEX)!=0.0 && doubleList.get(SECOND_INDEX)!=0.0); //'convert' to booleans
   }
+
 }

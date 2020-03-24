@@ -1,11 +1,9 @@
 package slogo.model.command;
 
 import slogo.model.Turtle;
+
 import java.util.List;
 
-/**
- * @author Tyler Meier and Dana Mulligan
- */
 public class ClearScreen extends Command {
 
   private static final int DEFAULT_STARTING_X = 0;
@@ -58,4 +56,5 @@ public class ClearScreen extends Command {
   public String getViewInteractionString() {
     return UPDATE;
   }
+
 }
