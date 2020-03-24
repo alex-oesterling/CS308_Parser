@@ -4,10 +4,6 @@ import java.util.List;
 import slogo.controller.Controller;
 import slogo.model.command.Command;
 
-/**
- * Class that holds all of the model external public methods
- * @author Tyler Meier and Dana Mulligan
- */
 public class ModelExternal implements ModelExternalAPI {
 
   private CommandCreator creator;
