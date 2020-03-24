@@ -8,6 +8,10 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
+/**
+ * Class that  parses all of the commands given to it  and returns its type/what type of command it was
+ * @author Dana Mulligan and  Tyler Meier
+ */
 public class Parser {
 
     private String resourcesPackage;

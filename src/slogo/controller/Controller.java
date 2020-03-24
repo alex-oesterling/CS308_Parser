@@ -1,17 +1,3 @@
-/**
- *  The purpose of this class is to connect the model and the view together, and allows the commands to be
- *  sent back to the model, dealt with, and then whatever it is update the view based off of that.
- *  I think this class is well designed and follows many of the guidelines we learned about in class. In the beginning, the
- *  private static final instance variables are separated from the other private instance variables that are not finals.
- *  Also, the methods are set up in a readable and flowing way, such as the main ones like the
- *  constructor going first, and then throughout whenever a method calls another one, the one called follows that method.
- *  Dana and I (we both worked on this class during the coding) also spilt up long methods into multiple smaller ones, like initializing the things in the controller or
- *  adding turtles. I also believe that in this class a lot of the variables and methods
- *  are well named so that a reader of this code can know what is going on and follow easily. There are also no magic variables/numbers throughout the
- *  code, as I made sure to make them all instance variables at the top. I also believe I commented the public methods well.
- *  Dana and I  also worked to ensure that there were as few conditional statements as possible, and that reflection is used
- *  to create the commands and update what they do in the view. Overall I think this class is very clean and DRY.
- */
 package slogo.controller;
 
 import java.lang.reflect.InvocationTargetException;

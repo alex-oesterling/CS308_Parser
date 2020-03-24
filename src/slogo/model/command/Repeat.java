@@ -1,10 +1,12 @@
 package slogo.model.command;
 
 import slogo.model.Turtle;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Tyler Meier and Dana Mulligan
+ */
 public class Repeat extends CommandWithReturningList{
 
   private Double times;
