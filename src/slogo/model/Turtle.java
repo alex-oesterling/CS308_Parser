@@ -2,6 +2,13 @@ package slogo.model;
 
 import java.util.List;
 
+/**
+ * Class that holds ALL of the methods that deal with the turtle and  its attributes, updating its status
+ * on multiple parts and returns booleans (such as heading or 0 or 1, etc.) This class and its methods
+ * are used in multiple command classes that utilize turtles and updates a turtle in some way. Has multiple
+ * constructors for different types of turtles being created
+ * @author Tyler Meier and Dana Mulligan
+ */
 public class Turtle{
 
   private static final int DEFAULT_STARTING_X = 0;

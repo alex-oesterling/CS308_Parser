@@ -1,9 +1,11 @@
 package slogo.model.command;
 
-import java.util.ArrayList;
 import java.util.List;
 import slogo.model.Turtle;
 
+/**
+ * @author Tyler Meier and Dana Mulligan
+ */
 public class MakeVariable extends Command {
 
   private static final String USER_CONSTANT = "addUserConstantToMap";

@@ -1,0 +1,38 @@
+setsh 12
+setbg 6
+setps 7
+pu
+fd 100 lt 90 fd 100 pd
+repeat 4 [ lt 90 fd 200 ]
+rt 135 fd 142 rt 90 fd 142
+pu
+rt 45 fd 100 rt 90 fd 100 rt 90
+bk 100 lt 90 fd 25 rt 90
+pd
+repeat 3 [ fd 50 rt 90 ]
+pu
+fd 15 rt 90 fd 20
+pd
+fd 10
+pu
+fd 30 rt 90 fd 20
+pd
+repeat 4 [ fd 40 lt 90 ]
+fd 20 lt 90 fd 40 lt 90 fd 20 lt 90 fd 20 lt 90 fd 40 lt 180
+pu
+fd 100 rt 90 bk 20
+pd
+repeat 4 [ fd 40 lt 90 ]
+fd 20 lt 90 fd 40 lt 90 fd 20 lt 90 fd 20 lt 90 fd 40
+pu
+fd 30 rt 90 fd 20 lt 90
+pd
+repeat 4 [ fd 40 lt 90 ]
+fd 20 lt 90 fd 40 lt 90 fd 20 lt 90 fd 20 lt 90 fd 40 rt 90
+pu
+fd 80 rt 90
+pd
+repeat 4 [ fd 40 lt 90 ]
+fd 20 lt 90 fd 40 lt 90 fd 20 lt 90 fd 20 lt 90 fd 40
+pu rt 90 fd 50 rt 90 bk 20
+bk 90 rt 90 fd 50 lt 90
