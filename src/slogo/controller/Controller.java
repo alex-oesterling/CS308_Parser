@@ -1,3 +1,17 @@
+/**
+ *  The purpose of this class is to connect the model and the view together, and allows the commands to be
+ *  sent back to the model, dealt with, and then whatever it is update the view based off of that.
+ *  I think this class is well designed and follows many of the guidelines we learned about in class. In the beginning, the
+ *  private static final instance variables are separated from the other private instance variables that are not finals.
+ *  Also, the methods are set up in a readable and flowing way, such as the main ones like the
+ *  constructor going first, and then throughout whenever a method calls another one, the one called follows that method.
+ *  Dana and I (we both worked on this class during the coding) also spilt up long methods into multiple smaller ones, like initializing the things in the controller or
+ *  adding turtles. I also believe that in this class a lot of the variables and methods
+ *  are well named so that a reader of this code can know what is going on and follow easily. There are also no magic variables/numbers throughout the
+ *  code, as I made sure to make them all instance variables at the top. I also believe I commented the public methods well.
+ *  Dana and I  also worked to ensure that there were as few conditional statements as possible, and that reflection is used
+ *  to create the commands and update what they do in the view. Overall I think this class is very clean and DRY.
+ */
 package slogo.controller;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +33,7 @@ import slogo.fun.RomanNumerals;
  * updates them, adds turtles, sends the commands to be parsed, executes the commands, and updates the information
  * in the view based off of changes on the model
  *
- * @author Dana Mulligan and Tyler Meier
+ * @author Tyler Meier and Dana Mulligan
  */
 public class Controller {
 
@@ -43,8 +57,7 @@ public class Controller {
 
   /**
    * The constructor for controller class, initializes the view, list of symbols that is being used
-   * for parsing, map of created variables, all of the stacks used, and the parsers for each
-   * different stack
+   * for parsing, map of created variables, all of the stacks used, and the parsers for each different stack
    * @param visualizer the view of the program
    * @param language   the specific language being used (aka english, chinese, etc)
    */
@@ -174,8 +187,8 @@ public class Controller {
 
   /**
    * Get the user created constant or variable in a line from the map
-   * @param line
-   * @return
+   * @param line the key of what is being retrieved
+   * @return the value of the key line
    */
   public Double getUserCreatedConstantVariables(String line) {
     return userCreatedConstantVariables.get(line);
@@ -246,6 +259,17 @@ public class Controller {
     myView.addCommand(variableName, commandSyntax);
   }
 
+  private void clear() {
+    myView.updatePenStatus(0);
+    myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
+    myView.clear();
+    myView.updatePenStatus(1);
+  }
+
+  private void setColorPalette(){
+    myView.setColorPalette(currentCommand.getResult(), currentCommand.getViewInteractionString().split(" ")[1]);
+  }
+
   private void update(){
     myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
   }
@@ -272,16 +296,5 @@ public class Controller {
 
   private void updateTurtleView(){
     myView.updateTurtleView(currentCommand.getResult());
-  }
-
-  private void clear() {
-    myView.updatePenStatus(0);
-    myView.update(turtle.getX(), turtle.getY(), turtle.getHeading());
-    myView.clear();
-    myView.updatePenStatus(1);
-  }
-
-  private void setColorPalette(){
-    myView.setColorPalette(currentCommand.getResult(), currentCommand.getViewInteractionString().split(" ")[1]);
   }
 }
