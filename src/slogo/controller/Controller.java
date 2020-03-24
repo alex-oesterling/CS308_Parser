@@ -16,10 +16,12 @@ package slogo.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
 import slogo.exceptions.*;
 import slogo.model.ModelExternal;
 import slogo.model.Turtle;
@@ -66,6 +68,7 @@ public class Controller {
     errorResources = ResourceBundle.getBundle(ERROR_PACKAGE);
     myView = visualizer;
     idOfTurtle = STARTING_ID;
+
     makeMaps();
   }
 
@@ -97,6 +100,7 @@ public class Controller {
 
   /**
    * Adds a new turtle to the screen with the given parameters
+   *
    * @param name            new name of the turtle
    * @param startingX       the x position of where the turtle will start
    * @param startingY       the y position of where the turtle will start
@@ -106,7 +110,8 @@ public class Controller {
     idOfTurtle++;
     Turtle t = new Turtle(name, startingX, startingY, startingHeading, idOfTurtle, myView.getArenaWidth(), myView.getArenaHeight());
     if (nameToTurtle.containsKey(t.getName())) {
-      throw new InvalidTurtleException("Turtle already exists", new Throwable()); //shouldn't ever get to this
+      throw new InvalidTurtleException("Turtle already exists",
+          new Throwable()); //shouldn't ever get to this
     }
     nameToTurtle.putIfAbsent(t.getName(), t);
     turtle = t;
@@ -114,7 +119,8 @@ public class Controller {
   }
 
   /**
-   * Get the name of the current turtle
+   * get the name of the current turtle
+   *
    * @return turtle's name
    */
   public String getTurtleName() {
@@ -133,6 +139,7 @@ public class Controller {
 
   /**
    * When the user changes a variable, this is updates map with new variable
+   *
    * @param key      the variable name value
    * @param newValue what it will be changed to
    */
@@ -144,6 +151,7 @@ public class Controller {
 
   /**
    * Add a user created variable to the map of user created variables
+   *
    * @param key   variable name
    * @param value variable value
    */
@@ -152,7 +160,8 @@ public class Controller {
   }
 
   /**
-   * Add a user created command to the map of user created commands
+   * add a user created command to the map of user created commands
+   *
    * @param key    variable name
    * @param syntax variable commands
    */
@@ -162,6 +171,7 @@ public class Controller {
 
   /**
    * Allows the user to pick a turtle to do work on
+   *
    * @param name turtle to become the current turtle
    */
   public void chooseTurtle(String name) {
@@ -171,6 +181,7 @@ public class Controller {
 
   /**
    * Change to a new language of input
+   *
    * @param language input language: English, Spanish, Urdu, etc.
    */
   public void addLanguage(String language) {
@@ -179,11 +190,13 @@ public class Controller {
 
   /**
    * Receives the commands to be done from the view/UI
+   *
    * @param commands the commands the user typed in
    */
   public void sendCommands(String commands) {
     executeCommandList(modelExternal.getCommandsOf(commands));
   }
+
 
   /**
    * Get the user created constant or variable in a line from the map
@@ -195,28 +208,17 @@ public class Controller {
   }
 
   /**
-   * Gets the user created command variable value based off of the given variable
-   * @param variable the  variable to retrieve its value
-   * @return the value of the variable
+   * @param variable
+   * @return
    */
   public List<Command> getUserCreatedCommandVariables(String variable) {
     return userCreatedCommandVariables.get(variable);
   }
-
-  /**
-   * Returns whether the command variable was already created
-   * @param variable the variable to check if it is already created
-   * @return true or false depending on if it is in the map or not
-   */
+//todo comment
   public boolean validCommandVariable(String variable){
     return userCreatedCommandVariables.containsKey(variable);
   }
 
-  /**
-   * Returns whether the constant variable was already created
-   * @param variable the variable to check if it is already created
-   * @return true or false depending on if it is in the map or not
-   */
   public boolean validConstantVariable(String variable){
     return userCreatedConstantVariables.containsKey(variable);
   }
@@ -246,8 +248,8 @@ public class Controller {
 
   private void addUserConstantToMap() {
     String variableName = currentCommand.getViewInteractionString().split(" ")[ONE];
-    userCreatedConstantVariables.put(variableName, currentCommand.getResult());
-    myView.addVariable(variableName, currentCommand.getResult());
+      userCreatedConstantVariables.put(variableName, currentCommand.getResult());
+      myView.addVariable(variableName, currentCommand.getResult());
   }
 
   private void addUserCommandToMap(){

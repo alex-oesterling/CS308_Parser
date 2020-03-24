@@ -4,8 +4,10 @@ import java.util.List;
 import slogo.model.command.Command;
 
 /**
- * API  for the external portion of  the model with all of the external public methods
- * @author Tyler Meier and Dana Mulligan
+ * Author: Alex Oesterling
+ * The API for the external portion of the Model.
+ * Feel free to add any public methods here which will be used by the visualizer (so probably will be a collaborative
+ * effort between all team members)
  */
 public interface ModelExternalAPI {
   void setTurtle(Turtle t);
